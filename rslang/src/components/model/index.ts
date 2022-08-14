@@ -1,9 +1,10 @@
-import { IUser, IWord } from '../../types/index';
+import { IAuth, IUser, IWord } from '../../types/index';
 
 const baseURL = 'http://localhost:3000';
 enum Path {
   words = '/words',
   users = '/users',
+  signIn = '/signin',
 }
 
 export default class Model {
@@ -57,6 +58,36 @@ export default class Model {
           throw new Error('Incorrect e-mail or password');
         default:
           break;
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async signIn(user: IUser) {
+    let status = 0;
+    try {
+      const response = await fetch(`${baseURL}${Path.signIn}`, {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(user),
+      });
+
+      const auth = await (<Promise<IAuth>>response.json());
+      status = response.status;
+
+      switch (status) {
+        case 200:
+          console.log('successful auth');
+          localStorage.setItem('auth', JSON.stringify(auth));
+          break;
+        case 403:
+          throw new Error('Incorrect e-mail or password');
+        default:
+          throw new Error(`request finish with status code: ${status}`);
       }
     } catch (error) {
       console.error(error);
