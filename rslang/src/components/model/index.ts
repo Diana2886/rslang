@@ -1,4 +1,4 @@
-import { IAuth, IUser, IWord } from '../../types/index';
+import { IAuth, IUser, IUserWord, IWord } from '../../types/index';
 
 const baseURL = 'http://localhost:3000';
 enum Path {
@@ -91,6 +91,47 @@ export default class Model {
       }
     } catch (error) {
       console.error(error);
+    }
+  }
+
+  async createUserWord(wordId: string, userWord: IUserWord) {
+    let status = 0;
+    const authStr = localStorage.getItem('auth');
+    let auth: IAuth | undefined;
+    if (authStr) {
+      auth = <IAuth>JSON.parse(authStr);
+    }
+    if (auth) {
+      try {
+        const response = await fetch(`${baseURL}${Path.users}/${auth.userId}${Path.words}/${wordId}`, {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${auth.token}`,
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(userWord),
+        });
+        status = response.status;
+
+        switch (status) {
+          case 200:
+            console.log('The user word has been created');
+            break;
+          case 400:
+            throw new Error('Bad request');
+          case 401:
+            throw new Error('Access token is missing or invalid');
+          case 417:
+            throw new Error('user word already created');
+          default:
+            break;
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    } else {
+      console.error('unauthorized user');
     }
   }
 }
