@@ -17,4 +17,18 @@ export class Model {
     }
   }
 
+  async createUser(user: IUser): Promise<void> {
+    try {
+      await fetch('https://<your-app-name>.herokuapp.com/users', {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(user)
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
 }
