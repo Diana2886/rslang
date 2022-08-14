@@ -134,4 +134,29 @@ export default class Model {
       console.error('unauthorized user');
     }
   }
+
+  async getUserWords() {
+    let status = 0;
+    const authStr = localStorage.getItem('auth');
+    let auth: IAuth | undefined;
+    if (authStr) {
+      auth = <IAuth>JSON.parse(authStr);
+    }
+    try {
+      if (!auth) throw new Error('unauthorized user');
+      const response = await fetch(`${baseURL}${Path.users}/${auth.userId}${Path.words}`, {
+        headers: {
+          Authorization: `Bearer ${auth.token}`,
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+      });
+      status = response.status;
+      const userWords = await (<Promise<IUserWord[]>>response.json());
+      return userWords;
+    } catch (error) {
+      console.error(error);
+      return status;
+    }
+  }
 }
