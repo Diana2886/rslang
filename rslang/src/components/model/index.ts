@@ -156,4 +156,41 @@ export default class Model {
       return status;
     }
   }
+
+  async deleteUserWord(wordId: string) {
+    let status = 0;
+    const authStr = localStorage.getItem('auth');
+    let auth: IAuth | undefined;
+    if (authStr) {
+      auth = <IAuth>JSON.parse(authStr);
+    }
+    try {
+      if (!auth) throw new Error('unauthorized user');
+      const response = await fetch(`${baseURL}${Path.users}/${auth.userId}${Path.words}/${wordId}`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${auth.token}`,
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+      });
+      status = response.status;
+
+      switch (status) {
+        case 204:
+          console.log('The user word has been deleted');
+          break;
+        case 400:
+          throw new Error('Bad request');
+        case 401:
+          throw new Error('Access token is missing or invalid');
+        case 417:
+          throw new Error('user word not found');
+        default:
+          break;
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
 }
