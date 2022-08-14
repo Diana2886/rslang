@@ -101,37 +101,34 @@ export default class Model {
     if (authStr) {
       auth = <IAuth>JSON.parse(authStr);
     }
-    if (auth) {
-      try {
-        const response = await fetch(`${baseURL}${Path.users}/${auth.userId}${Path.words}/${wordId}`, {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${auth.token}`,
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(userWord),
-        });
-        status = response.status;
+    try {
+      if (!auth) throw new Error('unauthorized user');
+      const response = await fetch(`${baseURL}${Path.users}/${auth.userId}${Path.words}/${wordId}`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${auth.token}`,
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userWord),
+      });
+      status = response.status;
 
-        switch (status) {
-          case 200:
-            console.log('The user word has been created');
-            break;
-          case 400:
-            throw new Error('Bad request');
-          case 401:
-            throw new Error('Access token is missing or invalid');
-          case 417:
-            throw new Error('user word already created');
-          default:
-            break;
-        }
-      } catch (error) {
-        console.error(error);
+      switch (status) {
+        case 200:
+          console.log('The user word has been created');
+          break;
+        case 400:
+          throw new Error('Bad request');
+        case 401:
+          throw new Error('Access token is missing or invalid');
+        case 417:
+          throw new Error('user word already created');
+        default:
+          break;
       }
-    } else {
-      console.error('unauthorized user');
+    } catch (error) {
+      console.error(error);
     }
   }
 
