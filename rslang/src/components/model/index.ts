@@ -18,6 +18,22 @@ export default class Model {
     return words;
   }
 
+  async getWord(id: string): Promise<IWord | number> {
+    let status = 0;
+    try {
+      const response = await fetch(`${baseURL}${Path.words}/${id}`);
+      status = response.status;
+      if (status !== 200) {
+        throw new Error(`Request finish with status code: ${status}`);
+      }
+      const word = await (<Promise<IWord>>response.json());
+      return word;
+    } catch (error) {
+      console.error(error);
+      return status;
+    }
+  }
+
   async createUser(user: IUser): Promise<void> {
     let status = 0;
     try {
