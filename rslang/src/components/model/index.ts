@@ -64,7 +64,7 @@ export default class Model {
     }
   }
 
-  async signIn(user: IUser) {
+  async signIn(user: IUser): Promise<void> {
     let status = 0;
     try {
       const response = await fetch(`${baseURL}${Path.signIn}`, {
@@ -94,7 +94,7 @@ export default class Model {
     }
   }
 
-  async createUserWord(wordId: string, userWord: IUserWord) {
+  async createUserWord(wordId: string, userWord: IUserWord): Promise<void> {
     let status = 0;
     const authStr = localStorage.getItem('auth');
     let auth: IAuth | undefined;
@@ -157,7 +157,7 @@ export default class Model {
     }
   }
 
-  async deleteUserWord(wordId: string) {
+  async deleteUserWord(wordId: string): Promise<void> {
     let status = 0;
     const authStr = localStorage.getItem('auth');
     let auth: IAuth | undefined;
