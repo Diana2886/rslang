@@ -52,3 +52,5 @@ export type QueryData = {
   key: string;
   value: string;
 };
+
+export type WordsGroup = { [key: string]: IWord[] };
