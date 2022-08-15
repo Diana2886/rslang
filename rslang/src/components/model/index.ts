@@ -76,13 +76,13 @@ export default class Model {
         body: JSON.stringify(user),
       });
 
-      const auth = await (<Promise<IAuth>>response.json());
+      const authDataRSlang = await (<Promise<IAuth>>response.json());
       status = response.status;
 
       switch (status) {
         case 200:
-          console.log('successful auth');
-          localStorage.setItem('auth', JSON.stringify(auth));
+          console.log('successful authDataRSlang');
+          localStorage.setItem('authDataRSlang', JSON.stringify(authDataRSlang));
           break;
         case 403:
           throw new Error('Incorrect e-mail or password');
@@ -96,17 +96,17 @@ export default class Model {
 
   async createUserWord(wordId: string, userWord: IUserWord): Promise<void> {
     let status = 0;
-    const authStr = localStorage.getItem('auth');
-    let auth: IAuth | undefined;
+    const authStr = localStorage.getItem('authDataRSlang');
+    let authDataRSlang: IAuth | undefined;
     if (authStr) {
-      auth = <IAuth>JSON.parse(authStr);
+      authDataRSlang = <IAuth>JSON.parse(authStr);
     }
     try {
-      if (!auth) throw new Error('unauthorized user');
-      const response = await fetch(`${baseURL}${Path.users}/${auth.userId}${Path.words}/${wordId}`, {
+      if (!authDataRSlang) throw new Error('unauthorized user');
+      const response = await fetch(`${baseURL}${Path.users}/${authDataRSlang.userId}${Path.words}/${wordId}`, {
         method: 'POST',
         headers: {
-          Authorization: `Bearer ${auth.token}`,
+          Authorization: `Bearer ${authDataRSlang.token}`,
           Accept: 'application/json',
           'Content-Type': 'application/json',
         },
@@ -134,16 +134,16 @@ export default class Model {
 
   async getUserWords() {
     let status = 0;
-    const authStr = localStorage.getItem('auth');
-    let auth: IAuth | undefined;
+    const authStr = localStorage.getItem('authDataRSlang');
+    let authDataRSlang: IAuth | undefined;
     if (authStr) {
-      auth = <IAuth>JSON.parse(authStr);
+      authDataRSlang = <IAuth>JSON.parse(authStr);
     }
     try {
-      if (!auth) throw new Error('unauthorized user');
-      const response = await fetch(`${baseURL}${Path.users}/${auth.userId}${Path.words}`, {
+      if (!authDataRSlang) throw new Error('unauthorized user');
+      const response = await fetch(`${baseURL}${Path.users}/${authDataRSlang.userId}${Path.words}`, {
         headers: {
-          Authorization: `Bearer ${auth.token}`,
+          Authorization: `Bearer ${authDataRSlang.token}`,
           Accept: 'application/json',
           'Content-Type': 'application/json',
         },
@@ -159,17 +159,17 @@ export default class Model {
 
   async deleteUserWord(wordId: string): Promise<void> {
     let status = 0;
-    const authStr = localStorage.getItem('auth');
-    let auth: IAuth | undefined;
+    const authStr = localStorage.getItem('authDataRSlang');
+    let authDataRSlang: IAuth | undefined;
     if (authStr) {
-      auth = <IAuth>JSON.parse(authStr);
+      authDataRSlang = <IAuth>JSON.parse(authStr);
     }
     try {
-      if (!auth) throw new Error('unauthorized user');
-      const response = await fetch(`${baseURL}${Path.users}/${auth.userId}${Path.words}/${wordId}`, {
+      if (!authDataRSlang) throw new Error('unauthorized user');
+      const response = await fetch(`${baseURL}${Path.users}/${authDataRSlang.userId}${Path.words}/${wordId}`, {
         method: 'DELETE',
         headers: {
-          Authorization: `Bearer ${auth.token}`,
+          Authorization: `Bearer ${authDataRSlang.token}`,
           Accept: 'application/json',
           'Content-Type': 'application/json',
         },
