@@ -1,13 +1,18 @@
-import { IAuth, IUser, IUserWord, IWord } from '../../types/index';
+import { IAuth, IUser, IUserWord, IWord, QueryData } from '../../types/index';
 
 const baseURL = 'http://localhost:3000';
 enum Path {
   words = '/words',
   users = '/users',
   signIn = '/signin',
+  aggregatedWords = '/aggregatedWords',
 }
 
 export default class Model {
+  private getQueryString = (params: QueryData[]) => {
+    return `?${params.map((param) => `${param.key}=${param.value}`).join('&')}`;
+  };
+
   async getWords(page: number, groupNum: number): Promise<IWord[]> {
     let words: IWord[] = [];
     try {
