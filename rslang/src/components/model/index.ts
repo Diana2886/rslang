@@ -198,4 +198,43 @@ export default class Model {
       console.error(error);
     }
   }
+
+  async getAggregatedWords(filter: string, page?: number, count?: number, group?: number): Promise<IWord[] | number> {
+    let status = 0;
+    const authStr = localStorage.getItem('authDataRSlang');
+    let authDataRSlang: IAuth | undefined;
+    if (authStr) {
+      authDataRSlang = <IAuth>JSON.parse(authStr);
+    }
+    try {
+      if (!authDataRSlang) throw new Error('unauthorized user');
+      const queryParams: QueryData[] = [];
+      if (group !== undefined) {
+        queryParams.push({ key: 'group', value: `${group}` });
+      }
+      if (page !== undefined) {
+        queryParams.push({ key: 'page', value: `${page}` });
+      }
+      if (count !== undefined) {
+        queryParams.push({ key: 'wordsPerPage', value: `${count}` });
+      }
+      queryParams.push({ key: 'filter', value: `${filter}` });
+      const response = await fetch(
+        `${baseURL}${Path.users}/${authDataRSlang.userId}${Path.aggregatedWords}${this.getQueryString(queryParams)}`,
+        {
+          headers: {
+            Authorization: `Bearer ${authDataRSlang.token}`,
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      status = response.status;
+      const words = await (<Promise<IWord[]>>response.json());
+      return words;
+    } catch (error) {
+      console.error(error);
+      return status;
+    }
+  }
 }
