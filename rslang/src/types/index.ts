@@ -47,3 +47,8 @@ export interface IStatistic {
   learnedWords: number;
   optional?: IOptional;
 }
+
+export type QueryData = {
+  key: string;
+  value: string;
+};
