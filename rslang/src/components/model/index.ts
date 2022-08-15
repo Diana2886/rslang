@@ -199,7 +199,7 @@ export default class Model {
     }
   }
 
-  async getAggregatedWords(filter: string, page?: number, count?: number, group?: number): Promise<IWord[] | number> {
+  async getAggregatedWords(filter: string, group?: number, page?: number, count?: number): Promise<IWord[] | number> {
     let status = 0;
     const authStr = localStorage.getItem('authDataRSlang');
     let authDataRSlang: IAuth | undefined;
