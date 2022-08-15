@@ -1,4 +1,4 @@
-import { IAuth, IUser, IUserWord, IWord, QueryData } from '../../types/index';
+import { IAuth, IUser, IUserWord, IWord, QueryData, WordsGroup } from '../../types/index';
 
 const baseURL = 'http://localhost:3000';
 enum Path {
@@ -9,17 +9,24 @@ enum Path {
 }
 
 export default class Model {
+  wordsGroup: WordsGroup = {};
+
   private getQueryString = (params: QueryData[]) => {
     return `?${params.map((param) => `${param.key}=${param.value}`).join('&')}`;
   };
 
   async getWords(page: number, groupNum: number): Promise<IWord[]> {
     let words: IWord[] = [];
-    try {
-      const response = await fetch(`${baseURL}${Path.words}?page=${page}&group=${groupNum}`);
-      words = await (<Promise<IWord[]>>response.json());
-    } catch (error) {
-      console.error(error);
+    if (this.wordsGroup[`p${page}g${groupNum}`]) {
+      words = this.wordsGroup[`p${page}g${groupNum}`];
+    } else {
+      try {
+        const response = await fetch(`${baseURL}${Path.words}?page=${page}&group=${groupNum}`);
+        words = await (<Promise<IWord[]>>response.json());
+        this.wordsGroup[`p${page}g${groupNum}`] = words;
+      } catch (error) {
+        console.error(error);
+      }
     }
     return words;
   }
