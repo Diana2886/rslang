@@ -1,7 +1,9 @@
 @import "custom";
 @import "~bootstrap/scss/bootstrap";
+@import "./view/pages/authorization/auth";
 
 .header-container div {
   display: flex;
   justify-content: space-between;
+  flex-wrap: wrap;
 }
