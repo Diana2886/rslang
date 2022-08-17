@@ -6,8 +6,9 @@ import Header from '../../core/components/header/index';
 import PageIds from './pageIds';
 import ErrorPage, { ErrorTypes } from '../error/index';
 import TextbookPage from '../textbook/index';
-import GamesPage from '../games/index';
+import AudioСhallenge from '../audioChallenge/index';
 import WordListPage from '../wordList/index';
+import Sprint from '../sprint/index';
 
 class App {
   private static container: HTMLElement = document.body;
@@ -40,8 +41,11 @@ class App {
       case `${PageIds.Textbook}`:
         page = new TextbookPage(idPage);
         break;
-      case `${PageIds.Games}`:
-        page = new GamesPage(idPage);
+      case `${PageIds.AudioСhallenge}`:
+        page = new AudioСhallenge(idPage);
+        break;
+      case `${PageIds.Sprint}`:
+        page = new Sprint(idPage);
         break;
       case `${PageIds.WordList}`:
         page = new WordListPage(idPage);

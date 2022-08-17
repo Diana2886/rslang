@@ -15,8 +15,12 @@ const Buttons = [
     text: 'WordList Page',
   },
   {
-    id: PageIds.Games,
-    text: 'Games Page',
+    id: PageIds.AudioСhallenge,
+    text: 'AudioСhallenge Page',
+  },
+  {
+    id: PageIds.Sprint,
+    text: 'Sprint Page',
   },
   {
     id: PageIds.Statistics,
