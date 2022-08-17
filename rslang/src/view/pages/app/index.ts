@@ -10,7 +10,7 @@ import AudioChallenge from '../audioChallenge/index';
 import WordListPage from '../wordList/index';
 import Sprint from '../sprint/index';
 
-class App {
+export class App {
   private static container: HTMLElement = document.body;
 
   private static defaultPageId = 'current-page';
