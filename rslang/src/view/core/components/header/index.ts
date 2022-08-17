@@ -56,9 +56,9 @@ class Header extends Component {
       if (item.id === PageIds.Games) {
         template += `
           <li class="nav-item dropdown">
-            <p class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              ${item.text}
-            </p>
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            ${item.text}
+            </a>
             <ul class="dropdown-menu">
         `;
         Games.forEach((game) => {
