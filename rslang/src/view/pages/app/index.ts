@@ -6,7 +6,7 @@ import Header from '../../core/components/header/index';
 import PageIds from './pageIds';
 import ErrorPage, { ErrorTypes } from '../error/index';
 import TextbookPage from '../textbook/index';
-import AudioСhallenge from '../audioChallenge/index';
+import AudioChallenge from '../audioChallenge/index';
 import WordListPage from '../wordList/index';
 import Sprint from '../sprint/index';
 
@@ -41,8 +41,8 @@ class App {
       case `${PageIds.Textbook}`:
         page = new TextbookPage(idPage);
         break;
-      case `${PageIds.AudioСhallenge}`:
-        page = new AudioСhallenge(idPage);
+      case `${PageIds.AudioChallenge}`:
+        page = new AudioChallenge(idPage);
         break;
       case `${PageIds.Sprint}`:
         page = new Sprint(idPage);

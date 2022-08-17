@@ -15,8 +15,8 @@ const Buttons = [
     text: 'WordList Page',
   },
   {
-    id: PageIds.AudioСhallenge,
-    text: 'AudioСhallenge Page',
+    id: PageIds.AudioChallenge,
+    text: 'AudioChallenge Page',
   },
   {
     id: PageIds.Sprint,
