@@ -5,6 +5,9 @@ import StatisticsPage from '../statistics/index';
 import Header from '../../core/components/header/index';
 import PageIds from './pageIds';
 import ErrorPage, { ErrorTypes } from '../error/index';
+import TextbookPage from '../textbook/index';
+import GamesPage from '../games/index';
+import WordListPage from '../wordList/index';
 
 class App {
   private static container: HTMLElement = document.body;
@@ -24,18 +27,31 @@ class App {
     }
     let page: Page | null = null;
 
-    if (idPage === PageIds.Main) {
-      page = new MainPage(idPage);
-    } else if (idPage === PageIds.Authorization) {
-      page = new AuthorizationPage(idPage);
-    } else if (idPage === PageIds.Statistics) {
-      page = new StatisticsPage(idPage);
-    } else {
-      page = new ErrorPage(idPage, ErrorTypes.Error_404);
+    switch (idPage) {
+      case `${PageIds.Main}`:
+        page = new MainPage(idPage);
+        break;
+      case `${PageIds.Authorization}`:
+        page = new AuthorizationPage(idPage);
+        break;
+      case `${PageIds.Statistics}`:
+        page = new StatisticsPage(idPage);
+        break;
+      case `${PageIds.Textbook}`:
+        page = new TextbookPage(idPage);
+        break;
+      case `${PageIds.Games}`:
+        page = new GamesPage(idPage);
+        break;
+      case `${PageIds.WordList}`:
+        page = new WordListPage(idPage);
+        break;
+      default:
+        page = new ErrorPage(idPage, ErrorTypes.Error_404);
     }
 
     if (page) {
-      const pageHTML: HTMLElement = page.render();
+      const pageHTML = page.render();
       pageHTML.id = App.defaultPageId;
       App.container.append(pageHTML);
     }

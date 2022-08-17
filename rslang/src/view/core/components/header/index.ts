@@ -7,12 +7,24 @@ const Buttons = [
     text: 'Main Page',
   },
   {
-    id: PageIds.Authorization,
-    text: 'Authorization Page',
+    id: PageIds.Textbook,
+    text: 'Textbook Page',
+  },
+  {
+    id: PageIds.WordList,
+    text: 'WordList Page',
+  },
+  {
+    id: PageIds.Games,
+    text: 'Games Page',
   },
   {
     id: PageIds.Statistics,
     text: 'Statistics Page',
+  },
+  {
+    id: PageIds.Authorization,
+    text: 'Authorization Page',
   },
 ];
 
