@@ -23,6 +23,10 @@ class AuthorizationPage extends Page {
     <div class="author-form">
       <form class="form">
         <div class="mb-3">
+        <div class="mb-3">
+          <label for="profil-name" class="form-label">Name</label>
+          <input type="text" class="form-control" id="profil-name" placeholder="Ivan">
+        </div>
           <label for="exampleInputEmail1" class="form-label">E-mail address</label>
           <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="name@example.com">
         </div>
@@ -31,8 +35,7 @@ class AuthorizationPage extends Page {
           <input type="password" class="form-control" id="exampleInputPassword1">
         </div>
         <div class="mb-3 d-flex justify-content-between">
-          <button class="btn btn-primary login">Login</button>
-          <button class="btn btn-success signin">Sign in</button>
+          <button class="btn btn-primary signin" id="signin">Signin</button>
         </div>
       </form>
     </div>

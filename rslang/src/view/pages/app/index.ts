@@ -27,7 +27,6 @@ export class App {
       currentPageHTML.remove();
     }
     let page: Page | null = null;
-
     switch (idPage) {
       case `${PageIds.Main}`:
         page = new MainPage(idPage);
@@ -62,7 +61,13 @@ export class App {
   }
 
   private enableRouteChange() {
-    window.addEventListener('hashchange', () => {
+    // this.header.container
+    window.addEventListener('hashchange', (e) => {
+      // нужно менять слушателья
+      // const target = e.target as HTMLElement;
+      // const name = target.className.slice(1);
+      // window.location.host += '/' + name;
+
       const hash = window.location.hash.slice(1);
       App.renderNewPage(hash);
     });

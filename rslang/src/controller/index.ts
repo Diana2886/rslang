@@ -1,23 +1,20 @@
-import { AuthController } from './auth/auth';
-import { App } from '../view/pages/app/index';
+import AuthController from './auth/auth';
+import app, { App } from '../view/pages/app/index';
 import Model from '../model/components/index';
+import PageIds from '../view/pages/app/pageIds';
 // listener
 export default class Controller {
-  model: Model;
-
-  view: App;
-
-  constructor() {
-    this.model = new Model();
-    this.view = new App();
-  }
-
   start() {
-    this.view.run();
+    const view = new App();
+    const model = new Model();
+    view.run();
     const auth = new AuthController();
-    console.log(auth);
-    document.addEventListener('load', () => {
-      auth.checkForm();
+    const headerCont = document.querySelector('.header-container') as HTMLElement;
+    headerCont.addEventListener('click', (e) => {
+      const target = e.target as HTMLElement;
+      if (target.classList.contains(`#${PageIds.Authorization}`)) {
+        auth.checkForm();
+      }
     });
   }
 }

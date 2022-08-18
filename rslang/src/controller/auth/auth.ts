@@ -1,7 +1,11 @@
-export class AuthController {
+class AuthController {
   checkForm() {
-    const loginBtn = document.querySelector('.login') as HTMLButtonElement;
-    const signinBtn = document.querySelector('.signin') as HTMLButtonElement;
-    console.log(signinBtn);
+    console.log(document.body);
+    const signin = document.querySelector('#signin');
+    const curPage = document.querySelector('#current-page');
+
+    console.log('signin', signin);
+    console.log('cur-page', curPage);
   }
 }
+export default AuthController;
