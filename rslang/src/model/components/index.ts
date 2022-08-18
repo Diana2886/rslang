@@ -1,4 +1,4 @@
-import { IAuth, IUser, IUserWord, IWord, QueryData, WordsGroup } from '../../types/index';
+import { IAuth, INewUser, IUser, IUserWord, IWord, QueryData, WordsGroup } from '../../types/index';
 
 const baseURL = 'http://localhost:3000';
 enum Path {
@@ -47,6 +47,7 @@ export default class Model {
     }
   }
 
+  // eslint-disable-next-line consistent-return
   async createUser(user: IUser): Promise<void> {
     let status = 0;
     try {
@@ -58,11 +59,13 @@ export default class Model {
         },
         body: JSON.stringify(user),
       });
+      const newUser = await (<Promise<INewUser>>response.json());
       status = response.status;
 
       switch (status) {
         case 200:
           console.log('new user created successfully');
+          localStorage.setItem('newUserDataRSlang', JSON.stringify(newUser));
           break;
         case 417:
           throw new Error('user with same email already registered');

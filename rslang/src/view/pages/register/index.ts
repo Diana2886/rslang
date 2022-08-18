@@ -35,7 +35,7 @@ class RegisterPage extends Page {
           <input type="password" class="form-control" id="exampleInputPassword1">
         </div>
         <div class="mb-3 d-flex justify-content-between">
-          <button class="btn btn-primary signin" id="signin">Signin</button>
+          <button type="submit" class="btn btn-primary signin" id="signin">Signin</button>
         </div>
       </form>
     </div>

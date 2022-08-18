@@ -77,8 +77,8 @@ class Header extends Component {
       } else if (item.id === PageIds.Register || item.id === PageIds.LogIn) {
         template += `
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#${item.id}">
-              <button type="button" class="btn btn-primary">${item.text}</button>
+            <a class="${item.id} nav-link active" aria-current="page" href="#${item.id}">
+              <button type="button" class="${item.id} btn btn-primary">${item.text}</button>
             </a>
           </li>
         `;

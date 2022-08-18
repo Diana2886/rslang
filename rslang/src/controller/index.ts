@@ -8,13 +8,13 @@ export default class Controller {
     const view = new App();
     const model = new Model();
     view.run();
-    // const auth = new AuthController();
-    // const headerCont = document.querySelector('.header-container') as HTMLElement;
-    // headerCont.addEventListener('click', (e) => {
-      // const target = e.target as HTMLElement;
-      // if (target.classList.contains(`#${PageIds.Register}`)) {
-        // auth.checkForm();
-      // }
-    // });
+    const auth = new AuthController();
+    const container = document.querySelector('.container') as HTMLElement;
+    container.addEventListener('click', (e) => {
+      const targ = e.target as HTMLElement;
+      if (targ.classList.contains('register-page')) {
+        auth.checkForm();
+      }
+    });
   }
 }

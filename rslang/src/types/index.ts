@@ -54,3 +54,9 @@ export type QueryData = {
 };
 
 export type WordsGroup = { [key: string]: IWord[] };
+
+export interface INewUser {
+  id: string;
+  name: string;
+  email: string;
+}
