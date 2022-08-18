@@ -1,6 +1,6 @@
 import MainPage from '../main/index';
 import Page from '../../core/templates/page';
-import AuthorizationPage from '../authorization/index';
+import RegisterPage from '../register/index';
 import StatisticsPage from '../statistics/index';
 import Header from '../../core/components/header/index';
 import PageIds from './pageIds';
@@ -9,8 +9,9 @@ import TextbookPage from '../textbook/index';
 import AudioChallenge from '../audioChallenge/index';
 import WordListPage from '../wordList/index';
 import Sprint from '../sprint/index';
+import LogInPage from '../logIn/logIn';
 
-export class App {
+class App {
   private static container: HTMLElement = document.body;
 
   private static defaultPageId = 'current-page';
@@ -31,8 +32,11 @@ export class App {
       case `${PageIds.Main}`:
         page = new MainPage(idPage);
         break;
-      case `${PageIds.Authorization}`:
-        page = new AuthorizationPage(idPage);
+      case `${PageIds.Register}`:
+        page = new RegisterPage(idPage);
+        break;
+      case `${PageIds.LogIn}`:
+        page = new LogInPage(idPage);
         break;
       case `${PageIds.Statistics}`:
         page = new StatisticsPage(idPage);
@@ -57,6 +61,8 @@ export class App {
       const pageHTML = page.render();
       pageHTML.id = App.defaultPageId;
       App.container.append(pageHTML);
+      App.container.classList.add('container');
+      document.body.append(App.container);
     }
   }
 
