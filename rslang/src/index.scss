@@ -1,7 +1,4 @@
 @import "custom";
 @import "~bootstrap/scss/bootstrap";
 
-.header-container div {
-  display: flex;
-  justify-content: space-between;
-}
+@import "./view/core/components/header/index.scss";
