@@ -1,5 +1,3 @@
-import PageIds from '../../pages/app/pageIds';
-
 abstract class Page {
   protected container: HTMLElement;
 
