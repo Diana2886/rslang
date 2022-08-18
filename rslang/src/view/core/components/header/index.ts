@@ -4,15 +4,15 @@ import PageIds from '../../../pages/app/pageIds';
 const navItems = [
   {
     id: PageIds.Main,
-    text: 'Main Page',
+    text: 'Main',
   },
   {
     id: PageIds.Textbook,
-    text: 'Textbook Page',
+    text: 'Textbook',
   },
   {
     id: PageIds.WordList,
-    text: 'WordList Page',
+    text: 'WordList',
   },
   {
     id: PageIds.Games,
@@ -20,22 +20,26 @@ const navItems = [
   },
   {
     id: PageIds.Statistics,
-    text: 'Statistics Page',
+    text: 'Statistics',
   },
   {
-    id: PageIds.Authorization,
-    text: 'Authorization Page',
+    id: PageIds.Register,
+    text: 'Register',
+  },
+  {
+    id: PageIds.LogIn,
+    text: 'Log in',
   },
 ];
 
 const Games = [
   {
     id: PageIds.AudioChallenge,
-    text: 'AudioChallenge Page',
+    text: 'AudioChallenge',
   },
   {
     id: PageIds.Sprint,
-    text: 'Sprint Page',
+    text: 'Sprint',
   },
 ];
 
@@ -70,12 +74,20 @@ class Header extends Component {
             </ul>
           </li>
         `;
+      } else if (item.id === PageIds.Register || item.id === PageIds.LogIn) {
+        template += `
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="#${item.id}">
+              <button type="button" class="btn btn-primary">${item.text}</button>
+            </a>
+          </li>
+        `;
       } else {
         template += `
           <li class="nav-item">
             <a class="nav-link active" aria-current="page" href="#${item.id}">${item.text}</a>
           </li>
-      `;
+        `;
       }
     });
     template += `
