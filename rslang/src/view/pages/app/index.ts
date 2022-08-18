@@ -12,7 +12,7 @@ import Sprint from '../sprint/index';
 import LogInPage from '../logIn/logIn';
 
 class App {
-  private static container: HTMLElement = document.body;
+  private static container: HTMLElement = document.createElement('div');
 
   private static defaultPageId = 'current-page';
 
