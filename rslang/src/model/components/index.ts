@@ -1,4 +1,4 @@
-import { IAuth, INewUser, IUser, IUserWord, IWord, QueryData, WordsGroup } from '../../types/index';
+import { IAuth, INewUser, ISignIn, IUser, IUserWord, IWord, QueryData, WordsGroup } from '../../types/index';
 
 const baseURL = 'http://localhost:3000';
 enum Path {
@@ -59,6 +59,10 @@ export default class Model {
         },
         body: JSON.stringify(user),
       });
+      const { email, password } = user;
+      // const { password } = user;
+      const obj = { email, password };
+      localStorage.setItem('sthmPasMail', JSON.stringify(obj));
       const newUser = await (<Promise<INewUser>>response.json());
       status = response.status;
 
@@ -79,7 +83,7 @@ export default class Model {
     }
   }
 
-  async signIn(user: IUser): Promise<void> {
+  async signIn(user: ISignIn): Promise<void> {
     let status = 0;
     try {
       const response = await fetch(`${baseURL}${Path.signIn}`, {
@@ -92,7 +96,7 @@ export default class Model {
       });
 
       const authDataRSlang = await (<Promise<IAuth>>response.json());
-      status = response.status;
+      status = +response.status;
 
       switch (status) {
         case 200:

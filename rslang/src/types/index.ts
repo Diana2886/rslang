@@ -60,3 +60,10 @@ export interface INewUser {
   name: string;
   email: string;
 }
+export interface ISignIn {
+  password: string;
+  email: string;
+}
+export interface IEmpyObj {
+  [key: string]: string;
+}
