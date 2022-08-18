@@ -1,0 +1,34 @@
+.main__container {
+  display: flex;
+  justify-content: space-evenly;
+  padding: 100px 0;
+}
+
+.main-page__content {
+  display: flex;
+  flex-direction: column;
+  width: 30%;
+  // margin: 60px;
+}
+
+.main__img {
+  width: 30%;
+  // height: 500px;
+  background: url('./assets/img/main-img.png') no-repeat;
+  background-size: contain;
+}
+
+.main-page__title {
+  font-size: 4rem;
+  font-weight: 900;
+  line-height: 1.4;
+  margin-bottom: 1.5rem;
+}
+
+.text_colored {
+  color: $primary;
+}
+
+.main__text {
+  color: #969696;
+}

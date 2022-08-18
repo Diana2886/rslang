@@ -1,3 +1,5 @@
+import PageIds from '../../pages/app/pageIds';
+
 abstract class Page {
   protected container: HTMLElement;
 
@@ -10,6 +12,7 @@ abstract class Page {
 
   protected createHeaderTitle(text: string) {
     const headerTitle = document.createElement('h1');
+    headerTitle.classList.add('title', `${this.container.id}__title`);
     headerTitle.innerHTML = text;
     return headerTitle;
   }
