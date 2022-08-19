@@ -44,8 +44,10 @@ const Games = [
 ];
 
 class Header extends Component {
+  static navContainer = document.createElement('div');
+
   renderNav() {
-    const navContainer = document.createElement('div');
+    Header.navContainer.innerHTML = '';
     let template = `
       <nav class="navbar navbar-expand-lg">
         <div class="container-fluid">
@@ -67,7 +69,7 @@ class Header extends Component {
         `;
         Games.forEach((game) => {
           template += `
-            <li><a class="dropdown-item" href="#${game.id}">${game.text}</a></li>
+            <li><a class="dropdown-item" href="#${game.id}"  data-page="${game.id}">${game.text}</a></li>
           `;
         });
         template += `
@@ -77,17 +79,17 @@ class Header extends Component {
       } else if (item.id === PageIds.Register || item.id === PageIds.LogIn) {
         template += `
           <li class="nav-item">
-            <a class="${item.id} nav-link active" aria-current="page" href="#${item.id}">
-            <button type="button" class="${item.id} btn btn-primary">${item.text}</button>
+            <a class="${item.id} nav-link active" aria-current="page" href="#${item.id}"  data-page="${item.id}">
+            <button type="button" class="${item.id} btn btn-primary"  data-page="${item.id}">${item.text}</button>
             </a>
           </li>
         `;
       } else {
         template += `
           <li class="nav-item">
-            <a class="nav-link ${item.id === PageIds.Main ? 'active' : ''}" aria-current="page" href="#${item.id}">${
-          item.text
-        }</a>
+            <a class="nav-link ${item.id === PageIds.Main ? 'active' : ''}" aria-current="page" href="#${
+          item.id
+        }" data-page="${item.id}">${item.text}</a>
           </li>
         `;
       }
@@ -98,8 +100,8 @@ class Header extends Component {
         </div>
       </nav>
     `;
-    navContainer.innerHTML = template;
-    this.container.append(navContainer);
+    Header.navContainer.innerHTML = template;
+    this.container.append(Header.navContainer);
   }
 
   render() {

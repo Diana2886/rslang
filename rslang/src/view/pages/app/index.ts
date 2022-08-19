@@ -16,7 +16,7 @@ class App {
 
   private static defaultPageId = 'current-page';
 
-  private header: Header;
+  public header: Header;
 
   constructor() {
     this.header = new Header('header', 'header-container');
@@ -67,15 +67,14 @@ class App {
   }
 
   private enableRouteChange() {
-    // this.header.container
-    window.addEventListener('hashchange', (e) => {
+    Header.navContainer.addEventListener('click', (e) => {
       // нужно менять слушателья
-      // const target = e.target as HTMLElement;
-      // const name = target.className.slice(1);
-      // window.location.host += '/' + name;
-
-      const hash = window.location.hash.slice(1);
-      App.renderNewPage(hash);
+      const target = e.target as HTMLAnchorElement;
+      const name = target.dataset.page!;
+      if (name !== undefined) {
+        App.renderNewPage(name);
+      }
+      // const hash = window.location.hash.slice(1);
     });
   }
 

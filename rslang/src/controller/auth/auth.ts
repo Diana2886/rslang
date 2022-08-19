@@ -8,11 +8,14 @@ class AuthController {
 
   model: Model;
 
+  form: HTMLFormElement;
+
   constructor() {
     this.model = new Model();
     this.userRegistrInfo = {};
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     this.userLogin = JSON.parse(localStorage.getItem('sthmPasMail')!);
+    this.form = document.querySelector('.form') as HTMLFormElement;
   }
 
   checkRegister() {
