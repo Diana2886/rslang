@@ -20,7 +20,7 @@ class RegisterPage extends Page {
       <h2>RS-School Final task</h2>
       <h5>RS-Language, this platform gave you <br> more information to learn new <br> words and good exersice and more <br> expiranse blablabla We did it!</h5>
     </div>
-    <div class="author-form">
+    <div class="author-form animate__zoomIn">
       <form class="form">
         <div class="mb-3">
         <div class="mb-3">

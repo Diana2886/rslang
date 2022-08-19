@@ -20,8 +20,8 @@ class LogInPage extends Page {
       <h2>RS-School Final task</h2>
       <h5>RS-Language, this platform gave you <br> more information to learn new <br> words and good exersice and more <br> expiranse blablabla We did it!</h5>
     </div>
-    <div class="login-form">
-      <form class="form">
+    <div class="login-form animate__zoomIn">
+      <form class="form ">
         <div class="mb-3">
           <label for="exampleInputEmail1" class="form-label">E-mail address</label>
           <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="name@example.com">
