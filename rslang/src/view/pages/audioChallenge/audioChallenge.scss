@@ -1,6 +1,3 @@
-@import "~bootstrap/scss/bootstrap";
-
-
 #current-page {
   width: 100%;
   min-height: 100%;
@@ -13,13 +10,17 @@
     align-items: center;
   }
   &__level-choose {
-    position: fixed;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
+
+
+  }
+  &__image {
 
   }
 }
 .contaier {
   height: 100%;
 }
+
+/*.greetBlock{
+  background-image: url('./assets/cassette.png');
+}*/
