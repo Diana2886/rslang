@@ -47,7 +47,7 @@ class Header extends Component {
   renderNav() {
     const navContainer = document.createElement('div');
     let template = `
-      <nav class="navbar navbar-expand-lg bg-light">
+      <nav class="navbar navbar-expand-lg">
         <div class="container-fluid">
           <a class="navbar-brand" href="#${PageIds.Main}">RS Lang</a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
@@ -78,14 +78,16 @@ class Header extends Component {
         template += `
           <li class="nav-item">
             <a class="${item.id} nav-link active" aria-current="page" href="#${item.id}">
-              <button type="button" class="${item.id} btn btn-primary">${item.text}</button>
+            <button type="button" class="${item.id} btn btn-primary">${item.text}</button>
             </a>
           </li>
         `;
       } else {
         template += `
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#${item.id}">${item.text}</a>
+            <a class="nav-link ${item.id === PageIds.Main ? 'active' : ''}" aria-current="page" href="#${item.id}">${
+          item.text
+        }</a>
           </li>
         `;
       }
