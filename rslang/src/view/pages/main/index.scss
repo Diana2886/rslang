@@ -1,7 +1,11 @@
-.main__container {
+.page-container {
   display: flex;
-  justify-content: space-evenly;
-  padding: 100px 0;
+  justify-content: center;
+  padding: 70px 0;
+}
+
+.main__container {
+  gap: 6rem;
 }
 
 .main-page__content {
@@ -29,9 +33,12 @@
   color: $primary;
 }
 
+.text {
+  color: #969696;
+}
+
 .main__text {
   margin-bottom: 2.8rem;
-  color: #969696;
 }
 
 .buttons__container {
@@ -51,4 +58,54 @@
   height: 38px;
   background: url('./assets/svg/play-btn.svg') no-repeat;
   background-size: contain;
+}
+
+.tools__container {
+  gap: 2rem;
+  background-color: #ffffff;
+}
+
+.tools__content,
+.tools__item {
+  display: flex;
+  flex-direction: column;
+}
+
+.tools__content {
+  width: 18%;
+}
+
+.subtitle {
+  margin-bottom: 2rem;
+  font-weight: 700;
+}
+
+.tool__link {
+  width: 14%;
+  padding: 2rem 1rem;
+  background-color: $primary;
+  border-radius: 1rem;
+  text-decoration: none;
+}
+
+.tool__icon {
+  display: block;
+  width: 40px;
+  height: 40px;
+  margin-bottom: 1rem;
+  background-size: 50%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: #ffffff;
+  border-radius: 50%;
+}
+
+.tool__title {
+  margin-bottom: 2rem;
+  color: #ffffff;
+}
+
+.tool__text {
+  color: #dddddd;
+  margin-bottom: 0;
 }
