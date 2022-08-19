@@ -23,12 +23,12 @@ const navItems = [
     text: 'Statistics',
   },
   {
-    id: PageIds.Register,
-    text: 'Register',
-  },
-  {
     id: PageIds.LogIn,
     text: 'Log in',
+  },
+  {
+    id: PageIds.SignUp,
+    text: 'Sign up',
   },
 ];
 
@@ -74,11 +74,11 @@ class Header extends Component {
             </ul>
           </li>
         `;
-      } else if (item.id === PageIds.Register || item.id === PageIds.LogIn) {
+      } else if (item.id === PageIds.SignUp || item.id === PageIds.LogIn) {
         template += `
           <li class="nav-item">
             <a class="nav-link" aria-current="page" href="#${item.id}">
-              <button type="button" class="btn btn-primary">${item.text}</button>
+              <button type="button" class="btn btn-primary btn-${item.id}">${item.text}</button>
             </a>
           </li>
         `;

@@ -1,6 +1,6 @@
 import MainPage from '../main/index';
 import Page from '../../core/templates/page';
-import RegisterPage from '../register/index';
+import SignUpPage from '../signUp/index';
 import StatisticsPage from '../statistics/index';
 import Header from '../../core/components/header/index';
 import PageIds from './pageIds';
@@ -33,8 +33,8 @@ class App {
       case `${PageIds.Main}`:
         page = new MainPage(idPage);
         break;
-      case `${PageIds.Register}`:
-        page = new RegisterPage(idPage);
+      case `${PageIds.SignUp}`:
+        page = new SignUpPage(idPage);
         break;
       case `${PageIds.LogIn}`:
         page = new LogInPage(idPage);
