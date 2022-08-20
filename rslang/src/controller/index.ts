@@ -16,14 +16,14 @@ export default class Controller {
   checkElem() {
     const auth = new AuthController();
     const container = document.querySelector('.container') as HTMLElement;
-    // console.log(auth);
     container.addEventListener('click', (e) => {
       const targ = e.target as HTMLElement;
-      // console.log(targ);
       if (targ.classList.contains(PageIds.Register)) {
-        auth.checkRegister();
+        const loginBtn = document.querySelector('.logIn-page button') as HTMLButtonElement;
+        auth.checkRegister(targ, loginBtn);
       } else if (targ.classList.contains(PageIds.LogIn)) {
-        auth.checkLogin();
+        const registerBtn = document.querySelector('.register-page') as HTMLButtonElement;
+        auth.checkLogin(registerBtn, targ);
       }
     });
   }

@@ -1,5 +1,6 @@
-import Model from '../../model/components/index';
+import Model, { Result } from '../../model/components/index';
 import { IEmpyObj, ISignIn, IUser } from '../../types/index';
+import App from '../../view/pages/app/index';
 
 class AuthController {
   userRegistrInfo: IEmpyObj;
@@ -18,9 +19,8 @@ class AuthController {
     this.form = document.querySelector('.form') as HTMLFormElement;
   }
 
-  checkRegister() {
+  checkRegister(registerBtn: HTMLElement, loginBtn: HTMLButtonElement) {
     const form = document.querySelector('.form') as HTMLElement;
-    console.log(form);
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -30,17 +30,33 @@ class AuthController {
       const password = (target[2] as HTMLInputElement).value.toString();
       this.userRegistrInfo = { name, email, password };
       this.userLogin = { email, password };
+
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const user: IUser = JSON.parse(JSON.stringify(this.userRegistrInfo));
-      await this.model.createUser(user);
-      await this.model.signIn(this.userLogin);
+      const status = await this.model.createUser(user);
+      switch (status) {
+        case Result.success:
+          await this.model.signIn(this.userLogin);
+          registerBtn.style.display = 'none';
+          loginBtn.textContent = 'Log Out';
+          // new App().run();
+          break;
+        case Result.exist_email:
+          alert('exist e-mail');
+          break;
+        case Result.wrong_email_password:
+          alert('wrong email or password');
+          break;
+        default:
+          break;
+      }
       target.reset();
     });
   }
 
-  checkLogin() {
+  checkLogin(registerBtn: HTMLButtonElement, loginBtn: HTMLElement) {
     const form = document.querySelector('.form') as HTMLElement;
-    console.log(form);
+    // console.log(form);
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -51,6 +67,9 @@ class AuthController {
       const obj: ISignIn = { email, password };
 
       await this.model.signIn(obj);
+      registerBtn.style.display = 'none';
+      loginBtn.textContent = 'Log Out';
+      // new App().run();
       target.reset();
     });
   }
