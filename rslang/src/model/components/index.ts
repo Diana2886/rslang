@@ -15,6 +15,14 @@ export default class Model {
     return `?${params.map((param) => `${param.key}=${param.value}`).join('&')}`;
   };
 
+  async gettwords() {
+    const response = await fetch(`${baseURL}${Path.words}`);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const words = await response.json();
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return words;
+  }
+
   async getWords(page: number, groupNum: number): Promise<IWord[]> {
     let words: IWord[] = [];
     if (this.wordsGroup[`p${page}g${groupNum}`]) {
