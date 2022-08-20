@@ -76,7 +76,7 @@ class App {
 
   run() {
     App.container.append(this.header.render());
-    App.renderNewPage('main-page');
+    App.renderNewPage('sprint-page');
     this.enableRouteChange();
   }
 }

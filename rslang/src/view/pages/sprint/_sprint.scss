@@ -1,0 +1,113 @@
+@import "./sprint-title-animation.scss";
+@import "./bell-animation";
+
+.sprint-wrapper{
+  width: 95vw;
+  margin-top: 20px;
+}
+.sprint-header{
+  width: 90vw;
+  display: grid;
+  grid-template-columns: 140px repeat(2, 60px) 1fr;
+}
+.sprint-notification{
+  cursor: pointer;
+  position: relative;
+}
+.sprint-notification-active::after{
+  content: '';
+  display: block;
+  position: absolute;
+  width: 40px;
+  height: 3px;
+  background: rgb(134, 41, 41);
+  transform: rotate(-45deg);
+  top: 15px;
+  right: -5px;
+}
+.sprint-fuul_screan{
+  cursor: pointer;
+}
+.btn-close{
+  justify-self: flex-end;
+}
+.check-level{
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.sprint-play-wrapper{
+  backdrop-filter: blur(10px) saturate(200%);
+    -webkit-backdrop-filter: blur(10px) saturate(200%);
+    background-color: rgba(255, 255, 255, 0.6);
+    border-radius: 12px;
+    border: 1px solid rgba(209, 213, 219, 0.3);
+    padding: 18px;
+
+  margin: 0 auto;
+  padding: 10px;
+  width: 500px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.game-info-block{
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+
+  font-size: 24px;
+}
+
+.game-play-block{
+  height: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+
+}
+
+.word-sound{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.word-english, .word-russia, .word-sound {
+  margin-top: 15px;
+  font-size: 20px;
+}
+
+
+
+@keyframes zoomIn {
+  from {
+    opacity: 0;
+    -webkit-transform: scale3d(0.3, 0.3, 0.3);
+    transform: scale3d(0.3, 0.3, 0.3);
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+@-webkit-keyframes zoomIn {
+  from {
+    opacity: 0;
+    -webkit-transform: scale3d(0.3, 0.3, 0.3);
+    transform: scale3d(0.3, 0.3, 0.3);
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+.animate__zoomIn {
+  -webkit-animation-name: zoomIn;
+  animation-name: zoomIn;
+  animation-duration: 1s;
+}
