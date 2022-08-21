@@ -35,7 +35,7 @@ const navItems = [
 const Games = [
   {
     id: PageIds.AudioChallenge,
-    text: 'AudioChallenge',
+    text: 'Audio Challenge',
   },
   {
     id: PageIds.Sprint,
@@ -60,14 +60,14 @@ class Header extends Component {
       if (item.id === PageIds.Games) {
         template += `
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <a class="nav-link dropdown-toggle nav-target" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             ${item.text}
             </a>
             <ul class="dropdown-menu">
         `;
         Games.forEach((game) => {
           template += `
-            <li><a class="dropdown-item" href="#${game.id}">${game.text}</a></li>
+            <li><a class="dropdown-item nav-target nav-games" href="#${game.id}">${game.text}</a></li>
           `;
         });
         template += `
@@ -77,7 +77,7 @@ class Header extends Component {
       } else if (item.id === PageIds.SignUp || item.id === PageIds.LogIn) {
         template += `
           <li class="nav-item">
-            <a class="nav-link" aria-current="page" href="#${item.id}">
+            <a class="nav-link nav-target" aria-current="page" href="#${item.id}">
               <button type="button" class="btn btn-primary btn-${item.id}">${item.text}</button>
             </a>
           </li>
@@ -85,9 +85,9 @@ class Header extends Component {
       } else {
         template += `
           <li class="nav-item">
-            <a class="nav-link ${item.id === PageIds.Main ? 'active' : ''}" aria-current="page" href="#${item.id}">${
-          item.text
-        }</a>
+            <a class="nav-link nav-target ${item.id === PageIds.Main ? 'active' : ''}" aria-current="page" href="#${
+          item.id
+        }">${item.text}</a>
           </li>
         `;
       }
