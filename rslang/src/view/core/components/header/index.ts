@@ -47,7 +47,7 @@ class Header extends Component {
   renderNav() {
     const navContainer = document.createElement('div');
     let template = `
-      <nav class="navbar navbar-expand-lg bg-light">
+      <nav class="navbar navbar-expand-lg">
         <div class="container-fluid">
           <a class="navbar-brand" href="#${PageIds.Main}">RS Lang</a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
@@ -77,7 +77,7 @@ class Header extends Component {
       } else if (item.id === PageIds.Register || item.id === PageIds.LogIn) {
         template += `
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#${item.id}">
+            <a class="nav-link" aria-current="page" href="#${item.id}">
               <button type="button" class="btn btn-primary">${item.text}</button>
             </a>
           </li>
@@ -85,7 +85,9 @@ class Header extends Component {
       } else {
         template += `
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#${item.id}">${item.text}</a>
+            <a class="nav-link ${item.id === PageIds.Main ? 'active' : ''}" aria-current="page" href="#${item.id}">${
+          item.text
+        }</a>
           </li>
         `;
       }
