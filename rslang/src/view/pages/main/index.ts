@@ -36,22 +36,22 @@ class MainPage extends Page {
     DevTitle: 'Our team',
     Developers: [
       {
-        name: 'Diana',
+        name: 'Diana Abdykassenova',
         role: 'Team leader, <br>Frontend developer',
         text: 'Made basic project settings, layout of the main page, ...',
         img: './assets/img/diana.jpg',
       },
       {
-        name: 'Aibek',
+        name: 'Aibek Kenzhebayev',
         role: 'Frontend developer',
         text: 'Set up an API connection, developed Audio Challenge game,...',
         img: './assets/img/aibek.jpg',
       },
       {
-        name: 'Sanzhar',
+        name: 'Sanjar Tukhtamishev',
         role: 'Frontend developer',
         text: 'Made the login page, Sprint game,...',
-        img: './assets/img/sanzhar.jpg',
+        img: './assets/img/sanjar.jpg',
       },
     ],
   };
