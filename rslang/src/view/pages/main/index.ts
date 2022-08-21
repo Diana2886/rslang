@@ -1,3 +1,4 @@
+import Footer from '../../core/components/footer/index';
 import Page from '../../core/templates/page';
 import PageIds from '../app/pageIds';
 
@@ -32,10 +33,25 @@ class MainPage extends Page {
         pageId: PageIds.Sprint,
       },
     ],
+    DevTitle: 'Our team',
     Developers: [
       {
         name: 'Diana',
-        text: '',
+        role: 'Team leader, <br>Frontend developer',
+        text: 'Made basic project settings, layout of the main page, ...',
+        img: './assets/img/diana.jpg',
+      },
+      {
+        name: 'Aibek',
+        role: 'Frontend developer',
+        text: 'Set up an API connection, developed Audio Challenge game,...',
+        img: './assets/img/aibek.jpg',
+      },
+      {
+        name: 'Sanzhar',
+        role: 'Frontend developer',
+        text: 'Made the login page, Sprint game,...',
+        img: './assets/img/sanzhar.jpg',
       },
     ],
   };
@@ -62,16 +78,21 @@ class MainPage extends Page {
     buttonsContainer.innerHTML = template;
     mainContent.append(title, text, buttonsContainer);
     const mainContainer = document.createElement('div');
-    mainContainer.classList.add('main__container', 'page-container');
+    mainContainer.classList.add('main__container');
+    const pageWrapper = document.createElement('div');
+    pageWrapper.classList.add('main-page__wrapper', 'main__wrapper');
     const img = document.createElement('div');
     img.classList.add('main__img');
-    mainContainer.append(mainContent, img);
+    pageWrapper.append(mainContent, img);
+    mainContainer.append(pageWrapper);
     return mainContainer;
   }
 
   renderAppToolsContainer() {
     const toolsContainer = document.createElement('div');
-    toolsContainer.classList.add('tools__container', 'page-container');
+    toolsContainer.classList.add('tools__container');
+    const pageWrapper = document.createElement('div');
+    pageWrapper.classList.add('main-page__wrapper', 'tools__wrapper');
     const toolsContent = document.createElement('div');
     toolsContent.classList.add('tools__content');
     const toolsTitle = document.createElement('h2');
@@ -81,7 +102,7 @@ class MainPage extends Page {
     toolsText.classList.add('tools__text', 'text');
     toolsText.innerText = MainPage.TextObject.ToolsText;
     toolsContent.append(toolsTitle, toolsText);
-    toolsContainer.append(toolsContent);
+    pageWrapper.append(toolsContent);
 
     MainPage.TextObject.Tools.forEach((item) => {
       const link = document.createElement('a');
@@ -100,33 +121,59 @@ class MainPage extends Page {
       toolText.innerText = item.content;
       tool.append(toolIcon, toolTitle, toolText);
       link.append(tool);
-      toolsContainer.append(link);
+      pageWrapper.append(link);
     });
-
+    toolsContainer.append(pageWrapper);
     return toolsContainer;
-
-    // const template = `
-    //   <div class="tools__container">
-    //     <div class="tools__content">
-    //       <h2 class="subtitle">${MainPage.TextObject.ToolsTitle}</h2>
-    //       <p class="tools__text text">
-    //         ${MainPage.TextObject.ToolsText}
-    //       </p>
-    //     </div>
-    //     <div class="tools__item">
-    //       <span class="tool__icon"></span>
-    //       <h5 class="tool__title"></h5>
-    //     </div>
-    //   </div>
-    // `;
   }
 
   renderDevelopersContainer() {
-
+    const devContainer = document.createElement('div');
+    devContainer.classList.add('dev__container');
+    const pageWrapper = document.createElement('div');
+    pageWrapper.classList.add('main-page__wrapper', 'dev__wrapper');
+    const devTitle = document.createElement('h3');
+    devTitle.classList.add('dev__title');
+    devTitle.innerText = MainPage.TextObject.DevTitle;
+    const devItemsContainer = document.createElement('div');
+    devItemsContainer.classList.add('dev-items__container');
+    MainPage.TextObject.Developers.forEach((item) => {
+      const devItem = document.createElement('div');
+      devItem.classList.add('dev__item');
+      const devImg = document.createElement('div');
+      devImg.classList.add('dev__img');
+      devImg.style.backgroundImage = `url(${item.img})`;
+      const nameContainer = document.createElement('div');
+      nameContainer.classList.add('name__container');
+      const devName = document.createElement('h5');
+      devName.classList.add('dev__name');
+      devName.innerText = item.name;
+      const devRole = document.createElement('h6');
+      devRole.classList.add('dev__role');
+      devRole.innerHTML = item.role;
+      nameContainer.append(devName, devRole);
+      const imgNameContainer = document.createElement('div');
+      imgNameContainer.classList.add('dev__header');
+      imgNameContainer.append(devImg, nameContainer);
+      const devText = document.createElement('p');
+      devText.classList.add('dev__text');
+      devText.innerText = item.text;
+      devItem.append(imgNameContainer, devText);
+      devItemsContainer.append(devItem);
+    });
+    pageWrapper.append(devTitle, devItemsContainer);
+    devContainer.append(pageWrapper);
+    return devContainer;
   }
 
   render() {
-    this.container.append(this.renderMainContainer(), this.renderAppToolsContainer());
+    const footer = new Footer();
+    this.container.append(
+      this.renderMainContainer(),
+      this.renderAppToolsContainer(),
+      this.renderDevelopersContainer(),
+      footer.renderFooter()
+    );
     return this.container;
   }
 }
