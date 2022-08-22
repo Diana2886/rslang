@@ -1,6 +1,5 @@
 import MainPage from '../main/index';
 import Page from '../../core/templates/page';
-import RegisterPage from '../register/index';
 import StatisticsPage from '../statistics/index';
 import Header from '../../core/components/header/index';
 import PageIds from './pageIds';
@@ -9,9 +8,9 @@ import TextbookPage from '../textbook/index';
 import AudioChallenge from '../audioChallenge/index';
 import WordListPage from '../wordList/index';
 import Sprint from '../sprint/index';
-import LogInPage from '../logIn/logIn';
+import LogInPage from '../logIn/index';
 
-class App {
+class AppView {
   private static container: HTMLElement = document.createElement('div');
 
   private static defaultPageId = 'current-page';
@@ -23,7 +22,7 @@ class App {
   }
 
   static renderNewPage(idPage: string) {
-    const currentPageHTML = document.querySelector(`#${App.defaultPageId}`);
+    const currentPageHTML = document.querySelector(`#${AppView.defaultPageId}`);
     if (currentPageHTML) {
       currentPageHTML.remove();
     }
@@ -32,9 +31,6 @@ class App {
     switch (idPage) {
       case `${PageIds.Main}`:
         page = new MainPage(idPage);
-        break;
-      case `${PageIds.Register}`:
-        page = new RegisterPage(idPage);
         break;
       case `${PageIds.LogIn}`:
         page = new LogInPage(idPage);
@@ -60,25 +56,25 @@ class App {
 
     if (page) {
       const pageHTML = page.render();
-      pageHTML.id = App.defaultPageId;
-      App.container.append(pageHTML);
-      App.container.classList.add('container');
-      document.body.append(App.container);
+      pageHTML.id = AppView.defaultPageId;
+      AppView.container.append(pageHTML);
+      AppView.container.classList.add('container');
+      document.body.append(AppView.container);
     }
   }
 
   private enableRouteChange() {
     window.addEventListener('hashchange', () => {
       const hash = window.location.hash.slice(1);
-      App.renderNewPage(hash);
+      AppView.renderNewPage(hash);
     });
   }
 
-  run() {
-    App.container.append(this.header.render());
-    App.renderNewPage('main-page');
+  render() {
+    AppView.container.append(this.header.render());
+    AppView.renderNewPage('main-page');
     this.enableRouteChange();
   }
 }
 
-export default App;
+export default AppView;

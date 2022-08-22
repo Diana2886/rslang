@@ -18,14 +18,7 @@
 .navbar-nav {
   display: flex;
   align-items: center;
-}
-
-.nav-item {
-  margin-left: 1rem;
-}
-
-.nav-item:last-child {
-  margin-left: 0;
+  gap: 1rem;
 }
 
 .btn {

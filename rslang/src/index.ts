@@ -1,5 +1,5 @@
 import './index.scss';
-import App from './view/pages/app/index';
+import App from './controller/index';
 
 const app = new App();
-app.run();
+app.start();
