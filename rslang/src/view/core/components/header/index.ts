@@ -45,6 +45,8 @@ const Games = [
 
 class Header extends Component {
   renderNav() {
+    const hash = window.location.hash.slice(1);
+    const initialPage = hash || PageIds.Main;
     const navContainer = document.createElement('div');
     let template = `
       <nav class="navbar navbar-expand-lg">
@@ -60,14 +62,16 @@ class Header extends Component {
       if (item.id === PageIds.Games) {
         template += `
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle nav-target" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <a class="nav-link dropdown-toggle nav-target nav-games ${
+              initialPage === PageIds.AudioChallenge || initialPage === PageIds.Sprint ? 'active' : ''
+            }" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             ${item.text}
             </a>
             <ul class="dropdown-menu">
         `;
         Games.forEach((game) => {
           template += `
-            <li><a class="dropdown-item nav-target nav-games" href="#${game.id}">${game.text}</a></li>
+            <li><a class="dropdown-item nav-target" href="#${game.id}">${game.text}</a></li>
           `;
         });
         template += `
@@ -85,7 +89,7 @@ class Header extends Component {
       } else {
         template += `
           <li class="nav-item">
-            <a class="nav-link nav-target ${item.id === PageIds.Main ? 'active' : ''}" aria-current="page" href="#${
+            <a class="nav-link nav-target ${item.id === initialPage ? 'active' : ''}" aria-current="page" href="#${
           item.id
         }">${item.text}</a>
           </li>
