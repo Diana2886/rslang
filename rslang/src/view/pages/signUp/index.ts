@@ -1,18 +1,18 @@
 import Page from '../../core/templates/page';
 
-class RegisterPage extends Page {
+class SignUpPage extends Page {
   static TextObject = {
-    MainTitle: 'Register Page',
+    MainTitle: 'SignUp Page',
   };
 
   render() {
-    // const title = this.createHeaderTitle(RegisterPage.TextObject.MainTitle);
-    const register = this.createAuthBlock();
-    this.container.append(register);
+    // const title = this.createHeaderTitle(SignUpPage.TextObject.MainTitle);
+    const signinBlock = this.createSigninBlock();
+    this.container.append(signinBlock);
     return this.container;
   }
 
-  createAuthBlock() {
+  createSigninBlock() {
     const authWrapper = document.createElement('div');
     authWrapper.className = 'auth-wrapper';
     authWrapper.innerHTML = `
@@ -44,4 +44,4 @@ class RegisterPage extends Page {
   }
 }
 
-export default RegisterPage;
+export default SignUpPage;

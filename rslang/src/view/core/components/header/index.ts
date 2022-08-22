@@ -23,19 +23,19 @@ const navItems = [
     text: 'Statistics',
   },
   {
-    id: PageIds.Register,
-    text: 'Register',
-  },
-  {
     id: PageIds.LogIn,
     text: 'Log in',
+  },
+  {
+    id: PageIds.SignUp,
+    text: 'Sign up',
   },
 ];
 
 const Games = [
   {
     id: PageIds.AudioChallenge,
-    text: 'AudioChallenge',
+    text: 'Audio Challenge',
   },
   {
     id: PageIds.Sprint,
@@ -62,34 +62,34 @@ class Header extends Component {
       if (item.id === PageIds.Games) {
         template += `
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <a class="nav-link dropdown-toggle nav-target" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             ${item.text}
             </a>
             <ul class="dropdown-menu">
         `;
         Games.forEach((game) => {
           template += `
-            <li><a class="dropdown-item" href="#${game.id}"  data-page="${game.id}">${game.text}</a></li>
+            <li><a class="dropdown-item" href="#${game.id}" data-page="${game.id}">${game.text}</a></li>
           `;
         });
         template += `
             </ul>
           </li>
         `;
-      } else if (item.id === PageIds.Register || item.id === PageIds.LogIn) {
+      } else if (item.id === PageIds.SignUp || item.id === PageIds.LogIn) {
         template += `
           <li class="nav-item">
-            <a class="${item.id} nav-link active" aria-current="page" href="#${item.id}"  data-page="${item.id}">
-            <button type="button" class="${item.id} btn btn-primary"  data-page="${item.id}">${item.text}</button>
+            <a class="nav-link" aria-current="page" href="#${item.id}" data-page="${item.id}">
+              <button type="button" class="btn btn-primary" data-page="${item.id}">${item.text}</button>
             </a>
           </li>
         `;
       } else {
         template += `
           <li class="nav-item">
-            <a class="nav-link ${item.id === PageIds.Main ? 'active' : ''}" aria-current="page" href="#${
-          item.id
-        }" data-page="${item.id}">${item.text}</a>
+            <a class="nav-link ${item.id === PageIds.Main ? 'active' : ''}" aria-current="page" href="#${item.id}" data-page="${item.id}">${
+          item.text
+        }</a>
           </li>
         `;
       }

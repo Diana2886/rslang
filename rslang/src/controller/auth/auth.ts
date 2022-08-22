@@ -1,6 +1,7 @@
 import Model, { Result } from '../../model/components/index';
 import { IEmpyObj, ISignIn, IUser } from '../../types/index';
 import App from '../../view/pages/app/index';
+import PageIds from '../../view/pages/app/pageIds';
 
 class AuthController {
   userRegistrInfo: IEmpyObj;
@@ -17,6 +18,21 @@ class AuthController {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     this.userLogin = JSON.parse(localStorage.getItem('sthmPasMail')!);
     this.form = document.querySelector('.form') as HTMLFormElement;
+  }
+
+  checkElem() {
+    const auth = new AuthController();
+    const container = document.querySelector('.container') as HTMLElement;
+    container.addEventListener('click', (e) => {
+      const targ = e.target as HTMLElement;
+      if (targ.classList.contains(PageIds.SignUp)) {
+        const loginBtn = document.querySelector('.logIn-page button') as HTMLButtonElement;
+        auth.checkRegister(targ, loginBtn);
+      } else if (targ.classList.contains(PageIds.LogIn)) {
+        const registerBtn = document.querySelector('.register-page') as HTMLButtonElement;
+        auth.checkLogin(registerBtn, targ);
+      }
+    });
   }
 
   checkRegister(registerBtn: HTMLElement, loginBtn: HTMLButtonElement) {
