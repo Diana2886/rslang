@@ -69,15 +69,12 @@ class AppView {
   private enableRouteChange() {
     let checker = '';
     Header.navContainer.addEventListener('click', (e) => {
-      // нужно менять слушателья
-      console.log('click');
       checker = 'checked';
       const target = e.target as HTMLAnchorElement;
       const name = target.dataset.page;
       if (name !== undefined) {
         AppView.renderNewPage(name);
       }
-      // const hash = window.location.hash.slice(1);
     });
 
     window.addEventListener('hashchange', () => {
@@ -86,19 +83,13 @@ class AppView {
       } else {
         const hash = window.location.hash.slice(1);
         AppView.renderNewPage(hash);
-        console.log('hash else');
       }
     });
   }
 
   render() {
-    const hash = window.location.hash.slice(1);
     AppView.container.append(this.header.render());
-    if (hash) {
-      AppView.renderNewPage(hash);
-    } else {
-      AppView.renderNewPage('main-page');
-    }
+    AppView.renderNewPage('main-page');
     this.enableRouteChange();
   }
 }
