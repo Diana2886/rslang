@@ -1,6 +1,5 @@
 import MainPage from '../main/index';
 import Page from '../../core/templates/page';
-import SignUpPage from '../signUp/index';
 import StatisticsPage from '../statistics/index';
 import Header from '../../core/components/header/index';
 import PageIds from './pageIds';
@@ -9,7 +8,7 @@ import TextbookPage from '../textbook/index';
 import AudioChallenge from '../audioChallenge/index';
 import WordListPage from '../wordList/index';
 import Sprint from '../sprint/index';
-import LogInPage from '../logIn/logIn';
+import LogInPage from '../logIn/index';
 
 class AppView {
   private static container: HTMLElement = document.createElement('div');
@@ -32,9 +31,6 @@ class AppView {
     switch (idPage) {
       case `${PageIds.Main}`:
         page = new MainPage(idPage);
-        break;
-      case `${PageIds.SignUp}`:
-        page = new SignUpPage(idPage);
         break;
       case `${PageIds.LogIn}`:
         page = new LogInPage(idPage);
