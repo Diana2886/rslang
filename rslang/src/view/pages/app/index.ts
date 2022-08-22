@@ -76,7 +76,9 @@ class AppView {
 
   render() {
     AppView.container.append(this.header.render());
-    AppView.renderNewPage('main-page');
+    const hash = window.location.hash.slice(1);
+    if (hash) AppView.renderNewPage(hash);
+    else AppView.renderNewPage('main-page');
     this.enableRouteChange();
   }
 }
