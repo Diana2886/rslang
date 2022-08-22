@@ -50,7 +50,12 @@ const baseConfig = {
       patterns: [
         {
           from: path.resolve(__dirname, './src/assets/img'),
-          to: path.resolve(__dirname, './dist/assets'),
+          to: path.resolve(__dirname, './dist/assets/img'),
+          noErrorOnMissing: true,
+        },
+        {
+          from: path.resolve(__dirname, './src/assets/svg'),
+          to: path.resolve(__dirname, './dist/assets/svg'),
           noErrorOnMissing: true,
         },
       ],

@@ -1,6 +1,6 @@
 import MainPage from '../main/index';
 import Page from '../../core/templates/page';
-import RegisterPage from '../register/index';
+import SignUpPage from '../signUp/index';
 import StatisticsPage from '../statistics/index';
 import Header from '../../core/components/header/index';
 import PageIds from './pageIds';
@@ -11,30 +11,29 @@ import WordListPage from '../wordList/index';
 import Sprint from '../sprint/index';
 import LogInPage from '../logIn/logIn';
 
-class App {
+class AppView {
   private static container: HTMLElement = document.createElement('div');
 
   private static defaultPageId = 'current-page';
 
-  private header: Header;
+  public header: Header;
 
   constructor() {
     this.header = new Header('header', 'header-container');
   }
 
   static renderNewPage(idPage: string) {
-    const currentPageHTML = document.querySelector(`#${App.defaultPageId}`);
+    const currentPageHTML = document.querySelector(`#${AppView.defaultPageId}`);
     if (currentPageHTML) {
       currentPageHTML.remove();
     }
     let page: Page | null = null;
-
     switch (idPage) {
       case `${PageIds.Main}`:
         page = new MainPage(idPage);
         break;
-      case `${PageIds.Register}`:
-        page = new RegisterPage(idPage);
+      case `${PageIds.SignUp}`:
+        page = new SignUpPage(idPage);
         break;
       case `${PageIds.LogIn}`:
         page = new LogInPage(idPage);
@@ -60,25 +59,39 @@ class App {
 
     if (page) {
       const pageHTML = page.render();
-      pageHTML.id = App.defaultPageId;
-      App.container.append(pageHTML);
-      App.container.classList.add('container');
-      document.body.append(App.container);
+      pageHTML.id = AppView.defaultPageId;
+      AppView.container.append(pageHTML);
+      AppView.container.classList.add('container');
+      document.body.append(AppView.container);
     }
   }
 
   private enableRouteChange() {
+    let checker = '';
+    Header.navContainer.addEventListener('click', (e) => {
+      checker = 'checked';
+      const target = e.target as HTMLAnchorElement;
+      const name = target.dataset.page;
+      if (name !== undefined) {
+        AppView.renderNewPage(name);
+      }
+    });
+
     window.addEventListener('hashchange', () => {
-      const hash = window.location.hash.slice(1);
-      App.renderNewPage(hash);
+      if (checker === 'checked') {
+        checker = '';
+      } else {
+        const hash = window.location.hash.slice(1);
+        AppView.renderNewPage(hash);
+      }
     });
   }
 
   run() {
-    App.container.append(this.header.render());
-    App.renderNewPage('sprint-page');
+    AppView.container.append(this.header.render());
+    AppView.renderNewPage('main-page');
     this.enableRouteChange();
   }
 }
 
-export default App;
+export default AppView;

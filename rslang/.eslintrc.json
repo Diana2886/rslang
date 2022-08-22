@@ -25,6 +25,7 @@
     "no-console": 0,
     "class-methods-use-this": "off",
     "@typescript-eslint/no-explicit-any": "error",
+    "no-param-reassign": "off",
     // "max-lines-per-function": [
     //   "error",
     //   40
