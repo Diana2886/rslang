@@ -1,20 +1,90 @@
 import Model from '../../../model/components/index';
+import { IWord } from '../../../types/index';
 import Page from '../../core/templates/page';
 import './audioChallenge.scss';
 
 const model = new Model();
+const page = 1;
 
+const random = (max: number) => Math.floor(Math.random() * max) + 1;
+type GameData = {
+  word: IWord;
+  variants: IWord[];
+};
 class AudioChallenge extends Page {
+  async createData(group: number) {
+    const newArr: IWord[] = [];
+    const gameData: GameData[] = [];
+    const indexes: number[] = [];
+    const words = await model.getWords(1, group);
+
+    while (indexes.length < 20) {
+      const index = random(19);
+      indexes.push(index);
+    }
+    indexes.forEach((index) => {
+      newArr.push(words[index]);
+    });
+
+    newArr.forEach((word) => {
+      const variants: IWord[] = [];
+      while (variants.length < 4) {
+        const index = random(19);
+        const item = words[index];
+
+        variants.push(item);
+      }
+      const i = random(4);
+      variants.splice(i, 0, word);
+      gameData.push({
+        word,
+        variants,
+      });
+    });
+    return gameData;
+  }
+
+  async startGame(group: number) {
+    const data = await this.createData(group);
+    const example = data[0];
+    const gameBody = document.createElement('div');
+    gameBody.className = 'game-body';
+    const audio = document.createElement('audio');
+    const imageDiv = document.createElement('div');
+    const image = document.createElement('img');
+    imageDiv.append(image);
+    image.src = 'http://localhost:8080/assets/svg/compact-cassette-157537.svg';
+    audio.src = `http://localhost:3000/${example.word.audio}`;
+    const variantsBtns = document.createElement('div');
+    variantsBtns.className = 'variants__btns';
+    example.variants.forEach((item) => {
+      const btnDiv = document.createElement('div');
+      btnDiv.innerHTML = `<button type="button" class="btn btn-primary">${item.word}</button>`;
+      variantsBtns.append(btnDiv);
+    });
+    console.log(variantsBtns);
+    gameBody.append(imageDiv);
+    gameBody.append(variantsBtns);
+    audio.autoplay = true;
+    return gameBody;
+  }
+
   drawInit() {
     const greetBlock = document.createElement('div');
-    greetBlock.className = 'greetBlock'
+    greetBlock.className = 'greetBlock';
+    const image = document.createElement('div');
+    image.className = 'audio-call__image';
     const audioCallTitle = <HTMLElement>document.createElement('h3');
     audioCallTitle.textContent = 'Игра "Аудиовызов"';
     const audioCallText = <HTMLElement>document.createElement('p');
     audioCallText.textContent = 'Правило игры: выслушать слова и выбрать правильный вариант.';
     const startButton = document.createElement('div');
+    startButton.addEventListener('click', () => {
+      greetBlock.innerHTML = '';
+      greetBlock.append(this.drawLevelBtn());
+    });
     startButton.innerHTML = `<button id="Audio-call-start" type="button" class="btn btn-primary">Начать игру</button>`;
-    [audioCallTitle, audioCallText, startButton].forEach((element) => greetBlock.append(element));
+    [audioCallTitle, image, audioCallText, startButton].forEach((element) => greetBlock.append(element));
     return greetBlock;
   }
 
@@ -42,17 +112,23 @@ class AudioChallenge extends Page {
     <input type="radio" class="btn-check btn-sm" name="btnradio" value ="5" id="btnradio7" autocomplete="off">
     <label class="btn btn-sm btn-outline-primary" for="btnradio7">6</label>
   </div>`;
-    async function getWordsByGroup(event: Event) {
+    const getWordsByGroup = async (event: Event) => {
       const levelInput = <HTMLInputElement>event.target;
       console.log(levelInput.value);
       const group = +levelInput.value;
-      const words = await model.getWords(1, group);
-      console.log(words);
-    }
+      const data = await this.startGame(group);
+      return data;
+    };
+
     const chooseLevel = levelBtnBody.querySelector('.choose-level');
     chooseLevel?.addEventListener('change', (e) => {
       chooseLevel.classList.remove('active');
-      getWordsByGroup(e).catch((err) => console.error(err));
+      levelBtnBody.innerHTML = '';
+      getWordsByGroup(e)
+        .then((res) => {
+          levelBtnBody.append(res);
+        })
+        .catch((err) => console.error(err));
     });
     levelBtnBody.prepend(levelTitle);
 

@@ -244,4 +244,47 @@ export default class Model {
       return status;
     }
   }
+
+  async createData() {
+    const random = (max: number) => Math.floor(Math.random() * max) + 1;
+    const newArr: IWord[] = [];
+    const gameData: {
+      word: IWord;
+      variants: IWord[];
+    }[] = [];
+    const indexes: number[] = [];
+    const words = await this.getWords(1, 0);
+
+    while (indexes.length < 20) {
+      const index = random(19);
+      indexes.push(index);
+    }
+    indexes.forEach((index) => {
+      newArr.push(words[index]);
+    });
+    console.log(newArr);
+
+    newArr.forEach((word) => {
+      const variants: IWord[] = [];
+      while (variants.length < 4) {
+        const index = random(19);
+        const item = words[index];
+        if (!variants.includes(item) && item !== word) {
+          variants.push(item);
+        }
+      }
+      const i = random(4);
+      variants.splice(i, 0, word);
+      gameData.push({
+        word,
+        variants,
+      });
+    });
+
+    const gameBody = document.createElement('div');
+    gameBody.className = 'game-body';
+    const audio = document.createElement('audio');
+    audio.autoplay = true;
+    return gameData;
+  }
 }
