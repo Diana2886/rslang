@@ -70,21 +70,26 @@ class AppView {
     Header.navContainer.addEventListener('click', (e) => {
       // нужно менять слушателья
       const target = e.target as HTMLAnchorElement;
-      const name = target.dataset.page!;
+      const name = target.dataset.page;
       if (name !== undefined) {
-        App.renderNewPage(name);
+        AppView.renderNewPage(name);
       }
       // const hash = window.location.hash.slice(1);
     });
 
     window.addEventListener('hashchange', () => {
       const hash = window.location.hash.slice(1);
-      App.renderNewPage(hash);
+      AppView.renderNewPage(hash);
     });
   }
 
   render() {
+    const hash = window.location.hash.slice(1);
     AppView.container.append(this.header.render());
+    // console.log(hash.length);
+    if (hash) {
+      AppView.renderNewPage(hash);
+    }
     AppView.renderNewPage('main-page');
     this.enableRouteChange();
   }

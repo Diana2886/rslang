@@ -1,6 +1,8 @@
+@import "./custom";
+
 @import "./view/core/components/header/index.scss";
 @import "./view/pages/main/index.scss";
 @import "./view/pages/app/index.scss";
-@import "./custom";
+
 @import "./view/pages/register/auth";
 @import "./view/pages/login/login";

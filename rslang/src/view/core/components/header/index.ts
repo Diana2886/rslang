@@ -80,16 +80,16 @@ class Header extends Component {
         template += `
           <li class="nav-item">
             <a class="nav-link" aria-current="page" href="#${item.id}" data-page="${item.id}">
-              <button type="button" class="btn btn-primary" data-page="${item.id}">${item.text}</button>
+              <button type="button" class="btn btn-primary ${item.id}" data-page="${item.id}">${item.text}</button>
             </a>
           </li>
         `;
       } else {
         template += `
           <li class="nav-item">
-            <a class="nav-link ${item.id === PageIds.Main ? 'active' : ''}" aria-current="page" href="#${item.id}" data-page="${item.id}">${
-          item.text
-        }</a>
+            <a class="nav-link ${item.id === PageIds.Main ? 'active' : ''}" aria-current="page" href="#${
+          item.id
+        }" data-page="${item.id}">${item.text}</a>
           </li>
         `;
       }
