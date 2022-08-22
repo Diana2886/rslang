@@ -31,7 +31,6 @@ class AudioChallenge extends Page {
       while (variants.length < 4) {
         const index = random(19);
         const item = words[index];
-
         variants.push(item);
       }
       const i = random(4);
@@ -45,27 +44,44 @@ class AudioChallenge extends Page {
   }
 
   async startGame(group: number) {
+    let i = 0;
     const data = await this.createData(group);
-    const example = data[0];
     const gameBody = document.createElement('div');
     gameBody.className = 'game-body';
-    const audio = document.createElement('audio');
-    const imageDiv = document.createElement('div');
-    const image = document.createElement('img');
-    imageDiv.append(image);
-    image.src = 'http://localhost:8080/assets/svg/compact-cassette-157537.svg';
-    audio.src = `http://localhost:3000/${example.word.audio}`;
-    const variantsBtns = document.createElement('div');
-    variantsBtns.className = 'variants__btns';
-    example.variants.forEach((item) => {
-      const btnDiv = document.createElement('div');
-      btnDiv.innerHTML = `<button type="button" class="btn btn-primary">${item.word}</button>`;
-      variantsBtns.append(btnDiv);
-    });
-    console.log(variantsBtns);
-    gameBody.append(imageDiv);
-    gameBody.append(variantsBtns);
-    audio.autoplay = true;
+    function gaming() {
+      const example = data[i];
+      const audio = document.createElement('audio');
+      const imageDiv = document.createElement('div');
+      const image = document.createElement('img');
+      imageDiv.append(image);
+      image.src = 'http://localhost:8080/assets/svg/compact-cassette-157537.svg';
+      audio.src = `http://localhost:3000/${example.word.audio}`;
+      const variantsBtns = document.createElement('div');
+      variantsBtns.className = 'variants__btns';
+      example.variants.forEach((item) => {
+        const btnDiv = document.createElement('div');
+        btnDiv.innerHTML = `<button type="button" class="btn btn-primary">${item.word}</button>`;
+        btnDiv.addEventListener('click', () => {
+          if (btnDiv.textContent === example.word.word) {
+            btnDiv.classList.add('correct');
+          } else {
+            btnDiv.classList.add('wrong');
+          }
+          if (i < 20) {
+            i += 1;
+            setTimeout(gaming, 2000);
+          } else {
+            console.log('done');
+          }
+        });
+        variantsBtns.append(btnDiv);
+      });
+      gameBody.innerHTML = '';
+      gameBody.append(imageDiv);
+      gameBody.append(variantsBtns);
+      audio.autoplay = true;
+    }
+    gaming();
     return gameBody;
   }
 
