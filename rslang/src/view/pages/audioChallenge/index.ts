@@ -56,6 +56,7 @@ class AudioChallenge extends Page {
         const btnDiv = document.createElement('div');
         btnDiv.innerHTML = `<button type="button" class="btn btn-primary">${item.word}</button>`;
         btnDiv.addEventListener('click', () => {
+          variantsBtns.classList.add('disabled');
           if (btnDiv.textContent === example.word.word) {
             btnDiv.classList.add('correct');
             corrects.push(example.word);
