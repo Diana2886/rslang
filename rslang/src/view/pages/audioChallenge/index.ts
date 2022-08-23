@@ -36,6 +36,8 @@ class AudioChallenge extends Page {
   }
 
   async startGame(group: number) {
+    const corrects: IWord[] = [];
+    const wrongs: IWord[] = [];
     let i = 0;
     const data = await this.createData(group);
     const gameBody = document.createElement('div');
@@ -56,13 +58,16 @@ class AudioChallenge extends Page {
         btnDiv.addEventListener('click', () => {
           if (btnDiv.textContent === example.word.word) {
             btnDiv.classList.add('correct');
+            corrects.push(example.word);
           } else {
             btnDiv.classList.add('wrong');
+            wrongs.push(example.word);
           }
           i += 1;
           if (i < 20) {
             setTimeout(gaming, 2000);
           } else {
+            console.log(corrects, wrongs);
             console.log('done');
           }
         });
