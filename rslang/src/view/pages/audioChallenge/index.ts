@@ -13,25 +13,17 @@ type GameData = {
 };
 class AudioChallenge extends Page {
   async createData(group: number) {
-    const newArr: IWord[] = [];
     const gameData: GameData[] = [];
-    const indexes: number[] = [];
     const words = await model.getWords(1, group);
-
-    while (indexes.length < 20) {
-      const index = random(19);
-      indexes.push(index);
-    }
-    indexes.forEach((index) => {
-      newArr.push(words[index]);
-    });
-
+    const newArr: IWord[] = words.sort(() => Math.random() - 0.5);
     newArr.forEach((word) => {
-      const variants: IWord[] = [];
+      let variants: IWord[] = [];
       while (variants.length < 4) {
         const index = random(19);
         const item = words[index];
         variants.push(item);
+        variants = variants.filter((element) => element.word !== word.word);
+        variants = [...new Set(variants)];
       }
       const i = random(4);
       variants.splice(i, 0, word);
@@ -54,7 +46,7 @@ class AudioChallenge extends Page {
       const imageDiv = document.createElement('div');
       const image = document.createElement('img');
       imageDiv.append(image);
-      image.src = 'http://localhost:8080/assets/svg/compact-cassette-157537.svg';
+      image.src = 'assets/svg/compact-cassette.svg';
       audio.src = `http://localhost:3000/${example.word.audio}`;
       const variantsBtns = document.createElement('div');
       variantsBtns.className = 'variants__btns';
@@ -67,8 +59,8 @@ class AudioChallenge extends Page {
           } else {
             btnDiv.classList.add('wrong');
           }
+          i += 1;
           if (i < 20) {
-            i += 1;
             setTimeout(gaming, 2000);
           } else {
             console.log('done');
@@ -89,6 +81,9 @@ class AudioChallenge extends Page {
     const greetBlock = document.createElement('div');
     greetBlock.className = 'greetBlock';
     const image = document.createElement('div');
+    const img = document.createElement('img');
+    image.append(img);
+    img.src = 'assets/img/cassette.png';
     image.className = 'audio-call__image';
     const audioCallTitle = <HTMLElement>document.createElement('h3');
     audioCallTitle.textContent = 'Игра "Аудиовызов"';
