@@ -41,29 +41,38 @@ class AudioChallenge extends Page {
     let i = 0;
     const data = await this.createData(group);
     const gameBody = document.createElement('div');
+    const imageDiv = document.createElement('div');
+    imageDiv.className = 'play-image';
+    const image = document.createElement('img');
+    const text = document.createElement('div');
+    const audio = document.createElement('audio');
+    image.addEventListener('click', () => {
+      audio.play().catch((err) => console.log(err));
+    });
+    imageDiv.append(image);
+    imageDiv.append(text);
     gameBody.className = 'game-body';
     function gaming() {
+      text.textContent = '';
       const example = data[i];
-      const audio = document.createElement('audio');
-      const imageDiv = document.createElement('div');
-      const image = document.createElement('img');
-      imageDiv.append(image);
       image.src = 'assets/svg/compact-cassette.svg';
       audio.src = `http://localhost:3000/${example.word.audio}`;
       const variantsBtns = document.createElement('div');
       variantsBtns.className = 'variants__btns';
       example.variants.forEach((item) => {
         const btnDiv = document.createElement('div');
-        btnDiv.innerHTML = `<button type="button" class="btn btn-primary">${item.word}</button>`;
+        btnDiv.innerHTML = `<button type="button" class="btn btn-primary">${item.wordTranslate}</button>`;
         btnDiv.addEventListener('click', () => {
           variantsBtns.classList.add('disabled');
-          if (btnDiv.textContent === example.word.word) {
+          if (btnDiv.textContent === example.word.wordTranslate) {
             btnDiv.classList.add('correct');
             corrects.push(example.word);
           } else {
             btnDiv.classList.add('wrong');
             wrongs.push(example.word);
           }
+          image.src = `http://localhost:3000/${example.word.image}`;
+          text.textContent = example.word.word;
           i += 1;
           if (i < 20) {
             setTimeout(gaming, 2000);
