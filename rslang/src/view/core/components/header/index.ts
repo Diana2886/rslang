@@ -26,10 +26,6 @@ const navItems = [
     id: PageIds.LogIn,
     text: 'Log in',
   },
-  {
-    id: PageIds.SignUp,
-    text: 'Sign up',
-  },
 ];
 
 const Games = [
@@ -76,11 +72,11 @@ class Header extends Component {
             </ul>
           </li>
         `;
-      } else if (item.id === PageIds.SignUp || item.id === PageIds.LogIn) {
+      } else if (item.id === PageIds.LogIn) {
         template += `
           <li class="nav-item">
-            <a class="nav-link" aria-current="page" href="#${item.id}" data-page="${item.id}">
-              <button type="button" class="btn btn-primary ${item.id}" data-page="${item.id}">${item.text}</button>
+            <a class="nav-link nav-target" aria-current="page" href="#${item.id}" data-page="${item.id}">
+              <button type="button" class="btn btn-primary btn-${item.id}" data-page="${item.id}">${item.text}</button>
             </a>
           </li>
         `;
