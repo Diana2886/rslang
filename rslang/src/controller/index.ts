@@ -1,6 +1,7 @@
 import Model from '../model/components/index';
 import AppView from '../view/pages/app/index';
 import HeaderController from './headerController';
+import TextbookController from './textbookController';
 
 class App {
   start() {
@@ -9,6 +10,8 @@ class App {
     view.render();
     const headerController = new HeaderController();
     headerController.listenHeaderButtons();
+    const textbookController = new TextbookController();
+    textbookController.listenPlayWordButton(0, 0);
   }
 }
 
