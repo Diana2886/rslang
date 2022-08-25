@@ -44,7 +44,7 @@ class AuthController {
 
       await this.model.signIn(obj);
       loginBtn.textContent = 'Log Out';
-      // new AppView().render();
+      AppView.renderNewPage('main-page');
       target.reset();
     });
   }
