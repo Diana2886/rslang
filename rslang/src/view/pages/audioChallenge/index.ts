@@ -51,13 +51,16 @@ class AudioChallenge extends Page {
     });
     imageDiv.append(image);
     imageDiv.append(text);
+    imageDiv.append(audio);
     gameBody.className = 'game-body';
+
     function gaming() {
       imageDiv.classList.remove('showed');
       text.textContent = '';
       const example = data[i];
       image.src = 'assets/svg/compact-cassette.svg';
       audio.src = `http://localhost:3000/${example.word.audio}`;
+      audio.autoplay = true;
       const variantsBtns = document.createElement('div');
       variantsBtns.className = 'variants__btns';
       example.variants.forEach((item, index) => {
@@ -87,10 +90,21 @@ class AudioChallenge extends Page {
         });
         variantsBtns.append(btnDiv);
       });
+      window.addEventListener(
+        'keyup',
+        (e) => {
+          const number: number = +e.key;
+          if (number > 0 && number < 6) {
+            const buttons = variantsBtns.querySelectorAll('button');
+            const button = buttons[number - 1];
+            button.click();
+          }
+        },
+        { once: true }
+      );
       gameBody.innerHTML = '';
       gameBody.append(imageDiv);
       gameBody.append(variantsBtns);
-      audio.autoplay = true;
     }
     gaming();
     return gameBody;
@@ -110,38 +124,71 @@ class AudioChallenge extends Page {
     const levelBtnBody = this.drawLevelBtn();
 
     const startButton = document.createElement('div');
+    const chooseLevel = levelBtnBody.querySelector('.choose-level');
     startButton.className = 'game-start__btn';
     startButton.classList.add('disabled');
-    startButton.addEventListener('click', () => {
-      greetBlock.innerHTML = '';
-    });
     let level = 0;
 
-    const chooseLevel = levelBtnBody.querySelector('.choose-level');
     chooseLevel?.addEventListener('change', (e) => {
-      chooseLevel.classList.remove('active');
+      chooseLevel.classList.add('active');
       const levelInput = <HTMLInputElement>e.target;
       level = +levelInput.value;
       startButton.classList.remove('disabled');
     });
     [audioCallTitle, image, audioCallText, levelBtnBody, startButton].forEach((element) => greetBlock.append(element));
     startButton.innerHTML = `<button id="Audio-call-start" type="button" class="btn btn-primary">Начать игру</button>`;
-    startButton.addEventListener('click', () => {
-      greetBlock.innerHTML = '';
-      this.startGame(level)
-        .then((el) => {
-          greetBlock.append(el);
-        })
-        .catch((err) => console.log(err));
-    });
 
+    startButton.addEventListener(
+      'click',
+      (e) => {
+        startButton.classList.add('disabled');
+        greetBlock.innerHTML = '';
+        chooseLevel?.classList.remove('active');
+        this.startGame(level)
+          .then((el) => {
+            greetBlock.append(el);
+          })
+          .catch((err) => console.log(err));
+        e.target?.removeEventListener('click', () => {
+          startButton.classList.add('disabled');
+          greetBlock.innerHTML = '';
+          chooseLevel?.classList.remove('active');
+          this.startGame(level)
+            .then((el) => {
+              greetBlock.append(el);
+            })
+            .catch((err) => console.log(err));
+        });
+      },
+      { once: true }
+    );
+    window.addEventListener('keyup', (e) => {
+      const number: number = +e.key;
+      if (number > 0 && number < 7) {
+        const levelPress = number - 1;
+        if (chooseLevel) {
+          const inputs = chooseLevel.querySelectorAll('input');
+          const input = inputs[levelPress];
+          input.checked = true;
+          level = levelPress;
+          startButton.autofocus = true;
+          startButton.classList.remove('disabled');
+          chooseLevel.classList.add('active');
+        }
+      }
+      if (e.code === 'Enter') {
+        if (chooseLevel?.classList.contains('active')) {
+          startButton.click();
+        }
+      }
+    });
     return greetBlock;
   }
 
   drawLevelBtn() {
-    const levelBtnBody: HTMLElement = document.createElement('div');
+    const levelBtnBody: HTMLElement = document.createElement('form');
     const levelTitle = document.createElement('h5');
-    levelBtnBody.className = 'audio-call__level-choose active';
+    levelBtnBody.className = 'audio-call__level-choose';
     levelTitle.textContent = 'Выберите уровень:';
     levelBtnBody.innerHTML = `<div class="choose-level btn-group" role="group" aria-label="Basic radio toggle button group">
     <input type="radio" class="btn-check btn-sm" name="btnradio" value ="0" id="btnradio2" autocomplete="off">
