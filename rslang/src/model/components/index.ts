@@ -78,8 +78,8 @@ export default class Model {
     }
   }
 
-  async signIn(user: ISignIn): Promise<void> {
-    let status = 0;
+  async signIn(user: ISignIn): Promise<number> {
+    // let status = 0;
     try {
       const response = await fetch(`${baseURL}${Path.signIn}`, {
         method: 'POST',
@@ -91,20 +91,12 @@ export default class Model {
       });
 
       const authDataRSlang = await (<Promise<IAuth>>response.json());
-      status = +response.status;
-
-      switch (status) {
-        case 200:
-          console.log('successful authDataRSlang');
-          localStorage.setItem('authDataRSlang', JSON.stringify(authDataRSlang));
-          break;
-        case 403:
-          throw new Error('Incorrect e-mail or password');
-        default:
-          throw new Error(`request finish with status code: ${status}`);
-      }
+      // status = +response.status;
+      localStorage.setItem('authDataRSlang', JSON.stringify(authDataRSlang));
+      return 200;
     } catch (error) {
-      console.error(error);
+      // console.error(error);
+      return 403;
     }
   }
 

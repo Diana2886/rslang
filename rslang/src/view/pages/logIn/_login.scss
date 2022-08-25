@@ -38,6 +38,15 @@
 .createAccountBtn{
   width: 200px;
 }
+#error-alert div{
+  // position: absolute;
+  width: 169px;
+  height: 30px;
+  padding: 3px;
+  margin: 0;
+  font-size: 12px;
+  line-height: 24px;
+}
 @keyframes zoomIn {
   from {
     opacity: 0;
