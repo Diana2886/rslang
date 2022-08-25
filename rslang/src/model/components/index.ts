@@ -1,6 +1,6 @@
 import { IAuth, IUser, IUserWord, IWord, QueryData, WordsGroup } from '../../types/index';
 
-const baseURL = 'http://localhost:3000';
+export const baseURL = 'http://localhost:3000';
 enum Path {
   words = '/words',
   users = '/users',
@@ -8,14 +8,14 @@ enum Path {
   aggregatedWords = '/aggregatedWords',
 }
 
-export default class Model {
-  wordsGroup: WordsGroup = {};
+class ApiModel {
+  static wordsGroup: WordsGroup = {};
 
   private getQueryString = (params: QueryData[]) => {
     return `?${params.map((param) => `${param.key}=${param.value}`).join('&')}`;
   };
 
-  async getWords(page: number, groupNum: number): Promise<IWord[]> {
+  static async getWords(page: number, groupNum: number): Promise<IWord[]> {
     let words: IWord[] = [];
     if (this.wordsGroup[`p${page}g${groupNum}`]) {
       words = this.wordsGroup[`p${page}g${groupNum}`];
@@ -245,3 +245,5 @@ export default class Model {
     }
   }
 }
+
+export default ApiModel;
