@@ -1,9 +1,8 @@
-import Model, { baseURL } from '../../../model/components/index';
+import TextbookModel from '../../../model/textbookModel';
+import ApiModel, { baseURL } from '../../../model/components/index';
 import Page from '../../core/templates/page';
 
 class TextbookPage extends Page {
-  model = new Model();
-
   static TextObject = {
     MainTitle: 'Textbook Page',
   };
@@ -11,9 +10,11 @@ class TextbookPage extends Page {
   async renderWords(page: number, group: number) {
     const wordsContainer = document.createElement('div');
     wordsContainer.classList.add('words__container');
+    const wordsWrapper = document.createElement('div');
+    wordsWrapper.classList.add('words__wrapper');
     const WORDS_AMOUNT = 20;
-    const words = await Model.getWords(page, group);
-    console.log(words);
+    const words = await ApiModel.getWords(page, group);
+    // console.log(words);
     for (let i = 0; i < WORDS_AMOUNT; i += 1) {
       const imgPath = `${baseURL}/${words[i].image}`;
       const wordContainer = document.createElement('div');
@@ -36,46 +37,62 @@ class TextbookPage extends Page {
       wordContainer.innerHTML = template;
       wordsContainer.append(wordContainer);
     }
-    this.container.append(wordsContainer);
+    wordsWrapper.append(wordsContainer);
+    this.container.append(wordsWrapper);
+    return wordsContainer;
   }
 
-  renderGroupsElement() {
+  renderLevelsElement() {
     const GROUPS_AMOUNT = 6;
-    const groupsElement = document.createElement('div');
-    groupsElement.classList.add('dropdown', 'groups__dropdown');
+    const levelsElement = document.createElement('div');
+    levelsElement.classList.add('dropdown', 'levels__dropdown');
     let template = `
-      <button class="btn btn-secondary dropdown-toggle dropdown-groups" type="button" id="dropdownMenu2" data-bs-toggle="dropdown" aria-expanded="false">
-        Group 1
+      <button class="btn btn-secondary dropdown-toggle dropdown-groups levels-btn" type="button" id="dropdownMenu2" data-bs-toggle="dropdown" aria-expanded="false">
+        Level ${TextbookModel.group + 1}
       </button>
       <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
     `;
     for (let i = 0; i < GROUPS_AMOUNT; i += 1) {
       template += `
-        <li><button class="dropdown-item btn${i}" type="button">Group ${i}</button></li>
+        <li><button class="dropdown-item level__item btn${i + 1}" id="level${i + 1}" type="button">Level ${
+        i + 1
+      }</button></li>
       `;
     }
     template += '</ul>';
-    groupsElement.innerHTML = template;
-    return groupsElement;
+    levelsElement.innerHTML = template;
+    return levelsElement;
   }
 
   renderPaginationElement() {
+    const PAGES_AMOUNT = 30;
     const paginationElement = document.createElement('div');
     paginationElement.classList.add('pagination');
-    const template = `
+    let template = `
       <nav aria-label="Page navigation example">
         <ul class="pagination">
           <li class="page-item">
-            <button class="page-link" type="button" aria-label="Previous">
-              <span aria-hidden="true">&laquo;</span>
+            <button class="page-link page-prev" type="button" aria-label="Previous">
+              <span aria-hidden="true">&lt;</span>
             </button>
           </li>
-          <li class="page-item"><button class="page-link" type="button">1</button></li>
-          <li class="page-item"><button class="page-link" type="button">2</button></li>
-          <li class="page-item"><button class="page-link" type="button">3</button></li>
+          <li class="page-item"><button class="btn btn-secondary dropdown-toggle dropdown-groups pages-btn" type="button" id="dropdownMenu3" data-bs-toggle="dropdown" aria-expanded="false">
+            Page ${TextbookModel.page + 1}
+          </button>
+          <ul class="dropdown-menu dropdown-pages" aria-labelledby="dropdownMenu2">
+    `;
+    for (let i = 0; i < PAGES_AMOUNT; i += 1) {
+      template += `
+        <li><button class="dropdown-item page__item page${i + 1}" id="page${i + 1}" type="button">Page ${
+        i + 1
+      }</button></li>
+      `;
+    }
+    template += `
+          </ul>
           <li class="page-item">
-            <button class="page-link" type="button" aria-label="Next">
-              <span aria-hidden="true">&raquo;</span>
+            <button class="page-link page-next" type="button" aria-label="Next">
+              <span aria-hidden="true">&gt;</span>
             </button>
           </li>
         </ul>
@@ -88,22 +105,11 @@ class TextbookPage extends Page {
   renderTextbookToolsContainer() {
     const textbookToolsContainer = document.createElement('div');
     textbookToolsContainer.classList.add('textbook-tools__container');
-    /* const template = `
-      <div class="btn-group" role="group" aria-label="Basic mixed styles example">
-        <button type="button" class="btn btn1">Section 1</button>
-        <button type="button" class="btn btn2">Section 2</button>
-        <button type="button" class="btn btn3">Section 3</button>
-        <button type="button" class="btn btn4">Section 4</button>
-        <button type="button" class="btn btn5">Section 5</button>
-        <button type="button" class="btn btn6">Section 6</button>
-      </div>
-    `; */
-    textbookToolsContainer.append(this.renderGroupsElement(), this.renderPaginationElement());
+    textbookToolsContainer.append(this.renderLevelsElement(), this.renderPaginationElement());
     return textbookToolsContainer;
   }
 
   renderTextbookContainer() {
-    // const PAGES_AMOUNT = 30;
     const textbookContainer = document.createElement('div');
     textbookContainer.classList.add('textbook__container');
     textbookContainer.append();
@@ -112,7 +118,7 @@ class TextbookPage extends Page {
   render() {
     this.container.append(this.renderTextbookToolsContainer());
     (async () => {
-      await this.renderWords(0, 0);
+      await this.renderWords(TextbookModel.page, TextbookModel.group);
     })().catch((err: Error) => console.warn(err.message));
     // const title = this.createHeaderTitle(TextbookPage.TextObject.MainTitle);
     // this.container.append(title);
