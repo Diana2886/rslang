@@ -53,6 +53,7 @@ class AudioChallenge extends Page {
     imageDiv.append(text);
     gameBody.className = 'game-body';
     function gaming() {
+      imageDiv.classList.remove('showed');
       text.textContent = '';
       const example = data[i];
       image.src = 'assets/svg/compact-cassette.svg';
@@ -66,6 +67,7 @@ class AudioChallenge extends Page {
         btnDiv.textContent = `${index + 1} ${item.wordTranslate}`;
         btnDiv.addEventListener('click', () => {
           variantsBtns.classList.add('disabled');
+          imageDiv.classList.add('showed');
           if (btnDiv.textContent === `${index + 1} ${example.word.wordTranslate}`) {
             btnDiv.classList.add('correct');
             corrects.push(example.word);

@@ -66,6 +66,15 @@
   img {
     width: 100%;
   }
+
+  &.showed{
+    font-size: 20px;
+    img {
+      display: inline-block;
+      border-radius: 15px;
+      box-shadow: 0 0 3px #000;
+    }
+  }
 }
 .game-body {
   display: flex;
