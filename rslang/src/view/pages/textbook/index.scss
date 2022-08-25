@@ -57,31 +57,45 @@
 }
 
 //---------
-// .dropdown-chapter {
-//   --bs-dropdown-min-width: 0;
-//   --bs-dropdown-padding-y: 0;
-// }
+
+.textbook-tools__container {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.page-link {
+  background-color: $secondary;
+  color: #000000;
+}
+
+.dropdown-pages {
+  height: 59vw;
+  overflow: auto;
+}
 
 .btn1 {
   background-color: $green;
 }
 
 .btn2 {
-  background-color: $teal;
-}
-
-.btn3 {
   background-color: $yellow;
 }
 
-.btn4 {
+.btn3 {
   background-color: $orange;
 }
 
-.btn5 {
+.btn4 {
   background-color: $red;
 }
 
+.btn5 {
+  background-color: $purple;
+}
+
 .btn6 {
-  background-color: $pink;
+  background-color: $blue;
 }
