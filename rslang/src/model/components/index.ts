@@ -9,13 +9,13 @@ enum Path {
 }
 
 export default class Model {
-  wordsGroup: WordsGroup = {};
+  static wordsGroup: WordsGroup = {};
 
   private getQueryString = (params: QueryData[]) => {
     return `?${params.map((param) => `${param.key}=${param.value}`).join('&')}`;
   };
 
-  async getWords(page: number, groupNum: number): Promise<IWord[]> {
+  static async getWords(page: number, groupNum: number): Promise<IWord[]> {
     let words: IWord[] = [];
     if (this.wordsGroup[`p${page}g${groupNum}`]) {
       words = this.wordsGroup[`p${page}g${groupNum}`];
@@ -253,7 +253,7 @@ export default class Model {
       variants: IWord[];
     }[] = [];
     const indexes: number[] = [];
-    const words = await this.getWords(1, 0);
+    const words = await Model.getWords(1, 0);
 
     while (indexes.length < 20) {
       const index = random(19);

@@ -3,7 +3,6 @@ import { IWord } from '../../../types/index';
 import Page from '../../core/templates/page';
 import './audioChallenge.scss';
 
-const model = new Model();
 const page = 1;
 
 const random = (max: number) => Math.floor(Math.random() * max) + 1;
@@ -14,7 +13,7 @@ type GameData = {
 class AudioChallenge extends Page {
   async createData(group: number) {
     const gameData: GameData[] = [];
-    const words = await model.getWords(1, group);
+    const words = await Model.getWords(1, group);
     const newArr: IWord[] = words.sort(() => Math.random() - 0.5);
     newArr.forEach((word) => {
       let variants: IWord[] = [];
