@@ -145,7 +145,7 @@ class AudioChallenge extends Page {
           image.src = `http://localhost:3000/${example.word.image}`;
           text.textContent = example.word.word;
           i += 1;
-          if (i < 5) {
+          if (i < 20) {
             setTimeout(gaming, 2000);
           } else {
             window.dispatchEvent(new CustomEvent('done'));
