@@ -10,7 +10,7 @@
   }
   &__image {
     width:40%;
-    
+ 
     margin: 0 auto;
     img{
       border-radius: 25px;
@@ -22,6 +22,27 @@
     height: 100%;
     margin: 0 0 30px 0;
   }
+
+  &__choose-btn{
+    background: #545BE8;
+    padding: 5px 7px;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    margin: 5px;
+    &:hover{
+      background: #393eac;
+    }
+    &:active{
+      box-shadow: 0 0 5px #7a81f8;
+    }
+    &.correct{
+      background: green; 
+    }
+    &.wrong{
+      background: rgb(235, 5, 5);
+   }
+}
 }
 .contaier {
   height: 100%;
@@ -31,20 +52,6 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  & > div {
-    margin: 5px;
-    &.correct{
-      button{
-        background: green;
-      }
-     
-    }
-    &.wrong{
-      button{
-        background: rgb(235, 5, 5);
-      }
-    }
-  }
 }
 
 .disabled{
@@ -55,7 +62,7 @@
   width: 200px;
   height: 100px;
   text-align: center;
-  margin: 0 auto;
+  margin: 0 auto 20px auto;
   img {
     width: 100%;
   }

@@ -59,12 +59,14 @@ class AudioChallenge extends Page {
       audio.src = `http://localhost:3000/${example.word.audio}`;
       const variantsBtns = document.createElement('div');
       variantsBtns.className = 'variants__btns';
-      example.variants.forEach((item) => {
-        const btnDiv = document.createElement('div');
-        btnDiv.innerHTML = `<button type="button" class="btn btn-primary">${item.wordTranslate}</button>`;
+      example.variants.forEach((item, index) => {
+        const btnDiv = document.createElement('button');
+        btnDiv.className = 'audio-call__choose-btn';
+        btnDiv.type = 'button';
+        btnDiv.textContent = `${index + 1} ${item.wordTranslate}`;
         btnDiv.addEventListener('click', () => {
           variantsBtns.classList.add('disabled');
-          if (btnDiv.textContent === example.word.wordTranslate) {
+          if (btnDiv.textContent === `${index + 1} ${example.word.wordTranslate}`) {
             btnDiv.classList.add('correct');
             corrects.push(example.word);
           } else {
