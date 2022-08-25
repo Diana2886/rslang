@@ -52,7 +52,7 @@ class AuthController {
       } else {
         const alertPlaceholder = document.querySelector('#error-alert') as HTMLElement;
         if (alertPlaceholder.children.length === 0) {
-          this.alert2(alertPlaceholder, 'Account not found', 'danger');
+          AuthController.alert2(alertPlaceholder, 'Account not found', 'danger');
           setTimeout(() => {
             alertPlaceholder.children[0].remove();
           }, 2000);
@@ -63,7 +63,7 @@ class AuthController {
     });
   }
 
-  alert2 = (elem: HTMLElement, message: string, type: string) => {
+  static alert2(elem: HTMLElement, message: string, type: string) {
     const wrapper = document.createElement('div');
     wrapper.innerHTML = `
     <div class="animate__zoomIn alert alert-${type} d-flex align-items-center" role="alert">
@@ -78,10 +78,12 @@ class AuthController {
     `;
 
     elem.append(wrapper);
-  };
+  }
 
   checkRegister() {
     const form = document.querySelector('.create-form') as HTMLElement;
+    const loginBtn = document.querySelector('.btn-logIn-page') as HTMLButtonElement;
+    const alertPlaceholder = document.querySelector('#error-alert2') as HTMLElement;
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -100,20 +102,39 @@ class AuthController {
       const status = await model.createUser(user);
       switch (status) {
         case Result.success:
-          await model.signIn(this.userLogin);
-          alert('sucsecc');
+          if (alertPlaceholder.children.length === 0) {
+            AuthController.alert2(alertPlaceholder, 'you successfully registered, now you need to log in', 'success');
+            setTimeout(() => {
+              alertPlaceholder.children[0].remove();
+            }, 2000);
+          } else {
+            alertPlaceholder.children[0].remove();
+          }
+          target.reset();
           break;
         case Result.exist_email:
-          // this.alert2(ss, 'Exist e-mail', 'danger');
-          alert('exist e-mail');
+          if (alertPlaceholder.children.length === 0) {
+            AuthController.alert2(alertPlaceholder, 'E-mail exsist', 'danger');
+            setTimeout(() => {
+              alertPlaceholder.children[0].remove();
+            }, 2000);
+          } else {
+            alertPlaceholder.children[0].remove();
+          }
           break;
         case Result.wrong_email_password:
-          alert('wrong email or password');
+          if (alertPlaceholder.children.length === 0) {
+            AuthController.alert2(alertPlaceholder, 'wrong name, email or password', 'danger');
+            setTimeout(() => {
+              alertPlaceholder.children[0].remove();
+            }, 2000);
+          } else {
+            alertPlaceholder.children[0].remove();
+          }
           break;
         default:
           break;
       }
-      target.reset();
     });
   }
 }
