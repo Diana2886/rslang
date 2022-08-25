@@ -66,7 +66,7 @@ class AudioChallenge extends Page {
 
     const wrongList = document.createElement('ul');
     wrongList.className = 'result__list result__list_wrong';
-    const wrongTitle = document.createElement('h5'); 
+    const wrongTitle = document.createElement('h5');
     wrongTitle.textContent = 'Wrong answers:';
     wrongList.append(wrongTitle)
     wrongs.forEach((element) => {
