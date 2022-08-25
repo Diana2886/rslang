@@ -3,9 +3,8 @@ import { IWord } from '../../../types/index';
 import Page from '../../core/templates/page';
 import './audioChallenge.scss';
 
-const page = 1;
-
 const random = (max: number) => Math.floor(Math.random() * max) + 1;
+
 type GameData = {
   word: IWord;
   variants: IWord[];
@@ -13,7 +12,8 @@ type GameData = {
 class AudioChallenge extends Page {
   async createData(group: number) {
     const gameData: GameData[] = [];
-    const words = await Model.getWords(1, group);
+    const page = random(29);
+    const words = await Model.getWords(page, group);
     const newArr: IWord[] = words.sort(() => Math.random() - 0.5);
     newArr.forEach((word) => {
       let variants: IWord[] = [];
@@ -44,6 +44,7 @@ class AudioChallenge extends Page {
     imageDiv.className = 'play-image';
     const image = document.createElement('img');
     const text = document.createElement('div');
+    text.className = 'play-text';
     const audio = document.createElement('audio');
     image.addEventListener('click', () => {
       audio.play().catch((err) => console.log(err));
