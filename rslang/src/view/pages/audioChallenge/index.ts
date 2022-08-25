@@ -187,7 +187,7 @@ class AudioChallenge extends Page {
     image.className = 'audio-call__image';
     const audioCallTitle = <HTMLElement>document.createElement('h3');
     const audioCallText = <HTMLElement>document.createElement('p');
-    audioCallText.textContent = 'Правило игры: выслушать слова и выбрать правильный вариант.';
+    audioCallText.textContent = 'Listen to the words and choose the correct translation.';
     const levelBtnBody = this.drawLevelBtn();
 
     const startButton = document.createElement('div');
@@ -203,7 +203,7 @@ class AudioChallenge extends Page {
       startButton.classList.remove('disabled');
     });
     [audioCallTitle, image, audioCallText, levelBtnBody, startButton].forEach((element) => greetBlock.append(element));
-    startButton.innerHTML = `<button id="Audio-call-start" type="button" class="btn btn-primary">Начать игру</button>`;
+    startButton.innerHTML = `<button id="Audio-call-start" type="button" class="btn btn-primary">Start</button>`;
 
     startButton.addEventListener(
       'click',
@@ -256,25 +256,25 @@ class AudioChallenge extends Page {
     const levelBtnBody: HTMLElement = document.createElement('form');
     const levelTitle = document.createElement('h5');
     levelBtnBody.className = 'audio-call__level-choose';
-    levelTitle.textContent = 'Выберите уровень:';
+    levelTitle.textContent = 'Choose your level:';
     levelBtnBody.innerHTML = `<div class="choose-level btn-group" role="group" aria-label="Basic radio toggle button group">
     <input type="radio" class="btn-check btn-sm" name="btnradio" value ="0" id="btnradio2" autocomplete="off">
-    <label class="btn btn-outline-primary btn-sm" for="btnradio2" >1</label>
+    <label class="btn btn-outline-primary btn-sm" for="btnradio2" >A1</label>
   
     <input type="radio" class="btn-check btn-sm" name="btnradio" value ="1" id="btnradio3" autocomplete="off">
-    <label class="btn btn-outline-primary btn-sm" for="btnradio3" >2</label>
+    <label class="btn btn-outline-primary btn-sm" for="btnradio3" >A2</label>
 
     <input type="radio" class="btn-check btn-sm" name="btnradio"  value ="2" id="btnradio4" autocomplete="off">
-    <label class="btn btn-outline-primary btn-sm" for="btnradio4" >3</label>
+    <label class="btn btn-outline-primary btn-sm" for="btnradio4" >B1</label>
   
     <input type="radio" class="btn-check btn-sm" name="btnradio"  value ="3" id="btnradio5" autocomplete="off">
-    <label class="btn btn-sm btn-outline-primary" for="btnradio5" >4</label>
+    <label class="btn btn-sm btn-outline-primary" for="btnradio5" >B2</label>
   
     <input type="radio" class="btn-check btn-sm" name="btnradio"  value ="4" id="btnradio6" autocomplete="off">
-    <label class="btn btn-sm btn-outline-primary" for="btnradio6">5</label>
+    <label class="btn btn-sm btn-outline-primary" for="btnradio6">C1</label>
 
     <input type="radio" class="btn-check btn-sm" name="btnradio" value ="5" id="btnradio7" autocomplete="off">
-    <label class="btn btn-sm btn-outline-primary" for="btnradio7">6</label>
+    <label class="btn btn-sm btn-outline-primary" for="btnradio7">C2</label>
   </div>`;
     levelBtnBody.prepend(levelTitle);
     return levelBtnBody;
