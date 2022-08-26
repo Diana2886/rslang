@@ -1,6 +1,6 @@
 import { IAuth, INewUser, ISignIn, IUser, IUserWord, IWord, QueryData, WordsGroup } from '../../types/index';
 
-const baseURL = 'http://localhost:3000';
+export const baseURL = 'http://localhost:3000';
 enum Path {
   words = '/words',
   users = '/users',
@@ -12,7 +12,7 @@ export enum Result {
   wrong_email_password = 422,
   exist_email = 417,
 }
-export default class Model {
+class Model {
   static wordsGroup: WordsGroup = {};
 
   private getQueryString = (params: QueryData[]) => {
@@ -51,8 +51,7 @@ export default class Model {
     }
   }
 
-  // eslint-disable-next-line consistent-return
-  async createUser(user: IUser): Promise<number | undefined> {
+  async createUser(user: IUser): Promise<number> {
     let status = 0;
     try {
       const response = await fetch(`${baseURL}${Path.users}`, {
@@ -63,9 +62,6 @@ export default class Model {
         },
         body: JSON.stringify(user),
       });
-      const { email, password } = user;
-      const obj = { email, password };
-      localStorage.setItem('sthmPasMail', JSON.stringify(obj));
       const newUser = await (<Promise<INewUser>>response.json());
       status = response.status;
       if (status === Result.success) {
@@ -79,7 +75,6 @@ export default class Model {
   }
 
   async signIn(user: ISignIn): Promise<number> {
-    // let status = 0;
     try {
       const response = await fetch(`${baseURL}${Path.signIn}`, {
         method: 'POST',
@@ -89,13 +84,14 @@ export default class Model {
         },
         body: JSON.stringify(user),
       });
-
+      const { email, password } = user;
+      const startDate = new Date();
       const authDataRSlang = await (<Promise<IAuth>>response.json());
-      // status = +response.status;
+      const obj = { email, password, startDate };
+      localStorage.setItem('sthmPasMail', JSON.stringify(obj));
       localStorage.setItem('authDataRSlang', JSON.stringify(authDataRSlang));
       return 200;
     } catch (error) {
-      // console.error(error);
       return 403;
     }
   }
@@ -307,3 +303,5 @@ export default class Model {
     }
   }
 }
+
+export default Model;
