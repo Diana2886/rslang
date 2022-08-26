@@ -1,10 +1,37 @@
+.textbook__container {
+  display: flex;
+  flex-direction: column;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 1rem 0 0;
+}
+
+.textbook-page__title {
+  margin-bottom: 1rem;
+}
+
+.textbook-tools__container {
+  display: flex;
+  gap: 1rem;
+}
+
+.dropdown-pages {
+  height: 59vw;
+  overflow: auto;
+}
+
+.page-link {
+  background-color: $secondary;
+  color: #000000;
+}
+
 .words__container {
   display: flex;
   flex-direction: column;
   gap: 1.3rem;
   max-width: 1000px;
   margin: 0 auto;
-  padding: 70px 0;
+  padding: 1rem 0;
 }
 
 .word__container {
@@ -27,6 +54,13 @@
   flex-direction: column;
 }
 
+.word-translation__wrapper {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+  padding-left: 0.7rem;
+}
+
 .word__wrapper {
   display: flex;
   align-items: center;
@@ -34,7 +68,8 @@
 }
 
 .word,
- .transcription {
+.transcription,
+.translation {
   margin-bottom: 0;
 }
 
@@ -54,48 +89,4 @@
   background-repeat: no-repeat;
   background-size: contain;
   cursor: pointer;
-}
-
-//---------
-
-.textbook-tools__container {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  max-width: 1000px;
-  margin: 0 auto;
-}
-
-.page-link {
-  background-color: $secondary;
-  color: #000000;
-}
-
-.dropdown-pages {
-  height: 59vw;
-  overflow: auto;
-}
-
-.btn1 {
-  background-color: $green;
-}
-
-.btn2 {
-  background-color: $yellow;
-}
-
-.btn3 {
-  background-color: $orange;
-}
-
-.btn4 {
-  background-color: $red;
-}
-
-.btn5 {
-  background-color: $purple;
-}
-
-.btn6 {
-  background-color: $blue;
 }
