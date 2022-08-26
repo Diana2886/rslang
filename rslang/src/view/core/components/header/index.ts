@@ -45,7 +45,7 @@ class Header extends Component {
   renderNav() {
     const hash = window.location.hash.slice(1);
     const initialPage = hash || PageIds.Main;
-    const navContainer = document.createElement('div');
+    Header.navContainer.innerHTML = '';
     let template = `
       <nav class="navbar navbar-expand-lg">
         <div class="container-fluid">
@@ -69,7 +69,7 @@ class Header extends Component {
         `;
         Games.forEach((game) => {
           template += `
-            <li><a class="dropdown-item nav-target" href="#${game.id}">${game.text}</a></li>
+            <li><a class="dropdown-item nav-target" href="#${game.id}" data-page="${game.id}">${game.text}</a></li>
           `;
         });
         template += `
