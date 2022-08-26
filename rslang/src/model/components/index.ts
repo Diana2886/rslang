@@ -1,4 +1,4 @@
-import { IAuth, IUser, IUserWord, IWord, QueryData, WordsGroup } from '../../types/index';
+import { IAuth, INewUser, ISignIn, IUser, IUserWord, IWord, QueryData, WordsGroup } from '../../types/index';
 
 const baseURL = 'http://localhost:3000';
 enum Path {
@@ -7,7 +7,11 @@ enum Path {
   signIn = '/signin',
   aggregatedWords = '/aggregatedWords',
 }
-
+export enum Result {
+  success = 200,
+  wrong_email_password = 422,
+  exist_email = 417,
+}
 export default class Model {
   static wordsGroup: WordsGroup = {};
 
@@ -47,7 +51,8 @@ export default class Model {
     }
   }
 
-  async createUser(user: IUser): Promise<void> {
+  // eslint-disable-next-line consistent-return
+  async createUser(user: IUser): Promise<number | undefined> {
     let status = 0;
     try {
       const response = await fetch(`${baseURL}${Path.users}`, {
@@ -58,26 +63,23 @@ export default class Model {
         },
         body: JSON.stringify(user),
       });
+      const { email, password } = user;
+      const obj = { email, password };
+      localStorage.setItem('sthmPasMail', JSON.stringify(obj));
+      const newUser = await (<Promise<INewUser>>response.json());
       status = response.status;
-
-      switch (status) {
-        case 200:
-          console.log('new user created successfully');
-          break;
-        case 417:
-          throw new Error('user with same email already registered');
-        case 422:
-          throw new Error('Incorrect e-mail or password');
-        default:
-          break;
+      if (status === Result.success) {
+        localStorage.setItem('newUserDataRSlang', JSON.stringify(newUser));
+        return Result.success;
       }
+      return Result.wrong_email_password;
     } catch (error) {
-      console.error(error);
+      return Result.exist_email;
     }
   }
 
-  async signIn(user: IUser): Promise<void> {
-    let status = 0;
+  async signIn(user: ISignIn): Promise<number> {
+    // let status = 0;
     try {
       const response = await fetch(`${baseURL}${Path.signIn}`, {
         method: 'POST',
@@ -89,20 +91,12 @@ export default class Model {
       });
 
       const authDataRSlang = await (<Promise<IAuth>>response.json());
-      status = response.status;
-
-      switch (status) {
-        case 200:
-          console.log('successful authDataRSlang');
-          localStorage.setItem('authDataRSlang', JSON.stringify(authDataRSlang));
-          break;
-        case 403:
-          throw new Error('Incorrect e-mail or password');
-        default:
-          throw new Error(`request finish with status code: ${status}`);
-      }
+      // status = +response.status;
+      localStorage.setItem('authDataRSlang', JSON.stringify(authDataRSlang));
+      return 200;
     } catch (error) {
-      console.error(error);
+      // console.error(error);
+      return 403;
     }
   }
 

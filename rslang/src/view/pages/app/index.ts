@@ -15,7 +15,7 @@ class AppView {
 
   private static defaultPageId = 'current-page';
 
-  private header: Header;
+  public header: Header;
 
   constructor() {
     this.header = new Header('header', 'header-container');
@@ -27,7 +27,6 @@ class AppView {
       currentPageHTML.remove();
     }
     let page: Page | null = null;
-
     switch (idPage) {
       case `${PageIds.Main}`:
         page = new MainPage(idPage);
@@ -64,9 +63,23 @@ class AppView {
   }
 
   private enableRouteChange() {
+    let checker = '';
+    Header.navContainer.addEventListener('click', (e) => {
+      checker = 'checked';
+      const target = e.target as HTMLAnchorElement;
+      const name = target.dataset.page;
+      if (name !== undefined) {
+        AppView.renderNewPage(name);
+      }
+    });
+
     window.addEventListener('hashchange', () => {
-      const hash = window.location.hash.slice(1);
-      AppView.renderNewPage(hash);
+      if (checker === 'checked') {
+        checker = '';
+      } else {
+        const hash = window.location.hash.slice(1);
+        AppView.renderNewPage(hash);
+      }
     });
   }
 
