@@ -66,6 +66,7 @@ class ApiModel {
       const { email, password } = user;
       const obj = { email, password };
       localStorage.setItem('sthmPasMail', JSON.stringify(obj));
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const newUser = await (<Promise<INewUser>>response.json());
       status = response.status;
       if (status === Result.success) {
@@ -247,7 +248,7 @@ class ApiModel {
       variants: IWord[];
     }[] = [];
     const indexes: number[] = [];
-    const words = await Model.getWords(1, 0);
+    const words = await ApiModel.getWords(1, 0);
 
     while (indexes.length < 20) {
       const index = random(19);
