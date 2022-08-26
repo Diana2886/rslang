@@ -1,6 +1,9 @@
 $primary: #545BE8;
 $secondary: #F0C932;
-$success: #393E46;
+$dark: #393E46;
+$dropdown-min-width: 0;
+$dropdown-padding-y: 0;
+// $btn-focus-shadow-rgb: 245, 245, 245;
 
 @import "node_modules/bootstrap/scss/bootstrap";
 
