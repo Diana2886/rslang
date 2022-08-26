@@ -78,10 +78,7 @@ export interface IEmpyObj {
   [key: string]: string;
 }
 
-const optional = {
-  26082022: {
-    attempts: 1,
-    corrects: 1,
-    serial: 1,
-  },
+export type GameData = {
+  word: IWord;
+  variants: IWord[];
 };
