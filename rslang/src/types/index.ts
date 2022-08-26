@@ -15,12 +15,22 @@ export interface IWord {
   textExampleTranslate: string;
 }
 
-interface IOptional {
-  [key: string]: string | boolean;
+export interface IOptional {
+  audio: IResult;
+  sprint: IResult;
+  serial: number;
+}
+
+interface IResult {
+  [data: string]: {
+    allGames: number;
+    corrects: number;
+  };
 }
 
 export interface IUserWord {
-  difficulty: string;
+  wordId?: string;
+  difficulty?: string;
   optional?: IOptional;
 }
 
@@ -67,3 +77,11 @@ export interface ISignIn {
 export interface IEmpyObj {
   [key: string]: string;
 }
+
+const optional = {
+  26082022: {
+    attempts: 1,
+    corrects: 1,
+    serial: 1,
+  },
+};
