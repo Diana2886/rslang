@@ -1,6 +1,6 @@
 import { IAuth, INewUser, ISignIn, IUser, IUserWord, IWord, QueryData, WordsGroup } from '../../types/index';
 
-const baseURL = 'http://localhost:3000';
+export const baseURL = 'http://localhost:3000';
 enum Path {
   words = '/words',
   users = '/users',
@@ -12,7 +12,7 @@ export enum Result {
   wrong_email_password = 422,
   exist_email = 417,
 }
-export default class Model {
+class Model {
   static wordsGroup: WordsGroup = {};
 
   private getQueryString = (params: QueryData[]) => {
@@ -66,6 +66,7 @@ export default class Model {
       const { email, password } = user;
       const obj = { email, password };
       localStorage.setItem('sthmPasMail', JSON.stringify(obj));
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const newUser = await (<Promise<INewUser>>response.json());
       status = response.status;
       if (status === Result.success) {
@@ -282,3 +283,5 @@ export default class Model {
     return gameData;
   }
 }
+
+export default Model;
