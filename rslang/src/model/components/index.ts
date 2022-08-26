@@ -13,21 +13,13 @@ export enum Result {
   exist_email = 417,
 }
 export default class Model {
-  wordsGroup: WordsGroup = {};
+  static wordsGroup: WordsGroup = {};
 
   private getQueryString = (params: QueryData[]) => {
     return `?${params.map((param) => `${param.key}=${param.value}`).join('&')}`;
   };
 
-  async gettwords() {
-    const response = await fetch(`${baseURL}${Path.words}`);
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const words = await response.json();
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    return words;
-  }
-
-  async getWords(page: number, groupNum: number): Promise<IWord[]> {
+  static async getWords(page: number, groupNum: number): Promise<IWord[]> {
     let words: IWord[] = [];
     if (this.wordsGroup[`p${page}g${groupNum}`]) {
       words = this.wordsGroup[`p${page}g${groupNum}`];
@@ -86,8 +78,8 @@ export default class Model {
     }
   }
 
-  async signIn(user: ISignIn): Promise<void> {
-    let status = 0;
+  async signIn(user: ISignIn): Promise<number> {
+    // let status = 0;
     try {
       const response = await fetch(`${baseURL}${Path.signIn}`, {
         method: 'POST',
@@ -99,20 +91,12 @@ export default class Model {
       });
 
       const authDataRSlang = await (<Promise<IAuth>>response.json());
-      status = +response.status;
-
-      switch (status) {
-        case 200:
-          console.log('successful authDataRSlang');
-          localStorage.setItem('authDataRSlang', JSON.stringify(authDataRSlang));
-          break;
-        case 403:
-          throw new Error('Incorrect e-mail or password');
-        default:
-          throw new Error(`request finish with status code: ${status}`);
-      }
+      // status = +response.status;
+      localStorage.setItem('authDataRSlang', JSON.stringify(authDataRSlang));
+      return 200;
     } catch (error) {
-      console.error(error);
+      // console.error(error);
+      return 403;
     }
   }
 
@@ -253,5 +237,48 @@ export default class Model {
       console.error(error);
       return status;
     }
+  }
+
+  async createData() {
+    const random = (max: number) => Math.floor(Math.random() * max) + 1;
+    const newArr: IWord[] = [];
+    const gameData: {
+      word: IWord;
+      variants: IWord[];
+    }[] = [];
+    const indexes: number[] = [];
+    const words = await Model.getWords(1, 0);
+
+    while (indexes.length < 20) {
+      const index = random(19);
+      indexes.push(index);
+    }
+    indexes.forEach((index) => {
+      newArr.push(words[index]);
+    });
+    console.log(newArr);
+
+    newArr.forEach((word) => {
+      const variants: IWord[] = [];
+      while (variants.length < 4) {
+        const index = random(19);
+        const item = words[index];
+        if (!variants.includes(item) && item !== word) {
+          variants.push(item);
+        }
+      }
+      const i = random(4);
+      variants.splice(i, 0, word);
+      gameData.push({
+        word,
+        variants,
+      });
+    });
+
+    const gameBody = document.createElement('div');
+    gameBody.className = 'game-body';
+    const audio = document.createElement('audio');
+    audio.autoplay = true;
+    return gameData;
   }
 }

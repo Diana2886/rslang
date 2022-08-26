@@ -29,10 +29,12 @@ class LogInPage extends Page {
         </div>
         <div class="mb-3">
           <label for="exampleInputPassword1" class="form-label">Password</label>
-          <input type="password" class="form-control" id="exampleInputPassword1">
+          <input type="password" class="form-control" id="exampleInputPassword1" placeholder="more 8 characters">
         </div>
+        
         <div class="mb-3 d-flex justify-content-between">
           <button type="submit" class="btn btn-primary login" id="login">Log in</button>
+          <div id="error-alert"></div>
         </div>
         
       </form>
@@ -70,11 +72,12 @@ class LogInPage extends Page {
               </div>
               <div class="mb-3">
                 <label for="exampleInputPassword12" class="form-label">Password</label>
-                <input type="password" class="form-control" id="exampleInputPassword12" placeholder="your name">
+                <input type="password" class="form-control" id="exampleInputPassword12" placeholder="more 8 characters">
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 <button type="submit" class="btn btn-primary">Create</button>
+                <div id="error-alert2"></div>
               </div>        
             </form>
           </div>
