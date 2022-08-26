@@ -1,5 +1,5 @@
 import TextbookModel from '../../../model/textbookModel';
-import ApiModel, { baseURL } from '../../../model/components/index';
+import Model, { baseURL } from '../../../model/components/index';
 import Page from '../../core/templates/page';
 import PageIds from '../app/pageIds';
 import { levelColors, Levels } from '../../../types/index';
@@ -16,7 +16,7 @@ class TextbookPage extends Page {
     const wordsWrapper = document.createElement('div');
     wordsWrapper.classList.add('words__wrapper');
     const WORDS_AMOUNT = 20;
-    const words = await ApiModel.getWords(page, group);
+    const words = await Model.getWords(page, group);
     for (let i = 0; i < WORDS_AMOUNT; i += 1) {
       const imgPath = `${baseURL}/${words[i].image}`;
       const wordContainer = document.createElement('div');

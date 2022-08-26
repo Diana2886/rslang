@@ -12,7 +12,7 @@ export enum Result {
   wrong_email_password = 422,
   exist_email = 417,
 }
-class ApiModel {
+class Model {
   static wordsGroup: WordsGroup = {};
 
   private getQueryString = (params: QueryData[]) => {
@@ -248,7 +248,7 @@ class ApiModel {
       variants: IWord[];
     }[] = [];
     const indexes: number[] = [];
-    const words = await ApiModel.getWords(1, 0);
+    const words = await Model.getWords(1, 0);
 
     while (indexes.length < 20) {
       const index = random(19);
@@ -284,4 +284,4 @@ class ApiModel {
   }
 }
 
-export default ApiModel;
+export default Model;

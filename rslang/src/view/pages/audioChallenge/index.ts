@@ -1,4 +1,4 @@
-import ApiModel from '../../../model/components/index';
+import Model from '../../../model/components/index';
 import { IWord } from '../../../types/index';
 import Page from '../../core/templates/page';
 import './audioChallenge.scss';
@@ -13,7 +13,7 @@ class AudioChallenge extends Page {
   async createData(group: number) {
     const gameData: GameData[] = [];
     const page = random(29);
-    const words = await ApiModel.getWords(page, group);
+    const words = await Model.getWords(page, group);
     const newArr: IWord[] = words.sort(() => Math.random() - 0.5);
     newArr.forEach((word) => {
       let variants: IWord[] = [];

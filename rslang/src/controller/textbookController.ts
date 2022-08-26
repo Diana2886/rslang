@@ -1,4 +1,4 @@
-import ApiModel, { baseURL } from '../model/components/index';
+import Model, { baseURL } from '../model/components/index';
 import TextbookModel from '../model/textbookModel';
 import PageIds from '../view/pages/app/pageIds';
 import TextbookPage from '../view/pages/textbook/index';
@@ -22,7 +22,7 @@ class TextbookController {
       if (target.classList.contains('word__play')) {
         console.log(target.id);
         (async () => {
-          const words = await ApiModel.getWords(TextbookModel.page, TextbookModel.group);
+          const words = await Model.getWords(TextbookModel.page, TextbookModel.group);
           words.forEach((item) => {
             const audios = [
               `${baseURL}/${item.audio}`,
@@ -30,7 +30,6 @@ class TextbookController {
               `${baseURL}/${item.audioExample}`,
             ];
             if (item.id === target.id) {
-              // console.log(target.id, item.id);
               audioPlay(audios);
             }
           });
