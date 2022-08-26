@@ -20,6 +20,8 @@ class AuthController {
       const targ = e.target as HTMLElement;
       if (targ.dataset.page === PageIds.LogIn) {
         targ.innerHTML = 'Log in';
+        localStorage.removeItem('sthmPasMail');
+        localStorage.removeItem('authDataRSlang');
         this.checkLogin(targ);
       }
     });
