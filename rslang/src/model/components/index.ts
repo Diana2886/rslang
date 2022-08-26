@@ -51,8 +51,7 @@ export default class Model {
     }
   }
 
-  // eslint-disable-next-line consistent-return
-  async createUser(user: IUser): Promise<number | undefined> {
+  async createUser(user: IUser): Promise<number> {
     let status = 0;
     try {
       const response = await fetch(`${baseURL}${Path.users}`, {
@@ -79,7 +78,6 @@ export default class Model {
   }
 
   async signIn(user: ISignIn): Promise<number> {
-    // let status = 0;
     try {
       const response = await fetch(`${baseURL}${Path.signIn}`, {
         method: 'POST',
@@ -91,11 +89,16 @@ export default class Model {
       });
 
       const authDataRSlang = await (<Promise<IAuth>>response.json());
-      // status = +response.status;
+      const loc: string | null = localStorage.getItem('sthmPasMail');
+      if (loc !== null) {
+        const startDate = new Date();
+        const { email, password } = JSON.parse(loc) as { email: string; password: string };
+        const obj = { email, password, startDate };
+        localStorage.setItem('sthmPasMail', JSON.stringify(obj));
+      }
       localStorage.setItem('authDataRSlang', JSON.stringify(authDataRSlang));
       return 200;
     } catch (error) {
-      // console.error(error);
       return 403;
     }
   }
