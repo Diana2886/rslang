@@ -68,11 +68,11 @@ export default class SprintController {
 
   async checkLevel(elem: HTMLElement | number) {
     if (typeof elem === 'number') {
-      this.wordsArray = await this.model.getWords(elem, this.level);
+      this.wordsArray = await Model.getWords(elem, this.level);
     } else {
       const lvl = elem.id;
       this.level = +lvl[lvl.length - 1] - 1;
-      this.wordsArray = await this.model.getWords(this.page, this.level);
+      this.wordsArray = await Model.getWords(this.page, this.level);
       const startBtn = elem.parentElement?.nextElementSibling as HTMLButtonElement;
       startBtn.disabled = false;
     }
