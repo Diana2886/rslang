@@ -1,9 +1,9 @@
-@import "custom";
-// @import "~bootstrap/scss/bootstrap";
-// @import "node_modules/bootstrap/scss/bootstrap";
+@import "./custom";
 
 @import "./view/core/components/header/index.scss";
 @import "./view/core/components/footer/index.scss";
 @import "./view/pages/main/index.scss";
 @import "./view/pages/textbook/index.scss";
 @import "./view/pages/app/index.scss";
+
+@import "./view/pages/login/login";

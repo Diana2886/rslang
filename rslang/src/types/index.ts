@@ -55,6 +55,19 @@ export type QueryData = {
 
 export type WordsGroup = { [key: string]: IWord[] };
 
+export interface INewUser {
+  id: string;
+  name: string;
+  email: string;
+}
+export interface ISignIn {
+  password: string;
+  email: string;
+}
+export interface IEmpyObj {
+  [key: string]: string;
+}
+
 export enum Levels {
   A1,
   A2,

@@ -3,6 +3,7 @@ import TextbookModel from '../model/textbookModel';
 import AppView from '../view/pages/app/index';
 import HeaderController from './headerController';
 import TextbookController from './textbookController';
+import AuthController from './auth/auth';
 
 class App {
   start() {
@@ -16,6 +17,8 @@ class App {
     textbookController.listenPlayWordButton();
     textbookController.listenLevelButton();
     textbookController.listenPageButton();
+    const login = new AuthController();
+    login.checkElem();
   }
 }
 

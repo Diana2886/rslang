@@ -1,0 +1,172 @@
+#current-page {
+  width: 100%;
+  min-height: 100%;
+}
+.audio-call {
+  &__body {
+    display: flex;
+    margin: 40px 0 0 0;
+    height: 100%;
+    font-weight: 700;
+  }
+  &__image {
+    width:40%;
+    margin: 0 auto;
+    img{
+      border-radius: 25px;
+      box-shadow: 0 0 5px #000;
+      width: 100%;
+    }
+  }
+  &__level-choose {
+    height: 100%;
+    margin: 0 0 30px 0;
+  }
+
+  &__choose-btn{
+    background: #545BE8;
+    padding: 5px 7px;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    margin: 5px;
+    &:hover{
+      background: #393eac;
+    }
+    &:active{
+      box-shadow: 0 0 5px #7a81f8;
+    }
+    &.correct{
+      background: green; 
+    }
+    &.wrong{
+      background: rgb(235, 5, 5);
+   }
+}
+}
+.contaier {
+  height: 100%;
+}
+
+.variants__btns{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.disabled{
+  pointer-events: none;   
+}
+
+.play-image {
+  animation: scale 0.5s;
+  width: 200px;
+  height: 100px;
+  text-align: center;
+  margin: 0 auto 20px auto;
+  img {
+    width: 100%;
+  }
+
+  &.showed{
+    font-size: 20px;
+    img {
+      display: inline-block;
+      border-radius: 15px;
+      box-shadow: 0 0 3px #000;
+      animation: rotate 0.5s;
+    }
+  }
+}
+.game-body {
+  display: flex;
+  min-height: 70vh;
+  flex-direction: column;
+  justify-content: space-evenly;
+  margin: 0 auto;
+  animation: scale 0.5s;
+}
+
+.greetBlock {
+  animation: scale 0.5s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 auto;
+}
+
+.game-start__btn.disabled {
+button {
+background: rgb(180, 193, 216);
+}
+}
+
+.result{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #ffff;
+  box-shadow: 0 0 3px #000;
+  border-radius: 5px;
+  padding: 10px;
+  animation: scale 0.5s;
+  &__body{
+    display: flex;
+    flex-wrap: wrap;
+  }
+  span {
+    
+    &:last-child {
+      color: rgba(92, 89, 89, 0.486);
+    }
+    font-weight: 700;
+    color: #000;
+  
+  }
+  &__list {
+
+    h5 {
+      font-weight: 700;
+      color: rgb(255, 1, 22);
+    }
+
+    li{
+      list-style: none;
+      img {
+        display: inline-block;
+        width: 30px;
+        margin-right: 5px;
+      }
+      margin: 0 0 10px 0;
+    }
+    &_correct{
+      h5 {
+        font-weight: 700;
+        color: rgb(1, 255, 65);
+      }
+    }
+  }
+
+  &__restart-btn{
+    display:inline-block;
+    margin: 0 auto;
+  }
+}
+
+@keyframes scale {
+  0%{
+    transform: scale(0);
+  }
+  100%{
+    transform: scale(1);
+  }
+}
+
+@keyframes rotate {
+  0%{
+    transform: rotate3d(0, 1, 0, 90deg);
+  }
+  100%{
+    transform: rotate3d(0, 1, 0, 0deg);
+  }
+}
