@@ -1,4 +1,4 @@
-import Model from '../../../model/components/index';
+import ApiModel from '../../../model/components/index';
 import { IWord } from '../../../types/index';
 import Page from '../../core/templates/page';
 import './audioChallenge.scss';
@@ -13,7 +13,7 @@ class AudioChallenge extends Page {
   async createData(group: number) {
     const gameData: GameData[] = [];
     const page = random(29);
-    const words = await Model.getWords(page, group);
+    const words = await ApiModel.getWords(page, group);
     const newArr: IWord[] = words.sort(() => Math.random() - 0.5);
     newArr.forEach((word) => {
       let variants: IWord[] = [];
@@ -43,7 +43,7 @@ class AudioChallenge extends Page {
     const correctTitle = document.createElement('h5');
     correctTitle.textContent = 'Correct answers:';
     const correctList = document.createElement('ul');
-    correctList.append(correctTitle)
+    correctList.append(correctTitle);
     correctList.className = 'result__list result__list_correct';
     corrects.forEach((element) => {
       const point = document.createElement('li');
@@ -68,7 +68,7 @@ class AudioChallenge extends Page {
     wrongList.className = 'result__list result__list_wrong';
     const wrongTitle = document.createElement('h5');
     wrongTitle.textContent = 'Wrong answers:';
-    wrongList.append(wrongTitle)
+    wrongList.append(wrongTitle);
     wrongs.forEach((element) => {
       const point = document.createElement('li');
       const imgAudio = document.createElement('img');
