@@ -79,6 +79,17 @@ export default class SprintController {
   }
 
   async pastWordToPlayGame(elem: HTMLElement) {
+    const sprintTimer = document.querySelector('.sprint-timer span') as HTMLElement;
+    let counterTime = 60;
+    const timer = setInterval(() => {
+      counterTime -= 1;
+      if (counterTime === 0) {
+        clearInterval(timer);
+        this.modalActive();
+      }
+      sprintTimer.innerHTML = `${counterTime}`;
+    }, 1000);
+    
     // setTimeout(() => {
     //   this.modalActive();
     // }, 5000);
@@ -90,7 +101,6 @@ export default class SprintController {
     const correctBtn = document.querySelector('.btn-success') as HTMLButtonElement;
     const wrongtBtn = document.querySelector('.btn-danger') as HTMLButtonElement;
     const taskBlock = document.querySelector('.task-block') as HTMLElement;
-    const soundWord = taskBlock.children[0] as HTMLElement;
     const englishWord = taskBlock.children[1] as HTMLElement;
     const russiaWord = taskBlock.children[2] as HTMLElement;
     this.len = this.wordsArray.length;
@@ -116,9 +126,9 @@ export default class SprintController {
   }
 
   nextWord = async (e: Event | string) => {
-    const audioTag = document.querySelector('audio') as HTMLAudioElement;
+    console.log('pastga tushvotti');
     const taskBlock = document.querySelector('.task-block') as HTMLElement;
-    const soundWord = taskBlock.children[0] as HTMLElement;
+    const soundWord = taskBlock.children[0].children[0] as HTMLAudioElement;
     const englishWord = taskBlock.children[1] as HTMLElement;
     const russiaWord = taskBlock.children[2] as HTMLElement;
     if (e === 'start') {
@@ -134,8 +144,8 @@ export default class SprintController {
     const rusWord = this.rusWords[this.count];
     const engWord = this.engWords[this.count];
     const forAudio = this.engWords[this.count + 1];
-    audioTag.src = '';
-    audioTag.src = `${baseUrl}/${forAudio.audio}`;
+    soundWord.src = '';
+    soundWord.src = `${baseUrl}/${forAudio.audio}`;
 
     if (e === 'ArrowRight' && rusWord.word === engWord.word) {
       this.correctWords.push(engWord);
