@@ -52,7 +52,7 @@ class TextbookController {
     document.body.addEventListener('click', (e) => {
       const target = e.target as HTMLElement;
       if (target.classList.contains('level__item')) {
-        (document.querySelector('.levels-btn') as HTMLButtonElement).innerHTML = target.innerHTML;
+        (document.querySelector('.levels-btn') as HTMLButtonElement).innerHTML = `Level ${target.innerHTML}`;
         TextbookModel.group = +target.id.split('level')[1] - 1;
         TextbookModel.page = 0;
         (document.querySelector('.pages-btn') as HTMLButtonElement).innerHTML = `Page ${TextbookModel.page + 1}`;
