@@ -83,7 +83,7 @@ class AppView {
     });
   }
 
-  render() {
+  run() {
     AppView.container.append(this.header.render());
     AppView.renderNewPage('main-page');
     this.enableRouteChange();
