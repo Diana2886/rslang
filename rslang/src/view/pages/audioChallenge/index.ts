@@ -1,9 +1,10 @@
 import Model from '../../../model/components/index';
-import { IWord } from '../../../types/index';
+import { IAuth, IOptional, IUserWord, IWord } from '../../../types/index';
 import Page from '../../core/templates/page';
 import './audioChallenge.scss';
 
 const random = (max: number) => Math.floor(Math.random() * max) + 1;
+const model = new Model();
 
 type GameData = {
   word: IWord;
@@ -43,7 +44,7 @@ class AudioChallenge extends Page {
     const correctTitle = document.createElement('h5');
     correctTitle.textContent = 'Correct answers:';
     const correctList = document.createElement('ul');
-    correctList.append(correctTitle)
+    correctList.append(correctTitle);
     correctList.className = 'result__list result__list_correct';
     corrects.forEach((element) => {
       const point = document.createElement('li');
@@ -68,7 +69,7 @@ class AudioChallenge extends Page {
     wrongList.className = 'result__list result__list_wrong';
     const wrongTitle = document.createElement('h5');
     wrongTitle.textContent = 'Wrong answers:';
-    wrongList.append(wrongTitle)
+    wrongList.append(wrongTitle);
     wrongs.forEach((element) => {
       const point = document.createElement('li');
       const imgAudio = document.createElement('img');
@@ -117,6 +118,13 @@ class AudioChallenge extends Page {
     imageDiv.append(text);
     imageDiv.append(audio);
     gameBody.className = 'game-body';
+    const authStr = localStorage.getItem('authDataRSlang');
+    let authDataRSlang: IAuth | undefined;
+    let userWords: IUserWord[] | number | undefined;
+    if (authStr) {
+      authDataRSlang = <IAuth>JSON.parse(authStr);
+      userWords = await model.getUserWords();
+    }
 
     const gaming = () => {
       imageDiv.classList.remove('showed');
@@ -135,12 +143,65 @@ class AudioChallenge extends Page {
         btnDiv.addEventListener('click', () => {
           variantsBtns.classList.add('disabled');
           imageDiv.classList.add('showed');
+          let answers = false;
           if (btnDiv.textContent === `${index + 1} ${example.word.wordTranslate}`) {
             btnDiv.classList.add('correct');
+            answers = true;
             corrects.push(example.word);
           } else {
             btnDiv.classList.add('wrong');
             wrongs.push(example.word);
+          }
+
+          if (typeof userWords === 'object') {
+            const date = new Date();
+            const key = `${date.getDate()}${date.getMonth()}${date.getFullYear()}`;
+            console.log(key);
+            if (userWords.some((word) => word.wordId === example.word.id)) {
+              let userWord: IUserWord;
+              model
+                .getUserWord(example.word.id)
+                .then((res) => {
+                  if (typeof res === 'object') {
+                    userWord = res;
+                    if (userWord.optional) {
+                      userWord.optional.audio[key].allGames += 1;
+                      userWord.optional.audio[key].corrects += answers ? 1 : 0;
+                      userWord.optional.serial = answers ? userWord.optional.serial + 1 : 0;
+                    }
+                    if (userWord.wordId) {
+                      console.log(userWord);
+                      model
+                        .updateUserWord(userWord.wordId, {
+                          difficulty: userWord.difficulty,
+                          optional: userWord.optional,
+                        })
+                        .catch((err) => console.error(err));
+                    }
+                  }
+                })
+                .catch((err) => console.log(err));
+            } else {
+              const optional: IOptional = {
+                audio: {
+                  [key]: {
+                    allGames: 1,
+                    corrects: 1,
+                  },
+                },
+                sprint: {
+                  [key]: {
+                    allGames: 0,
+                    corrects: 0,
+                  },
+                },
+                serial: 1,
+              };
+              model
+                .createUserWord(example.word.id, { difficulty: 'new', optional })
+                .then(() => console.log('created'))
+                .catch((err) => console.log(err));
+            }
           }
           image.src = `http://localhost:3000/${example.word.image}`;
           text.textContent = example.word.word;
