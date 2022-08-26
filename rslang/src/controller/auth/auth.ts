@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import Model, { Result } from '../../model/components/index';
 import { IEmpyObj, ISignIn, IUser } from '../../types/index';
 import AppView from '../../view/pages/app/index';
@@ -6,15 +7,11 @@ import PageIds from '../../view/pages/app/pageIds';
 class AuthController {
   userRegistrInfo: IEmpyObj;
 
-  userLogin: ISignIn;
-
   model: Model;
 
   constructor() {
     this.model = new Model();
     this.userRegistrInfo = {};
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    this.userLogin = JSON.parse(localStorage.getItem('sthmPasMail')!);
   }
 
   checkElem() {
@@ -22,6 +19,7 @@ class AuthController {
     container.addEventListener('click', (e) => {
       const targ = e.target as HTMLElement;
       if (targ.dataset.page === PageIds.LogIn) {
+        targ.innerHTML = 'Log in';
         this.checkLogin(targ);
       }
     });
@@ -30,9 +28,10 @@ class AuthController {
   checkLogin(loginBtn: HTMLElement) {
     const form = document.querySelector('.form') as HTMLElement;
     const createBtn = document.querySelector('.createAccountBtn') as HTMLButtonElement;
+
     // eslint-disable-next-line @typescript-eslint/unbound-method
     createBtn.addEventListener('click', this.checkRegister);
-    // eslint-disable-next-line @typescript-eslint/no-misused-promises, @typescript-eslint/require-await
+
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
 
@@ -82,9 +81,8 @@ class AuthController {
 
   checkRegister() {
     const form = document.querySelector('.create-form') as HTMLElement;
-    const loginBtn = document.querySelector('.btn-logIn-page') as HTMLButtonElement;
     const alertPlaceholder = document.querySelector('#error-alert2') as HTMLElement;
-    // eslint-disable-next-line @typescript-eslint/no-misused-promises
+
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       const target = e.target as HTMLFormElement;
@@ -92,11 +90,10 @@ class AuthController {
       const email = (target[1] as HTMLInputElement).value.toString();
       const password = (target[2] as HTMLInputElement).value.toString();
       this.userRegistrInfo = { name, email, password };
-      this.userLogin = { email, password };
       // eslint-disable-next-line @typescript-eslint/no-unused-expressions
       password.length <= 7 ? target[1].classList.add('is-invalid') : target[1].classList.remove('is-invalid');
       const model = new Model();
-      // console.log(this.userLogin, this.userRegistrInfo);
+
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const user: IUser = JSON.parse(JSON.stringify(this.userRegistrInfo));
       const status = await model.createUser(user);

@@ -51,8 +51,7 @@ class Model {
     }
   }
 
-  // eslint-disable-next-line consistent-return
-  async createUser(user: IUser): Promise<number | undefined> {
+  async createUser(user: IUser): Promise<number> {
     let status = 0;
     try {
       const response = await fetch(`${baseURL}${Path.users}`, {
@@ -63,10 +62,6 @@ class Model {
         },
         body: JSON.stringify(user),
       });
-      const { email, password } = user;
-      const obj = { email, password };
-      localStorage.setItem('sthmPasMail', JSON.stringify(obj));
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const newUser = await (<Promise<INewUser>>response.json());
       status = response.status;
       if (status === Result.success) {
@@ -80,7 +75,6 @@ class Model {
   }
 
   async signIn(user: ISignIn): Promise<number> {
-    // let status = 0;
     try {
       const response = await fetch(`${baseURL}${Path.signIn}`, {
         method: 'POST',
@@ -90,13 +84,14 @@ class Model {
         },
         body: JSON.stringify(user),
       });
-
+      const { email, password } = user;
+      const startDate = new Date();
       const authDataRSlang = await (<Promise<IAuth>>response.json());
-      // status = +response.status;
+      const obj = { email, password, startDate };
+      localStorage.setItem('sthmPasMail', JSON.stringify(obj));
       localStorage.setItem('authDataRSlang', JSON.stringify(authDataRSlang));
       return 200;
     } catch (error) {
-      // console.error(error);
       return 403;
     }
   }
