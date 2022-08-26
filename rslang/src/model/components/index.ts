@@ -62,9 +62,6 @@ export default class Model {
         },
         body: JSON.stringify(user),
       });
-      const { email, password } = user;
-      const obj = { email, password };
-      localStorage.setItem('sthmPasMail', JSON.stringify(obj));
       const newUser = await (<Promise<INewUser>>response.json());
       status = response.status;
       if (status === Result.success) {
@@ -87,15 +84,11 @@ export default class Model {
         },
         body: JSON.stringify(user),
       });
-
+      const { email, password } = user;
+      const startDate = new Date();
       const authDataRSlang = await (<Promise<IAuth>>response.json());
-      const loc: string | null = localStorage.getItem('sthmPasMail');
-      if (loc !== null) {
-        const startDate = new Date();
-        const { email, password } = JSON.parse(loc) as { email: string; password: string };
-        const obj = { email, password, startDate };
-        localStorage.setItem('sthmPasMail', JSON.stringify(obj));
-      }
+      const obj = { email, password, startDate };
+      localStorage.setItem('sthmPasMail', JSON.stringify(obj));
       localStorage.setItem('authDataRSlang', JSON.stringify(authDataRSlang));
       return 200;
     } catch (error) {
