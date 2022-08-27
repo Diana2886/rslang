@@ -45,16 +45,37 @@ export default class AudioGame {
 
   private random = (max: number) => Math.floor(Math.random() * max) + 1;
 
-  async createData(group: number, pageNum?: number) {
+  async createData(group: number, pageNum?: number, userWords?: IUserWord[] | number | undefined) {
     const gameData: GameData[] = [];
     const page = pageNum || pageNum === 0 ? pageNum : this.random(29);
-    const words = await Model.getWords(page, group);
+    const pageWords = await Model.getWords(page, group);
+    let words: IWord[] = [];
+
+    const filterWords = (word: IWord) => {
+      if (typeof userWords === 'object') {
+        const userWord = userWords?.find((uWord) => uWord.wordId === word.id);
+        if (userWord) {
+          return userWord.difficulty !== 'learned';
+        }
+      }
+      return true;
+    };
+
+    if (typeof userWords === 'object') {
+      words = pageWords.filter(filterWords);
+    } else {
+      words = pageWords;
+    }
+
+    console.log(words);
+    console.log(words.length);
     const newArr: IWord[] = words.sort(() => Math.random() - 0.5);
+
     newArr.forEach((word) => {
       let variants: IWord[] = [];
       while (variants.length < 4) {
-        const index = this.random(19);
-        const item = words[index];
+        const index = this.random(pageWords.length - 1);
+        const item = pageWords[index];
         variants.push(item);
         variants = variants.filter((element) => element.word !== word.word);
         variants = [...new Set(variants)];
@@ -66,6 +87,8 @@ export default class AudioGame {
         variants,
       });
     });
+    console.log('ok data');
+    console.log(gameData);
     return gameData;
   }
 
@@ -102,7 +125,7 @@ export default class AudioGame {
         this.image.src = `http://localhost:3000/${example.word.image}`;
         this.text.textContent = example.word.word;
         this.index += 1;
-        if (this.index < 20) {
+        if (this.index < this.data.length) {
           setTimeout(() => this.getProcessGame(userWords), 2000);
         } else {
           window.dispatchEvent(new CustomEvent('done'));
@@ -114,6 +137,7 @@ export default class AudioGame {
     this.initBtnListener(variantsBtns);
     this.gameBody.innerHTML = '';
     [this.imageDiv, variantsBtns].forEach((item) => this.gameBody.append(item));
+    console.log('ok process game');
   };
 
   initBtnListener(variantsBtns: HTMLDivElement) {
@@ -136,7 +160,12 @@ export default class AudioGame {
   }
 
   async startGame(group: number, pageNum?: number) {
-    this.data = await this.createData(group, pageNum);
+    const authStr = localStorage.getItem('authDataRSlang');
+    let userWords: IUserWord[] | number | undefined;
+    if (authStr) {
+      userWords = await this.model.getUserWords();
+    }
+    this.data = await this.createData(group, pageNum, userWords);
     this.imageDiv.className = 'play-image';
     this.text.className = 'play-text';
     this.image.addEventListener('click', () => {
@@ -144,12 +173,8 @@ export default class AudioGame {
     });
     [this.image, this.text, this.audio].forEach((item) => this.imageDiv.append(item));
     this.gameBody.className = 'game-body';
-    const authStr = localStorage.getItem('authDataRSlang');
-    let userWords: IUserWord[] | number | undefined;
-    if (authStr) {
-      userWords = await this.model.getUserWords();
-    }
     this.getProcessGame(userWords);
+    console.log('ok start game');
     return this.gameBody;
   }
 }
