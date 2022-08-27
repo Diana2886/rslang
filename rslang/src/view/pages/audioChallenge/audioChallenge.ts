@@ -45,10 +45,9 @@ export default class AudioGame {
 
   private random = (max: number) => Math.floor(Math.random() * max) + 1;
 
-  async createData(group: number) {
+  async createData(group: number, pageNum?: number) {
     const gameData: GameData[] = [];
-    const page = 3;
-    // this.random(29);
+    const page = pageNum || pageNum === 0 ? pageNum : this.random(29);
     const words = await Model.getWords(page, group);
     const newArr: IWord[] = words.sort(() => Math.random() - 0.5);
     newArr.forEach((word) => {
@@ -74,6 +73,7 @@ export default class AudioGame {
     this.imageDiv.classList.remove('showed');
     this.text.textContent = '';
     const example = this.data[this.index];
+    console.log(example);
     this.image.src = 'assets/svg/compact-cassette.svg';
     this.audio.src = `http://localhost:3000/${example.word.audio}`;
     this.audio.autoplay = true;
@@ -135,8 +135,8 @@ export default class AudioGame {
     });
   }
 
-  async startGame(group: number) {
-    this.data = await this.createData(group);
+  async startGame(group: number, pageNum?: number) {
+    this.data = await this.createData(group, pageNum);
     this.imageDiv.className = 'play-image';
     this.text.className = 'play-text';
     this.image.addEventListener('click', () => {

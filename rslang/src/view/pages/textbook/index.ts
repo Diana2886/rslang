@@ -4,6 +4,7 @@ import Page from '../../core/templates/page';
 import PageIds from '../app/pageIds';
 import { levelColors, Levels } from '../../../types/index';
 import Footer from '../../core/components/footer/index';
+import AudioGame from '../audioChallenge/audioChallenge';
 
 class TextbookPage extends Page {
   static TextObject = {
@@ -115,14 +116,55 @@ class TextbookPage extends Page {
         Games
       </button>
       <ul class="dropdown-menu dropdown-menu-end">
-        <li><a class="dropdown-item" href="#${PageIds.AudioChallenge}">Audio Challenge</a></li>
+        <li><a class="dropdown-item textbook__audio-challenge" href="#" data-bs-toggle="modal" data-bs-target="#audioModal">Audio Challenge</a></li>
         <li><a class="dropdown-item" href="#${PageIds.Sprint}">Sprint</a></li>
       </ul>
     `;
     const gamesDropdown = document.createElement('div');
     gamesDropdown.classList.add('dropdown', 'textbook-tools__games');
     gamesDropdown.innerHTML = template;
+    const audioBtn = gamesDropdown.querySelector('.textbook__audio-challenge');
+    audioBtn?.addEventListener('click', (e) => {
+      e.preventDefault();
+      window.location.hash = '#audioChallenge-page';
+      const audioGame = new AudioGame(new Model());
+      const title = 'Audio Challenge';
+      const description = 'Listen these words and choose the correct translation';
+
+      const { modal, buttonStart } = this.renderModalAudio(title, description);
+
+      setTimeout(() => {
+        const greetBlock = document.querySelector('.greetBlock');
+        if (greetBlock) {
+          greetBlock.innerHTML = '';
+          greetBlock.append(modal);
+          buttonStart.addEventListener('click', () => {
+            audioGame
+              .startGame(TextbookModel.group, TextbookModel.page)
+              .then((element) => {
+                greetBlock.innerHTML = '';
+                greetBlock?.append(element);
+              })
+              .catch((err) => console.error(err));
+          });
+        }
+      });
+    });
     return gamesDropdown;
+  }
+
+  renderModalAudio(title: string, description: string) {
+    const modal = document.createElement('div');
+    modal.className = 'audio-call__modal';
+    const titleText = document.createElement('h4');
+    titleText.textContent = title;
+    const descriptionText = document.createElement('p');
+    descriptionText.textContent = description;
+    const buttonStart = document.createElement('button');
+    buttonStart.className = 'modal__start-audio btn btn-primary';
+    buttonStart.textContent = 'start';
+    [titleText, descriptionText, buttonStart].forEach((item) => modal.append(item));
+    return { modal, buttonStart };
   }
 
   renderTextbookToolsContainer() {
