@@ -87,6 +87,19 @@ class TextbookController {
       }
     });
   }
+
+  listenWordButtons() {
+    document.body.addEventListener('click', (e) => {
+      const target = e.target as HTMLElement;
+      const wordContainer = target.closest('.word__container') as HTMLElement;
+      if (target.classList.contains('difficult-button')) {
+        wordContainer.style.backgroundColor = '#545be820';
+      }
+      if (target.classList.contains('learned-button')) {
+        wordContainer.style.backgroundColor = '#F0C93220';
+      }
+    });
+  }
 }
 
 export default TextbookController;
