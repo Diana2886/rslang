@@ -63,6 +63,26 @@ export default class AudioGame {
 
     if (typeof userWords === 'object') {
       words = pageWords.filter(filterWords);
+      if (words.length < 20) {
+        let prevWords: IWord[] = [];
+        let i = page;
+        const promises: Promise<IWord[]>[] = [];
+        while (i > 0) {
+          i -= 1;
+          promises.push(Model.getWords(i, group));
+        }
+        const promiseResult = await Promise.allSettled(promises);
+        promiseResult.forEach((prom) => {
+          if (prom.status === 'fulfilled') {
+            prevWords = [...prevWords, ...prom.value];
+          }
+        });
+        const nonLearned = prevWords.filter(filterWords);
+        words = [...words, ...nonLearned];
+        if (words.length > 20) {
+          words = words.slice(0, 20);
+        }
+      }
     } else {
       words = pageWords;
     }
