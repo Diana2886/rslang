@@ -23,6 +23,9 @@ export default class AudioStatistic {
               userWord.optional.audio[key].allGames += 1;
               userWord.optional.audio[key].corrects += answers ? 1 : 0;
               userWord.optional.serial = answers ? userWord.optional.serial + 1 : 0;
+              if (answers) {
+                this.checkSerial(userWord);
+              }
             }
             if (userWord.wordId) {
               console.log(userWord);
@@ -56,6 +59,16 @@ export default class AudioStatistic {
         .createUserWord(example.word.id, { difficulty: 'new', optional })
         .then(() => console.log('created'))
         .catch((err) => console.log(err));
+    }
+  }
+
+  checkSerial(userWord: IUserWord) {
+    if (userWord.difficulty === 'difficult') {
+      if (userWord.optional?.serial === 5) {
+        userWord.difficulty = 'learned';
+      }
+    } else if (userWord.optional?.serial === 3) {
+      userWord.difficulty = 'learned';
     }
   }
 }
