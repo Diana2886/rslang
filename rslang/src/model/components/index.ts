@@ -235,47 +235,72 @@ class Model {
     }
   }
 
-  async createData() {
-    const random = (max: number) => Math.floor(Math.random() * max) + 1;
-    const newArr: IWord[] = [];
-    const gameData: {
-      word: IWord;
-      variants: IWord[];
-    }[] = [];
-    const indexes: number[] = [];
-    const words = await Model.getWords(1, 0);
-
-    while (indexes.length < 20) {
-      const index = random(19);
-      indexes.push(index);
+  async getUserWord(wordId: string) {
+    let status = 0;
+    const authStr = localStorage.getItem('authDataRSlang');
+    let authDataRSlang: IAuth | undefined;
+    if (authStr) {
+      authDataRSlang = <IAuth>JSON.parse(authStr);
     }
-    indexes.forEach((index) => {
-      newArr.push(words[index]);
-    });
-    console.log(newArr);
-
-    newArr.forEach((word) => {
-      const variants: IWord[] = [];
-      while (variants.length < 4) {
-        const index = random(19);
-        const item = words[index];
-        if (!variants.includes(item) && item !== word) {
-          variants.push(item);
-        }
-      }
-      const i = random(4);
-      variants.splice(i, 0, word);
-      gameData.push({
-        word,
-        variants,
+    try {
+      if (!authDataRSlang) throw new Error('unauthorized user');
+      const response = await fetch(`${baseURL}${Path.users}/${authDataRSlang.userId}${Path.words}/${wordId}`, {
+        headers: {
+          Authorization: `Bearer ${authDataRSlang.token}`,
+          'Content-Type': 'application/json',
+        },
       });
-    });
+      status = response.status;
+      const userWord = await (<Promise<IUserWord>>response.json());
+      switch (status) {
+        case 200:
+          return userWord;
+        case 401:
+          throw new Error('Access token is missing or invalid');
+        case 404:
+          throw new Error(`User's word not found`);
+        default:
+          return status;
+      }
+    } catch (error) {
+      return status;
+    }
+  }
 
-    const gameBody = document.createElement('div');
-    gameBody.className = 'game-body';
-    const audio = document.createElement('audio');
-    audio.autoplay = true;
-    return gameData;
+  async updateUserWord(wordId: string, userWord: IUserWord): Promise<void> {
+    let status = 0;
+    const authStr = localStorage.getItem('authDataRSlang');
+    let authDataRSlang: IAuth | undefined;
+    if (authStr) {
+      authDataRSlang = <IAuth>JSON.parse(authStr);
+    }
+    try {
+      if (!authDataRSlang) throw new Error('unauthorized user');
+      const response = await fetch(`${baseURL}${Path.users}/${authDataRSlang.userId}${Path.words}/${wordId}`, {
+        method: 'PUT',
+        headers: {
+          Authorization: `Bearer ${authDataRSlang.token}`,
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userWord),
+      });
+      status = response.status;
+
+      switch (status) {
+        case 200:
+          console.log('The user word has been updated');
+          break;
+        case 400:
+          throw new Error('Bad request');
+        case 401:
+          throw new Error('Access token is missing or invalid');
+        default:
+          break;
+      }
+    } catch (error) {
+      console.error(error);
+    }
   }
 }
 
