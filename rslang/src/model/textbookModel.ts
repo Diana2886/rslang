@@ -20,6 +20,13 @@ class TextbookModel {
     };
     window.addEventListener('DOMContentLoaded', getLocalStorage);
   }
+
+  /* static checkLogin() {
+    if (localStorage.getItem('authDataRSlang')) {
+      const wordButtonsContainer = document.querySelector('.word__buttons');
+      console.log(wordButtonsContainer);
+    }
+  } */
 }
 
 export default TextbookModel;
