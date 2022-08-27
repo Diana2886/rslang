@@ -18,7 +18,7 @@ class AudioChallenge extends Page {
     image.className = 'audio-call__image';
     const audioCallTitle = <HTMLElement>document.createElement('h3');
     const audioCallText = <HTMLElement>document.createElement('p');
-    audioCallText.textContent = 'Listen to the words and choose the correct translation.';
+    audioCallText.textContent = 'Listen these words and choose the correct translation';
     const levelBtnBody = this.drawLevelBtn();
 
     const startButton = document.createElement('div');

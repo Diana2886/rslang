@@ -170,3 +170,17 @@ background: rgb(180, 193, 216);
     transform: rotate3d(0, 1, 0, 0deg);
   }
 }
+
+.audio-call__modal {
+  h4 {
+    font-weight: 700;
+  }
+  p {
+    font-weight: 400;
+  }
+  text-align: center;
+  padding: 5px;
+  background: #fff;
+  box-shadow: 0 0 2px #000;
+  border-radius: 5px;
+}
