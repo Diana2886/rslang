@@ -104,3 +104,8 @@ export const levelColors: IColors = {
   C1: '#d63384',
   C2: '#6f42c1',
 };
+
+export const difficultyColors: IColors = {
+  difficult: '#DDDEFA',
+  learned: '#FCF4D6',
+};

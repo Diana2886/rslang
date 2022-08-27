@@ -2,13 +2,15 @@ import TextbookModel from '../../../model/textbookModel';
 import Model, { baseURL } from '../../../model/components/index';
 import Page from '../../core/templates/page';
 import PageIds from '../app/pageIds';
-import { levelColors, Levels } from '../../../types/index';
+import { difficultyColors, levelColors, Levels } from '../../../types/index';
 import Footer from '../../core/components/footer/index';
 
 class TextbookPage extends Page {
   static TextObject = {
     MainTitle: 'Textbook',
   };
+
+  model = new Model();
 
   async renderWords(page: number, group: number) {
     const wordsContainer = document.createElement('div');
@@ -17,11 +19,19 @@ class TextbookPage extends Page {
     wordsWrapper.classList.add('words__wrapper');
     const WORDS_AMOUNT = 20;
     const words = await Model.getWords(page, group);
+    const userWords = await this.model.getUserWords();
     for (let i = 0; i < WORDS_AMOUNT; i += 1) {
       const imgPath = `${baseURL}/${words[i].image}`;
       const wordContainer = document.createElement('div');
       wordContainer.classList.add('word__container');
       wordContainer.id = `word-id-${words[i].id}`;
+      if (typeof userWords === 'object') {
+        userWords.forEach((item) => {
+          if (item.wordId === words[i].id) {
+            wordContainer.style.backgroundColor = difficultyColors[item.difficulty as string];
+          }
+        });
+      }
       const template = `
         <img class="word__img" src="${imgPath}" alt="image">
         <div class="word__content">
@@ -116,7 +126,7 @@ class TextbookPage extends Page {
 
   renderGamesButton() {
     const template = `
-      <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+      <button class="btn btn-secondary dropdown-toggle textbook-games__button" type="button" data-bs-toggle="dropdown" aria-expanded="false">
         Games
       </button>
       <ul class="dropdown-menu dropdown-menu-end">
@@ -165,6 +175,8 @@ class TextbookPage extends Page {
     this.container.append(this.renderTextbookContainer());
     (async () => {
       await this.renderWords(TextbookModel.page, TextbookModel.group);
+      const textbookModel = new TextbookModel();
+      await textbookModel.checkPageForPickedWords();
     })().catch((err: Error) => console.warn(err.message));
     return this.container;
   }
