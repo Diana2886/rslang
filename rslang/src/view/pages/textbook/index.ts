@@ -21,6 +21,7 @@ class TextbookPage extends Page {
       const imgPath = `${baseURL}/${words[i].image}`;
       const wordContainer = document.createElement('div');
       wordContainer.classList.add('word__container');
+      wordContainer.id = `word-id-${words[i].id}`;
       const template = `
         <img class="word__img" src="${imgPath}" alt="image">
         <div class="word__content">
