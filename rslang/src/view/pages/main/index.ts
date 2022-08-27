@@ -66,9 +66,6 @@ class MainPage extends Page {
     const buttonsContainer = document.createElement('div');
     buttonsContainer.classList.add('buttons__container');
     const template = `
-      <a class="nav-link" aria-current="page" href="#logIn-page">
-        <button type="button" class="btn btn-primary">Log in</button>
-      </a>
       <a class="nav-link" aria-current="page" href="#">
         <div class="play-button">
           <span class="play-icon"></span>Play Video
