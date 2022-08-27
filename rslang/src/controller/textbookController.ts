@@ -94,6 +94,9 @@ class TextbookController {
       const wordContainer = target.closest('.word__container') as HTMLElement;
       if (target.classList.contains('difficult-button')) {
         wordContainer.style.backgroundColor = '#545be820';
+        const wordId = wordContainer.id.split('word-id-')[1];
+        // console.log(wordId);
+        // Model.createUserWord(wordId, )
       }
       if (target.classList.contains('learned-button')) {
         wordContainer.style.backgroundColor = '#F0C93220';
