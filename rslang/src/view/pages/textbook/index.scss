@@ -25,6 +25,10 @@
   color: #000000;
 }
 
+.btn-difficult-words {
+  width: auto;
+}
+
 .words__container {
   display: flex;
   flex-direction: column;
@@ -77,8 +81,9 @@
   margin-bottom: 0.2rem;
 }
 
-.phrase-ru_meaning {
+.phrase-ru {
   margin-bottom: 1rem;
+  color: #969696;
 }
 
 .word__play {
@@ -89,4 +94,9 @@
   background-repeat: no-repeat;
   background-size: contain;
   cursor: pointer;
+}
+
+.word__buttons {
+  display: flex;
+  gap: 1rem;
 }

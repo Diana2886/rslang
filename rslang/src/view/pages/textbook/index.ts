@@ -35,9 +35,13 @@ class TextbookPage extends Page {
             <p class="translation">${words[i].wordTranslate}</p>
           </div>
           <p class="phrase phrase-en_meaning">${words[i].textMeaning}</p>
-          <p class="phrase phrase-ru_meaning">${words[i].textMeaningTranslate}</p>
+          <p class="phrase phrase-ru phrase-ru_meaning">${words[i].textMeaningTranslate}</p>
           <p class="phrase phrase-en_example">${words[i].textExample}</p>
-          <p class="phrase phrase-ru_example">${words[i].textExampleTranslate}</p>
+          <p class="phrase phrase-ru phrase-ru_example">${words[i].textExampleTranslate}</p>
+          <div class="word__buttons" style="display: ${localStorage.getItem('authDataRSlang') ? 'flex' : 'none'}">
+            <button class="btn btn-primary difficult-button">difficult</button>
+            <button class="btn btn-secondary learned-button">learned</button>
+          </div>
         </div>
       `;
       wordContainer.innerHTML = template;
@@ -125,10 +129,26 @@ class TextbookPage extends Page {
     return gamesDropdown;
   }
 
+  renderDifficultWordsButton() {
+    const template = `
+      <a class="link target" aria-current="page" href="#${PageIds.DifficultWords}">
+        <button type="button" class="btn btn-primary btn-difficult-words">Difficult words</button>
+      </a>
+    `;
+    const difficultWordsButton = document.createElement('div');
+    difficultWordsButton.innerHTML = template;
+    return difficultWordsButton;
+  }
+
   renderTextbookToolsContainer() {
     const textbookToolsContainer = document.createElement('div');
     textbookToolsContainer.classList.add('textbook-tools__container');
-    textbookToolsContainer.append(this.renderLevelsElement(), this.renderPaginationElement(), this.renderGamesButton());
+    textbookToolsContainer.append(
+      this.renderLevelsElement(),
+      this.renderPaginationElement(),
+      this.renderGamesButton(),
+      this.renderDifficultWordsButton()
+    );
     return textbookToolsContainer;
   }
 
