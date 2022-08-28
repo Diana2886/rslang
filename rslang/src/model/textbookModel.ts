@@ -39,8 +39,8 @@ class TextbookModel {
     const wordsWrapper = document.querySelector('.words__wrapper') as HTMLElement;
     const pagesButton = document.querySelector('.pages-btn') as HTMLElement;
     wordsWrapper.style.boxShadow = count === 20 ? '0px 0px 8px rgba(0, 0, 0, 0.1)' : 'none';
-    wordsWrapper.style.backgroundColor = count === 20 ? '#ffffff' : 'inherit';
-    pagesButton.style.border = count === 20 ? '1px solid #393E46' : '1px solid #F0C932';
+    wordsWrapper.style.backgroundColor = count === 20 ? '#D1E7DD' : 'inherit';
+    pagesButton.style.border = count === 20 ? '1px solid #198754' : '1px solid #F0C932';
     const gamesButton = document.querySelector('.textbook-games__button') as HTMLButtonElement;
     gamesButton.disabled = count === 20;
   }
