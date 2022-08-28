@@ -2,7 +2,7 @@ import TextbookModel from '../../../model/textbookModel';
 import Model, { baseURL } from '../../../model/components/index';
 import Page from '../../core/templates/page';
 import PageIds from '../app/pageIds';
-import { levelColors, Levels } from '../../../types/index';
+import { difficultyColors, levelColors, Levels } from '../../../types/index';
 import Footer from '../../core/components/footer/index';
 import AudioGame from '../audioChallenge/audioChallenge';
 
@@ -11,6 +11,8 @@ class TextbookPage extends Page {
     MainTitle: 'Textbook',
   };
 
+  model = new Model();
+
   async renderWords(page: number, group: number) {
     const wordsContainer = document.createElement('div');
     wordsContainer.classList.add('words__container');
@@ -18,10 +20,19 @@ class TextbookPage extends Page {
     wordsWrapper.classList.add('words__wrapper');
     const WORDS_AMOUNT = 20;
     const words = await Model.getWords(page, group);
+    const userWords = await this.model.getUserWords();
     for (let i = 0; i < WORDS_AMOUNT; i += 1) {
       const imgPath = `${baseURL}/${words[i].image}`;
       const wordContainer = document.createElement('div');
       wordContainer.classList.add('word__container');
+      wordContainer.id = `word-id-${words[i].id}`;
+      if (typeof userWords === 'object') {
+        userWords.forEach((item) => {
+          if (item.wordId === words[i].id) {
+            wordContainer.style.backgroundColor = difficultyColors[item.difficulty as string];
+          }
+        });
+      }
       const template = `
         <img class="word__img" src="${imgPath}" alt="image">
         <div class="word__content">
@@ -36,9 +47,13 @@ class TextbookPage extends Page {
             <p class="translation">${words[i].wordTranslate}</p>
           </div>
           <p class="phrase phrase-en_meaning">${words[i].textMeaning}</p>
-          <p class="phrase phrase-ru_meaning">${words[i].textMeaningTranslate}</p>
+          <p class="phrase phrase-ru phrase-ru_meaning">${words[i].textMeaningTranslate}</p>
           <p class="phrase phrase-en_example">${words[i].textExample}</p>
-          <p class="phrase phrase-ru_example">${words[i].textExampleTranslate}</p>
+          <p class="phrase phrase-ru phrase-ru_example">${words[i].textExampleTranslate}</p>
+          <div class="word__buttons" style="display: ${localStorage.getItem('authDataRSlang') ? 'flex' : 'none'}">
+            <button class="btn btn-primary difficult-button">difficult</button>
+            <button class="btn btn-secondary learned-button">learned</button>
+          </div>
         </div>
       `;
       wordContainer.innerHTML = template;
@@ -112,7 +127,7 @@ class TextbookPage extends Page {
 
   renderGamesButton() {
     const template = `
-      <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+      <button class="btn btn-secondary dropdown-toggle textbook-games__button" type="button" data-bs-toggle="dropdown" aria-expanded="false">
         Games
       </button>
       <ul class="dropdown-menu dropdown-menu-end">
@@ -153,6 +168,17 @@ class TextbookPage extends Page {
     return gamesDropdown;
   }
 
+  renderDifficultWordsButton() {
+    const template = `
+      <a class="link target" aria-current="page" href="#${PageIds.DifficultWords}">
+        <button type="button" class="btn btn-primary btn-difficult-words">Difficult words</button>
+      </a>
+    `;
+    const difficultWordsButton = document.createElement('div');
+    difficultWordsButton.innerHTML = template;
+    return difficultWordsButton;
+  }
+
   renderModalAudio(title: string, description: string) {
     const modal = document.createElement('div');
     modal.className = 'audio-call__modal';
@@ -170,7 +196,12 @@ class TextbookPage extends Page {
   renderTextbookToolsContainer() {
     const textbookToolsContainer = document.createElement('div');
     textbookToolsContainer.classList.add('textbook-tools__container');
-    textbookToolsContainer.append(this.renderLevelsElement(), this.renderPaginationElement(), this.renderGamesButton());
+    textbookToolsContainer.append(
+      this.renderLevelsElement(),
+      this.renderPaginationElement(),
+      this.renderGamesButton(),
+      this.renderDifficultWordsButton()
+    );
     return textbookToolsContainer;
   }
 
@@ -186,6 +217,8 @@ class TextbookPage extends Page {
     this.container.append(this.renderTextbookContainer());
     (async () => {
       await this.renderWords(TextbookModel.page, TextbookModel.group);
+      const textbookModel = new TextbookModel();
+      await textbookModel.checkPageForPickedWords();
     })().catch((err: Error) => console.warn(err.message));
     return this.container;
   }

@@ -6,7 +6,7 @@ import PageIds from './pageIds';
 import ErrorPage, { ErrorTypes } from '../error/index';
 import TextbookPage from '../textbook/index';
 import AudioChallenge from '../audioChallenge/index';
-import WordListPage from '../wordList/index';
+import DifficultWordsPage from '../difficultWords/index';
 import Sprint from '../sprint/index';
 import LogInPage from '../logIn/index';
 
@@ -46,8 +46,8 @@ class AppView {
       case `${PageIds.Sprint}`:
         page = new Sprint(idPage);
         break;
-      case `${PageIds.WordList}`:
-        page = new WordListPage(idPage);
+      case `${PageIds.DifficultWords}`:
+        page = new DifficultWordsPage(idPage);
         break;
       default:
         page = new ErrorPage(idPage, ErrorTypes.Error_404);
@@ -85,7 +85,9 @@ class AppView {
 
   run() {
     AppView.container.append(this.header.render());
-    AppView.renderNewPage('main-page');
+    const hash = window.location.hash.slice(1);
+    if (hash) AppView.renderNewPage(hash);
+    else AppView.renderNewPage('main-page');
     this.enableRouteChange();
   }
 }

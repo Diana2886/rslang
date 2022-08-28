@@ -1,10 +1,15 @@
 import Model, { baseURL } from '../model/components/index';
 import TextbookModel from '../model/textbookModel';
+import { difficultyColors } from '../types/index';
 import PageIds from '../view/pages/app/pageIds';
 import TextbookPage from '../view/pages/textbook/index';
 
 class TextbookController {
   textbookPage = new TextbookPage(PageIds.Textbook);
+
+  model = new Model();
+
+  textbookModel = new TextbookModel();
 
   listenPlayWordButton() {
     document.body.addEventListener('click', (e) => {
@@ -56,8 +61,17 @@ class TextbookController {
         TextbookModel.page = 0;
         (document.querySelector('.pages-btn') as HTMLButtonElement).innerHTML = `Page ${TextbookModel.page + 1}`;
         this.rerenderWords();
+        (async () => {
+          await this.textbookModel.checkPageForPickedWords();
+        })().catch((err: Error) => console.warn(err.message));
       }
     });
+  }
+
+  checkPageStyle() {
+    (async () => {
+      await this.textbookModel.checkPageForPickedWords();
+    })().catch((err: Error) => console.warn(err.message));
   }
 
   listenPageButton() {
@@ -73,18 +87,44 @@ class TextbookController {
         (async () => {
           wordsWrapper.append(await textbookPage.renderWords(TextbookModel.page, TextbookModel.group));
         })().catch((err: Error) => console.warn(err.message));
+        this.checkPageStyle();
       }
       if (target.closest('.page-prev')) {
         if (TextbookModel.page > 0) TextbookModel.page -= 1;
         pagesButton.innerHTML = `Page ${TextbookModel.page + 1}`;
         this.rerenderWords();
+        this.checkPageStyle();
       }
       if (target.closest('.page-next')) {
         const PAGES_AMOUNT = 30;
         if (TextbookModel.page < PAGES_AMOUNT) TextbookModel.page += 1;
         pagesButton.innerHTML = `Page ${TextbookModel.page + 1}`;
         this.rerenderWords();
+        this.checkPageStyle();
       }
+    });
+  }
+
+  listenWordButtons() {
+    document.body.addEventListener('click', (e) => {
+      const target = e.target as HTMLElement;
+      const wordContainer = target.closest('.word__container') as HTMLElement;
+      const wordButtons = ['difficult', 'learned'];
+      wordButtons.forEach((item) => {
+        if (target.classList.contains(`${item}-button`)) {
+          wordContainer.style.backgroundColor = difficultyColors[item];
+          const wordId = wordContainer.id.split('word-id-')[1];
+          (async () => {
+            const userWord = await this.model.getUserWord(wordId);
+            if (typeof userWord === 'number') {
+              await this.model.createUserWord(wordId, { difficulty: item });
+              await this.textbookModel.checkPageForPickedWords();
+            } else if (userWord.difficulty !== item) {
+              await this.model.updateUserWord(wordId, { difficulty: item });
+            }
+          })().catch((err: Error) => console.warn(err.message));
+        }
+      });
     });
   }
 }

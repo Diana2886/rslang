@@ -10,6 +10,7 @@ class App {
   start() {
     const model = new Model();
     TextbookModel.setLocalStorageSettings();
+    // TextbookModel.checkLogin();
     const view = new AppView();
     view.run();
     const headerController = new HeaderController();
@@ -18,6 +19,7 @@ class App {
     textbookController.listenPlayWordButton();
     textbookController.listenLevelButton();
     textbookController.listenPageButton();
+    textbookController.listenWordButtons();
     const login = new AuthController();
     login.checkElem();
     const sprint = new SprintController();
