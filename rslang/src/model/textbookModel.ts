@@ -32,7 +32,7 @@ class TextbookModel {
     words.forEach((word) => {
       if (typeof userWords === 'object') {
         userWords.forEach((item) => {
-          if (word.id === item.wordId) count += 1;
+          if (word.id === item.wordId && (item.difficulty === 'learned' || item.difficulty === 'difficult')) count += 1;
         });
       }
     });
