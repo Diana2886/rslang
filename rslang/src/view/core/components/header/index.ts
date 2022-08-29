@@ -1,7 +1,7 @@
 import Component from '../../templates/components';
 import PageIds from '../../../pages/app/pageIds';
 
-const navItems = [
+let navItems = [
   {
     id: PageIds.Main,
     text: 'Main',
@@ -43,6 +43,18 @@ class Header extends Component {
   static navContainer = document.createElement('div');
 
   renderNav() {
+    const logPar = localStorage.getItem('sthmPasMail');
+    const tokenUser = localStorage.getItem('newUserDataRSlang');
+    const creatUser = localStorage.getItem('authDataRSlang');
+    if (logPar !== null || tokenUser !== null || creatUser !== null) {
+      navItems = navItems.map((item) => {
+        if (item.id === PageIds.LogIn) {
+          item.text = 'Log out';
+          return item;
+        }
+        return item;
+      });
+    }
     const hash = window.location.hash.slice(1);
     const initialPage = hash || PageIds.Main;
     Header.navContainer.innerHTML = '';
@@ -78,7 +90,9 @@ class Header extends Component {
         `;
       } else if (item.id === PageIds.LogIn) {
         template += `
+        <li class="nav-item">
           <button type="button" class="btn btn-primary btn-${item.id}" data-page="${item.id}" id="login-page">${item.text}</button>
+        </li>
         `;
       } else {
         template += `

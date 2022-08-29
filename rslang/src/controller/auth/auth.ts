@@ -25,6 +25,7 @@ class AuthController {
       if (targ.dataset.page === PageIds.LogIn) {
         targ.innerHTML = 'Log in';
         localStorage.removeItem('sthmPasMail');
+        localStorage.removeItem('newUserDataRSlang');
         localStorage.removeItem('authDataRSlang');
         const modal = LogInPage.authModal();
         container.after(modal);
