@@ -1,4 +1,4 @@
-import AudioStatistic from '../../../controller/audio/statistics';
+import AudioStatistic from '../../../controller/statistics/index';
 import Model from '../../../model/components/index';
 import { GameData, IUserWord, IWord } from '../../../types/index';
 import AudioResult from './results';
@@ -86,9 +86,6 @@ export default class AudioGame {
     } else {
       words = pageWords;
     }
-
-    console.log(words);
-    console.log(words.length);
     const newArr: IWord[] = words.sort(() => Math.random() - 0.5);
 
     newArr.forEach((word) => {
@@ -107,8 +104,6 @@ export default class AudioGame {
         variants,
       });
     });
-    console.log('ok data');
-    console.log(gameData);
     return gameData;
   }
 
@@ -116,7 +111,6 @@ export default class AudioGame {
     this.imageDiv.classList.remove('showed');
     this.text.textContent = '';
     const example = this.data[this.index];
-    console.log(example);
     this.image.src = 'assets/svg/compact-cassette.svg';
     this.audio.src = `http://localhost:3000/${example.word.audio}`;
     this.audio.autoplay = true;
@@ -140,7 +134,7 @@ export default class AudioGame {
           this.wrongs.push(example.word);
         }
         if (typeof userWords === 'object') {
-          this.stat.writeWordStat(userWords, example, answers);
+          this.stat.writeWordStat('audio', example.word, answers).catch((err) => console.error(err));
         }
         this.image.src = `http://localhost:3000/${example.word.image}`;
         this.text.textContent = example.word.word;
@@ -157,7 +151,6 @@ export default class AudioGame {
     this.initBtnListener(variantsBtns);
     this.gameBody.innerHTML = '';
     [this.imageDiv, variantsBtns].forEach((item) => this.gameBody.append(item));
-    console.log('ok process game');
   };
 
   initBtnListener(variantsBtns: HTMLDivElement) {
@@ -194,7 +187,6 @@ export default class AudioGame {
     [this.image, this.text, this.audio].forEach((item) => this.imageDiv.append(item));
     this.gameBody.className = 'game-body';
     this.getProcessGame(userWords);
-    console.log('ok start game');
     return this.gameBody;
   }
 }

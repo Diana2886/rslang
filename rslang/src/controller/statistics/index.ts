@@ -1,0 +1,112 @@
+import Model from '../../model/components/index';
+import { IUserWord, IWord } from '../../types/index';
+
+export default class AudioStatistic {
+  model: Model;
+
+  constructor() {
+    this.model = new Model();
+  }
+
+  async writeWordStat(gameName: 'audio' | 'sprint', example: IWord, answers: boolean) {
+    const date = new Date();
+    const key = `${date.getDate()}${date.getMonth()}${date.getFullYear()}`;
+    const userWords = await this.model.getUserWords();
+    let userWord: IUserWord = {};
+    let resUWord: number | IUserWord = 0;
+    if (typeof userWords === 'object') {
+      if (userWords.some((word) => word.wordId === example.id)) {
+        resUWord = await this.model.getUserWord(example.id);
+        if (typeof resUWord === 'object') {
+          userWord = resUWord;
+        }
+      } else {
+        userWord.optional = {
+          audio: {
+            [key]: {
+              allGames: 0,
+              corrects: 0,
+            },
+          },
+          sprint: {
+            [key]: {
+              allGames: 0,
+              corrects: 0,
+            },
+          },
+          serial: 0,
+        };
+      }
+
+      if (userWord.optional) {
+        userWord.optional[gameName][key].allGames += 1;
+        userWord.optional[gameName][key].corrects += answers ? 1 : 0;
+        userWord.optional.serial = answers ? userWord.optional.serial + 1 : 0;
+        if (answers) {
+          await this.checkSerial(userWord, key, gameName);
+        }
+      }
+      console.log(userWord);
+      if (typeof resUWord === 'object') {
+        if (userWord.wordId) {
+          await this.model.updateUserWord(userWord.wordId, {
+            difficulty: userWord.difficulty,
+            optional: userWord.optional,
+          });
+        }
+      } else {
+        await this.model.createUserWord(example.id, { difficulty: 'new', optional: userWord.optional });
+        await this.writeGlobalStat('new', gameName, key);
+      }
+    }
+  }
+
+  async checkSerial(userWord: IUserWord, key: string, gameName: 'audio' | 'sprint' | 'textbook') {
+    if (userWord.difficulty === 'difficult') {
+      if (userWord.optional?.serial === 5) {
+        userWord.difficulty = 'learned';
+        await this.writeGlobalStat('learned', gameName, key);
+      }
+    } else if (userWord.optional?.serial === 3) {
+      userWord.difficulty = 'learned';
+      await this.writeGlobalStat('learned', gameName, key);
+    }
+  }
+
+  async writeGlobalStat(type: 'new' | 'learned', source: 'audio' | 'sprint' | 'textbook', date: string) {
+    let statistic = await this.model.getStatistic();
+    if (typeof statistic === 'number') {
+      statistic = {
+        learnedWords: 0,
+        optional: {
+          [date]: {
+            audio: {
+              newWords: 0,
+              learnedWords: 0,
+            },
+            sprint: {
+              newWords: 0,
+              learnedWords: 0,
+            },
+            textbook: {
+              newWords: 0,
+              learnedWords: 0,
+            },
+          },
+        },
+      };
+    }
+
+    if (type === 'new') {
+      const dayStat = statistic.optional[date];
+      dayStat[source].newWords += 1;
+    }
+    if (type === 'learned') {
+      statistic.learnedWords += 1;
+      const dayStat = statistic.optional[date];
+      dayStat[source].learnedWords += 1;
+    }
+
+    await this.model.updateStatistic({ learnedWords: statistic.learnedWords, optional: statistic.optional });
+  }
+}
