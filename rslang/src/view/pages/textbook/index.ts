@@ -131,7 +131,7 @@ class TextbookPage extends Page {
         Games
       </button>
       <ul class="dropdown-menu dropdown-menu-end">
-        <li><a class="dropdown-item textbook__audio-challenge" href="#" data-bs-toggle="modal" data-bs-target="#audioModal">Audio Challenge</a></li>
+        <li><a class="dropdown-item textbook__audio-challenge" href="#">Audio Challenge</a></li>
         <li><a class="dropdown-item" href="#${PageIds.Sprint}">Sprint</a></li>
       </ul>
     `;
