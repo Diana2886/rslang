@@ -77,6 +77,10 @@ class AudioChallenge extends Page {
         }
       }
       if (e.code === 'Enter') {
+        const nextBtn: HTMLButtonElement | null = document.querySelector('.audio-call__next');
+        if (nextBtn) {
+          nextBtn.click();
+        }
         if (chooseLevel?.classList.contains('active')) {
           startButton.click();
         }
