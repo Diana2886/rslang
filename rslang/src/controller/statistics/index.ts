@@ -1,7 +1,7 @@
 import Model from '../../model/components/index';
 import { IUserWord, IWord } from '../../types/index';
 
-export default class AudioStatistic {
+export default class Statistic {
   model: Model;
 
   constructor() {

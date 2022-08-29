@@ -1,4 +1,4 @@
-import AudioStatistic from '../../../controller/statistics/index';
+import Statistic from '../../../controller/statistics/index';
 import Model from '../../../model/components/index';
 import { GameData, IUserWord, IWord } from '../../../types/index';
 import AudioResult from './results';
@@ -6,7 +6,7 @@ import AudioResult from './results';
 export default class AudioGame {
   model: Model;
 
-  stat: AudioStatistic;
+  stat: Statistic;
 
   result: AudioResult;
 
@@ -30,7 +30,7 @@ export default class AudioGame {
 
   constructor(model: Model) {
     this.model = model;
-    this.stat = new AudioStatistic();
+    this.stat = new Statistic();
     this.corrects = [];
     this.wrongs = [];
     this.data = [];
