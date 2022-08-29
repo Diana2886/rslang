@@ -73,7 +73,12 @@ export default class AudioStatistic {
     }
   }
 
-  async writeGlobalStat(type: 'new' | 'learned', source: 'audio' | 'sprint' | 'textbook', date: string) {
+  async writeGlobalStat(
+    type: 'new' | 'learned',
+    source: 'audio' | 'sprint' | 'textbook',
+    date: string,
+    minus?: boolean
+  ) {
     let statistic = await this.model.getStatistic();
     if (typeof statistic === 'number') {
       statistic = {
@@ -102,9 +107,9 @@ export default class AudioStatistic {
       dayStat[source].newWords += 1;
     }
     if (type === 'learned') {
-      statistic.learnedWords += 1;
+      statistic.learnedWords += minus ? -1 : 1;
       const dayStat = statistic.optional[date];
-      dayStat[source].learnedWords += 1;
+      dayStat[source].learnedWords += minus ? -1 : 1;
     }
 
     await this.model.updateStatistic({ learnedWords: statistic.learnedWords, optional: statistic.optional });
