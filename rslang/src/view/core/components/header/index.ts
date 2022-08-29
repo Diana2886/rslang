@@ -11,8 +11,8 @@ const navItems = [
     text: 'Textbook',
   },
   {
-    id: PageIds.WordList,
-    text: 'WordList',
+    id: PageIds.DifficultWords,
+    text: 'Difficult words',
   },
   {
     id: PageIds.Games,
