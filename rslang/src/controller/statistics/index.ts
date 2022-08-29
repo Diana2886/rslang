@@ -56,7 +56,7 @@ export default class Statistic {
         }
       } else {
         await this.model.createUserWord(example.id, { difficulty: 'new', optional: userWord.optional });
-        await this.writeGlobalStat('new', gameName, key);
+        await this.writeGlobalStat('new', gameName);
       }
     }
   }
@@ -65,26 +65,23 @@ export default class Statistic {
     if (userWord.difficulty === 'difficult') {
       if (userWord.optional?.serial === 5) {
         userWord.difficulty = 'learned';
-        await this.writeGlobalStat('learned', gameName, key);
+        await this.writeGlobalStat('learned', gameName);
       }
     } else if (userWord.optional?.serial === 3) {
       userWord.difficulty = 'learned';
-      await this.writeGlobalStat('learned', gameName, key);
+      await this.writeGlobalStat('learned', gameName);
     }
   }
 
-  async writeGlobalStat(
-    type: 'new' | 'learned',
-    source: 'audio' | 'sprint' | 'textbook',
-    date: string,
-    minus?: boolean
-  ) {
+  async writeGlobalStat(type: 'new' | 'learned', source: 'audio' | 'sprint' | 'textbook', minus?: boolean) {
+    const date = new Date();
+    const key = `${date.getDate()}${date.getMonth()}${date.getFullYear()}`;
     let statistic = await this.model.getStatistic();
     if (typeof statistic === 'number') {
       statistic = {
         learnedWords: 0,
         optional: {
-          [date]: {
+          [key]: {
             audio: {
               newWords: 0,
               learnedWords: 0,
@@ -103,12 +100,12 @@ export default class Statistic {
     }
 
     if (type === 'new') {
-      const dayStat = statistic.optional[date];
+      const dayStat = statistic.optional[key];
       dayStat[source].newWords += 1;
     }
     if (type === 'learned') {
       statistic.learnedWords += minus ? -1 : 1;
-      const dayStat = statistic.optional[date];
+      const dayStat = statistic.optional[key];
       dayStat[source].learnedWords += minus ? -1 : 1;
     }
 
