@@ -131,7 +131,7 @@ class TextbookPage extends Page {
         Games
       </button>
       <ul class="dropdown-menu dropdown-menu-end">
-        <li><a class="dropdown-item textbook__audio-challenge" href="#" data-bs-toggle="modal" data-bs-target="#audioModal">Audio Challenge</a></li>
+        <li><a class="dropdown-item textbook__audio-challenge" href="#">Audio Challenge</a></li>
         <li><a class="dropdown-item" href="#${PageIds.Sprint}">Sprint</a></li>
       </ul>
     `;
@@ -154,6 +154,7 @@ class TextbookPage extends Page {
           greetBlock.innerHTML = '';
           greetBlock.append(modal);
           buttonStart.addEventListener('click', () => {
+            buttonStart.disabled = true;
             audioGame
               .startGame(TextbookModel.group, TextbookModel.page)
               .then((element) => {
@@ -188,7 +189,7 @@ class TextbookPage extends Page {
     descriptionText.textContent = description;
     const buttonStart = document.createElement('button');
     buttonStart.className = 'modal__start-audio btn btn-primary';
-    buttonStart.textContent = 'start';
+    buttonStart.textContent = 'Start';
     [titleText, descriptionText, buttonStart].forEach((item) => modal.append(item));
     return { modal, buttonStart };
   }
