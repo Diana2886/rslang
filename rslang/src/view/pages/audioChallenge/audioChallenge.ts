@@ -116,6 +116,10 @@ export default class AudioGame {
     this.audio.autoplay = true;
     const variantsBtns = document.createElement('div');
     variantsBtns.className = 'variants__btns';
+    const nextBtn = document.createElement('button');
+    nextBtn.className = 'audio-call__next btn btn-info';
+    nextBtn.textContent = 'Next';
+
     example.variants.forEach((item, index) => {
       const btnDiv = document.createElement('button');
       btnDiv.className = 'audio-call__choose-btn';
@@ -138,19 +142,21 @@ export default class AudioGame {
         }
         this.image.src = `http://localhost:3000/${example.word.image}`;
         this.text.textContent = example.word.word;
-        this.index += 1;
-        if (this.index < this.data.length) {
-          setTimeout(() => this.getProcessGame(userWords), 2000);
-        } else {
-          window.dispatchEvent(new CustomEvent('done'));
-          this.index = 0;
-        }
       });
       variantsBtns.append(btnDiv);
     });
+    nextBtn.addEventListener('click', () => {
+      this.index += 1;
+      if (this.index < this.data.length) {
+        this.getProcessGame(userWords);
+      } else {
+        window.dispatchEvent(new CustomEvent('done'));
+        this.index = 0;
+      }
+    });
     this.initBtnListener(variantsBtns);
     this.gameBody.innerHTML = '';
-    [this.imageDiv, variantsBtns].forEach((item) => this.gameBody.append(item));
+    [this.imageDiv, variantsBtns, nextBtn].forEach((item) => this.gameBody.append(item));
   };
 
   initBtnListener(variantsBtns: HTMLDivElement) {
