@@ -78,8 +78,13 @@ class AudioChallenge extends Page {
       }
       if (e.code === 'Enter') {
         const nextBtn: HTMLButtonElement | null = document.querySelector('.audio-call__next');
+        const modalBtn: HTMLButtonElement | null = document.querySelector('.modal__start-audio');
+
         if (nextBtn) {
           nextBtn.click();
+        }
+        if (modalBtn) {
+          modalBtn.click();
         }
         if (chooseLevel?.classList.contains('active')) {
           startButton.click();
