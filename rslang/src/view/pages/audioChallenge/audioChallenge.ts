@@ -126,7 +126,10 @@ export default class AudioGame {
       btnDiv.type = 'button';
       btnDiv.textContent = `${index + 1} ${item.wordTranslate}`;
       btnDiv.addEventListener('click', () => {
-        variantsBtns.classList.add('disabled');
+        const btns = variantsBtns.querySelectorAll('button');
+        btns.forEach((button) => {
+          button.disabled = true;
+        });
         this.imageDiv.classList.add('showed');
         let answers = false;
         if (btnDiv.textContent === `${index + 1} ${example.word.wordTranslate}`) {
@@ -160,18 +163,14 @@ export default class AudioGame {
   };
 
   initBtnListener(variantsBtns: HTMLDivElement) {
-    window.addEventListener(
-      'keyup',
-      (e) => {
-        const number: number = +e.key;
-        if (number > 0 && number < 6) {
-          const buttons = variantsBtns.querySelectorAll('button');
-          const button = buttons[number - 1];
-          button.click();
-        }
-      },
-      { once: true }
-    );
+    window.addEventListener('keyup', (e) => {
+      const number: number = +e.key;
+      if (number > 0 && number < 6) {
+        const buttons = variantsBtns.querySelectorAll('button');
+        const button = buttons[number - 1];
+        button.click();
+      }
+    });
     window.addEventListener('done', () => {
       this.gameBody.innerHTML = '';
       this.gameBody.append(this.result.drawResult(this.corrects, this.wrongs));
