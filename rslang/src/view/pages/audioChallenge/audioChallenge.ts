@@ -109,8 +109,13 @@ export default class AudioGame {
 
   getProcessGame = (userWords?: IUserWord[] | number) => {
     this.imageDiv.classList.remove('showed');
+    const icon = document.createElement('img');
+    icon.className = 'cassette-icon';
+    icon.src = 'assets/svg/compact-cassette.svg';
+    this.imageDiv.append(icon);
     this.text.textContent = '';
     const example = this.data[this.index];
+    this.image.className = 'cassette-big';
     this.image.src = 'assets/svg/compact-cassette.svg';
     this.audio.src = `http://localhost:3000/${example.word.audio}`;
     this.audio.autoplay = true;
@@ -118,13 +123,13 @@ export default class AudioGame {
     variantsBtns.className = 'variants__btns';
     const nextBtn = document.createElement('button');
     nextBtn.className = 'audio-call__next btn btn-info';
-    nextBtn.textContent = 'Next';
+    nextBtn.innerHTML = `Next  <kbd>↵</kbd>`;
 
     example.variants.forEach((item, index) => {
       const btnDiv = document.createElement('button');
       btnDiv.className = 'audio-call__choose-btn';
       btnDiv.type = 'button';
-      btnDiv.textContent = `${index + 1} ${item.wordTranslate}`;
+      btnDiv.innerHTML = `<kbd>${index + 1}</kbd> ${item.wordTranslate}`;
       btnDiv.addEventListener('click', () => {
         const btns = variantsBtns.querySelectorAll('button');
         btns.forEach((button) => {
@@ -144,7 +149,7 @@ export default class AudioGame {
           this.stat.writeWordStat('audio', example.word, answers).catch((err) => console.error(err));
         }
         this.image.src = `http://localhost:3000/${example.word.image}`;
-        this.text.textContent = example.word.word;
+        this.text.innerHTML = `${example.word.word} <p>${example.word.wordTranslate}</p>`;
       });
       variantsBtns.append(btnDiv);
     });
@@ -186,7 +191,7 @@ export default class AudioGame {
     this.data = await this.createData(group, pageNum, userWords);
     this.imageDiv.className = 'play-image';
     this.text.className = 'play-text';
-    this.image.addEventListener('click', () => {
+    this.imageDiv.addEventListener('click', () => {
       this.audio.play().catch((err) => console.log(err));
     });
     [this.image, this.text, this.audio].forEach((item) => this.imageDiv.append(item));
