@@ -1,51 +1,76 @@
+.modal-loginPage-box{
+  position: absolute;
+  left: 37%;
+  top: 24%;
+  
+}
+
+.body-act{
+  overflow: hidden;
+}
+.login-block{
+  display: grid;
+}
 .login-wrapper{
-  min-height: 90vh;
+  width: 400px;
+  margin: 0 auto;
   display: flex;
-  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+}
+.login-modal, .register-modal{
+  display: none;
+  flex-direction: column;
   align-items: center;
   justify-content: space-around;
-  padding: 15px;
-  @media (max-width:500px) {
-    .login-title-block{
-      display: none;
-    }
-    
-  }
+  background: white;
+  width: 400px;
+  margin: 0 auto;
+  align-items: stretch;
+  padding: 18px;
+  border-radius: 8px;
 }
-.login-form{
-  backdrop-filter: blur(10px) saturate(200%);
-    -webkit-backdrop-filter: blur(10px) saturate(200%);
-    background-color: rgba(255, 255, 255, 0.6);
-    border-radius: 12px;
-    border: 1px solid rgba(209, 213, 219, 0.3);
-    padding: 18px;
+.close-modal{
+  align-self: flex-end;
 }
-.form{
-  width: 300px;
+.createUser{
+  width: 180px;
 }
-.create-form{
-  // display: flex;
-  // flex-direction: column;
-  // align-items: center;
-  // margin: 0 auto;
+.modal-active{
+  display: flex;
+  position: relative;
+  z-index: 2;
 }
-.login-page__title{
-  font-size: 3.5rem;
-  font-weight: 900;
-  line-height: 1.4;
-  margin-bottom: 1.5rem;
+.back-login{
+  width: 150px;
 }
-.createAccountBtn{
-  width: 200px;
+.login-btn-box{
+  margin-bottom: 0px;
+  margin-top: 24px;
+}
+.black-bg{
+  display: block;
+  position: fixed;
+  height: 100vh;
+  width: 100vw;
+  top: 0;
+  left: 0;
+  background: rgb(0, 0, 0, 0.7);
+  z-index: 1;
+}
+#error-alert {
+  position: absolute;
+  bottom: 138px;
+  right: 10px;
 }
 #error-alert div{
-  // position: absolute;
-  width: 169px;
+  width: 227px;
   height: 30px;
   padding: 3px;
   margin: 0;
   font-size: 12px;
   line-height: 24px;
+  margin-top: 3px;
 }
 #error-alert2{
   position: absolute;
@@ -53,6 +78,32 @@
   margin: 0;
   padding: 0;
 }
+
+
+@-webkit-keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+.fadeIn {
+  -webkit-animation-name: fadeIn;
+  animation-name: fadeIn;
+  animation-duration: 0.5s;
+}
+
 @keyframes zoomIn {
   from {
     opacity: 0;
@@ -75,8 +126,38 @@
     opacity: 1;
   }
 }
-.animate__zoomIn {
+.zoomIn {
   -webkit-animation-name: zoomIn;
   animation-name: zoomIn;
-  animation-duration: 1s;
+  animation-duration: 0.7s;
+}
+
+@media (max-width:950px) {
+  .modal-loginPage-box{
+    left: 28%;
+  }    
+}
+@media (max-width:768px) {
+  .modal-loginPage-box{
+    left: 20%;
+  }    
+}
+@media (max-width:550px) {
+  .modal-loginPage-box{
+    left: 12%;
+  }    
+}
+@media (max-width:500px) {
+  .modal-loginPage-box{
+    left: 5%;
+    top: 10%;
+  }    
+  .login-modal, .register-modal{
+    width: 300px;
+  }
+}
+@media (max-width:400px) {
+  .modal-loginPage-box{
+    left: 2%;
+  }    
 }
