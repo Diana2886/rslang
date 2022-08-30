@@ -3,6 +3,7 @@ import TextbookModel from '../model/textbookModel';
 import { difficultyColors, IOptional } from '../types/index';
 import PageIds from '../view/pages/app/pageIds';
 import TextbookPage from '../view/pages/textbook/index';
+import Statistic from './statistics/index';
 
 class TextbookController {
   textbookPage = new TextbookPage(PageIds.Textbook);
@@ -113,6 +114,7 @@ class TextbookController {
     document.body.addEventListener('click', (e) => {
       const target = e.target as HTMLElement;
       const wordContainer = target.closest('.word__container') as HTMLElement;
+      const cardColor = wordContainer.style.backgroundColor;
       const wordButtons = ['difficult', 'learned'];
       const date = new Date();
       const key = `${date.getDate()}${date.getMonth()}${date.getFullYear()}`;
@@ -138,12 +140,25 @@ class TextbookController {
           (async () => {
             if (this.textbookModel.checkAuthorization()) {
               const userWord = await this.model.getUserWord(wordId);
+              const statistics = new Statistic();
               if (typeof userWord === 'number') {
                 await this.model.createUserWord(wordId, { difficulty: item, optional });
+                if (target.classList.contains('learned-button')) {
+                  await statistics.writeGlobalStat('learned', 'textbook');
+                }
                 this.textbookModel.resetPageStyles();
                 await this.textbookModel.checkPageStyle();
               } else if (userWord.difficulty !== item) {
-                await this.model.updateUserWord(wordId, { difficulty: item });
+                if (target.classList.contains('learned-button')) {
+                  await statistics.writeGlobalStat('learned', 'textbook');
+                }
+                if (target.classList.contains('difficult-button') && cardColor === 'rgb(252, 244, 214)') {
+                  await statistics.writeGlobalStat('learned', 'textbook', true);
+                  if (userWord.optional) {
+                    userWord.optional.serial = 0;
+                  }
+                }
+                await this.model.updateUserWord(wordId, { difficulty: item, optional: userWord.optional });
                 this.textbookModel.resetPageStyles();
                 await this.textbookModel.checkPageStyle();
               }
