@@ -167,25 +167,12 @@ export default class AudioGame {
         this.index = 0;
       }
     });
-    this.initBtnListener(variantsBtns);
+    this.initBtnListener();
     this.gameBody.innerHTML = '';
     [this.imageDiv, variantsBtns, nextBtn].forEach((item) => this.gameBody.append(item));
   };
 
-  initBtnListener(variantsBtns: HTMLDivElement) {
-    document.body.addEventListener(
-      'keydown',
-      (e) => {
-        e.stopPropagation();
-        const number: number = +e.key;
-        if (number > 0 && number < 6) {
-          const buttons = variantsBtns.querySelectorAll('button');
-          const button = buttons[number - 1];
-          button.click();
-        }
-      },
-      { once: true }
-    );
+  initBtnListener() {
     window.addEventListener('done', () => {
       this.gameBody.innerHTML = '';
       this.gameBody.append(this.result.drawResult(this.corrects, this.wrongs));
