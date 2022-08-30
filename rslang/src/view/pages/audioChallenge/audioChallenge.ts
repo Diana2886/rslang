@@ -127,7 +127,6 @@ export default class AudioGame {
     nextBtn.innerHTML = `Next  <kbd>↵</kbd>`;
 
     example.variants.forEach((item, index) => {
-      variantsBtns.classList.add('disabled');
       const btnDiv = document.createElement('button');
       btnDiv.className = 'audio-call__choose-btn';
       btnDiv.type = 'button';
