@@ -114,7 +114,10 @@ class TextbookController {
     document.body.addEventListener('click', (e) => {
       const target = e.target as HTMLElement;
       const wordContainer = target.closest('.word__container') as HTMLElement;
-      const cardColor = wordContainer.style.backgroundColor;
+      let cardColor = '';
+      if (wordContainer) {
+        cardColor = wordContainer.style.backgroundColor;
+      }
       const wordButtons = ['difficult', 'learned'];
       const date = new Date();
       const key = `${date.getDate()}${date.getMonth()}${date.getFullYear()}`;
