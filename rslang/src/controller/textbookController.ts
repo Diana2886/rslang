@@ -25,13 +25,20 @@ class TextbookController {
   }
 
   rerenderWords(wordsType: string) {
+    this.textbookModel.resetPageStyles();
+    this.textbookModel.checkAuthorization();
+    const textbookToolsContainer = document.querySelector('.textbook-tools__container') as HTMLElement;
+    const difficultWordsButton = document.querySelector('.btn-difficult-words');
+    if (this.textbookModel.checkAuthorization()) {
+      if (!difficultWordsButton) textbookToolsContainer.append(this.textbookPage.renderDifficultWordsButton());
+    } else if (difficultWordsButton) difficultWordsButton.remove();
     const wordsWrapper = document.querySelector('.words__wrapper') as HTMLElement;
     wordsWrapper.innerHTML = '';
-    const textbookPage = new TextbookPage(PageIds.Textbook);
     (async () => {
       const words = await Model.getWords(TextbookModel.page, TextbookModel.group);
       const difficultWords = await this.textbookModel.getDifficultWords();
-      wordsWrapper.append(await textbookPage.renderWords(wordsType === 'words' ? words : difficultWords));
+      wordsWrapper.append(await this.textbookPage.renderWords(wordsType === 'words' ? words : difficultWords));
+      await this.textbookModel.checkPageStyle();
     })().catch((err: Error) => console.warn(err.message));
   }
 
@@ -129,20 +136,21 @@ class TextbookController {
           if (target.innerHTML !== 'remove') wordContainer.style.backgroundColor = difficultyColors[item];
           const wordId = wordContainer.id.split('word-id-')[1];
           (async () => {
-            const userWord = await this.model.getUserWord(wordId);
-            if (typeof userWord === 'number') {
-              await this.model.createUserWord(wordId, { difficulty: item, optional });
-              this.textbookModel.resetPageStyles();
-              await this.textbookModel.checkPageStyle();
-            } else if (userWord.difficulty !== item) {
-              await this.model.updateUserWord(wordId, { difficulty: item });
-              this.textbookModel.resetPageStyles();
-              await this.textbookModel.checkPageStyle();
-            }
-            if (target.classList.contains('difficult-button') && target.innerHTML === 'remove') {
-              await this.model.deleteUserWord(wordId);
-              console.log(await this.model.getUserWords());
-              this.rerenderWords('difficultWords');
+            if (this.textbookModel.checkAuthorization()) {
+              const userWord = await this.model.getUserWord(wordId);
+              if (typeof userWord === 'number') {
+                await this.model.createUserWord(wordId, { difficulty: item, optional });
+                this.textbookModel.resetPageStyles();
+                await this.textbookModel.checkPageStyle();
+              } else if (userWord.difficulty !== item) {
+                await this.model.updateUserWord(wordId, { difficulty: item });
+                this.textbookModel.resetPageStyles();
+                await this.textbookModel.checkPageStyle();
+              }
+              if (target.classList.contains('difficult-button') && target.innerHTML === 'remove') {
+                await this.model.deleteUserWord(wordId);
+                this.rerenderWords('difficultWords');
+              }
             }
           })().catch((err: Error) => console.warn(err.message));
         }

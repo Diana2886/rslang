@@ -2,7 +2,7 @@ import TextbookModel from '../../../model/textbookModel';
 import Model, { baseURL } from '../../../model/components/index';
 import Page from '../../core/templates/page';
 import PageIds from '../app/pageIds';
-import { difficultyColors, IWord, LevelColors, Levels } from '../../../types/index';
+import { difficultyColors, IUserWord, IWord, LevelColors, Levels } from '../../../types/index';
 import Footer from '../../core/components/footer/index';
 import AudioGame from '../audioChallenge/audioChallenge';
 
@@ -20,7 +20,10 @@ class TextbookPage extends Page {
     wordsContainer.classList.add('words__container');
     const wordsWrapper = document.createElement('div');
     wordsWrapper.classList.add('words__wrapper');
-    const userWords = await this.model.getUserWords();
+    let userWords: IUserWord[] | number;
+    if (this.textbookModel.checkAuthorization()) {
+      userWords = await this.model.getUserWords();
+    }
     words.forEach((item) => {
       const imgPath = `${baseURL}/${item.image}`;
       const wordContainer = document.createElement('div');
@@ -49,7 +52,7 @@ class TextbookPage extends Page {
           <p class="phrase phrase-ru phrase-ru_meaning">${item.textMeaningTranslate}</p>
           <p class="phrase phrase-en_example">${item.textExample}</p>
           <p class="phrase phrase-ru phrase-ru_example">${item.textExampleTranslate}</p>
-          <div class="word__buttons" style="display: ${localStorage.getItem('authDataRSlang') ? 'flex' : 'none'}">
+          <div class="word__buttons" style="display: ${this.textbookModel.checkAuthorization() ? 'flex' : 'none'}">
             <button class="btn btn-primary difficult-button">${
               TextbookModel.isDifficultWordsGroup ? 'remove' : 'difficult'
             }</button>
@@ -197,12 +200,8 @@ class TextbookPage extends Page {
   renderTextbookToolsContainer() {
     const textbookToolsContainer = document.createElement('div');
     textbookToolsContainer.classList.add('textbook-tools__container');
-    textbookToolsContainer.append(
-      this.renderLevelsElement(),
-      this.renderPaginationElement(),
-      this.renderGamesButton(),
-      this.renderDifficultWordsButton()
-    );
+    textbookToolsContainer.append(this.renderLevelsElement(), this.renderPaginationElement(), this.renderGamesButton());
+    if (this.textbookModel.checkAuthorization()) textbookToolsContainer.append(this.renderDifficultWordsButton());
     return textbookToolsContainer;
   }
 
@@ -222,6 +221,7 @@ class TextbookPage extends Page {
       await this.renderWords(TextbookModel.isDifficultWordsGroup ? difficultWords : words);
       if (TextbookModel.isDifficultWordsGroup) this.textbookModel.setDifficultWordsPage();
       const textbookModel = new TextbookModel();
+      textbookModel.updatePaginationState();
       await textbookModel.checkPageStyle();
     })().catch((err: Error) => console.warn(err.message));
     return this.container;

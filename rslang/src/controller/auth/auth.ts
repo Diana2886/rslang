@@ -3,6 +3,7 @@ import Model, { Result } from '../../model/components/index';
 import { IEmpyObj, ISignIn, IUser } from '../../types/index';
 import PageIds from '../../view/pages/app/pageIds';
 import LogInPage from '../../view/pages/logIn/index';
+import TextbookController from '../textbookController';
 
 class AuthController {
   userRegistrInfo: IEmpyObj;
@@ -78,6 +79,9 @@ class AuthController {
     loginBlock.classList.remove('modal-active');
     registerBlock.classList.remove('modal-active');
     document.body.classList.remove('body-act');
+
+    const textbookController = new TextbookController();
+    textbookController.rerenderWords('words');
   }
 
   checkInput(elem: HTMLElement) {
@@ -183,7 +187,7 @@ class AuthController {
       const resStatus = await this.model.signIn(obj);
       if (resStatus === 200) {
         console.log(elem);
-        
+
         elem.innerHTML = 'Log out';
         this.closeModal();
       } else if (alertPlaceholder.children.length === 0) {
