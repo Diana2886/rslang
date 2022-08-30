@@ -62,7 +62,7 @@ class AudioChallenge extends Page {
       },
       { once: true }
     );
-    window.addEventListener('keyup', (e) => {
+    document.body.addEventListener('keyup', (e) => {
       const number: number = +e.key;
       if (number > 0 && number < 7) {
         const levelPress = number - 1;
@@ -89,13 +89,13 @@ class AudioChallenge extends Page {
           startButton.click();
         }
       }
-
       if (e.code === 'Space') {
         const playAudioBtn: HTMLButtonElement | null = document.querySelector('.play-image');
         if (playAudioBtn) {
           playAudioBtn.click();
         }
       }
+      e.stopImmediatePropagation();
     });
     return greetBlock;
   }

@@ -46,7 +46,6 @@ export default class Statistic {
           await this.checkSerial(userWord, key, gameName);
         }
       }
-      console.log(userWord);
       if (typeof resUWord === 'object') {
         if (userWord.wordId) {
           await this.model.updateUserWord(userWord.wordId, {

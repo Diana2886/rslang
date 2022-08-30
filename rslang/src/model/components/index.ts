@@ -351,7 +351,6 @@ class Model {
 
   async updateStatistic(statistic: IStatistic): Promise<void> {
     let status = 0;
-    console.log(statistic);
     const authStr = localStorage.getItem('authDataRSlang');
     let authDataRSlang: IAuth | undefined;
     if (authStr) {

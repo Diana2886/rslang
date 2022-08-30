@@ -108,6 +108,7 @@ export default class AudioGame {
   }
 
   getProcessGame = (userWords?: IUserWord[] | number) => {
+    this.audio.src = '';
     this.imageDiv.classList.remove('showed');
     const icon = document.createElement('img');
     icon.className = 'cassette-icon';
@@ -126,31 +127,36 @@ export default class AudioGame {
     nextBtn.innerHTML = `Next  <kbd>↵</kbd>`;
 
     example.variants.forEach((item, index) => {
+      variantsBtns.classList.add('disabled');
       const btnDiv = document.createElement('button');
       btnDiv.className = 'audio-call__choose-btn';
       btnDiv.type = 'button';
       btnDiv.innerHTML = `<kbd>${index + 1}</kbd> ${item.wordTranslate}`;
-      btnDiv.addEventListener('click', () => {
-        const btns = variantsBtns.querySelectorAll('button');
-        btns.forEach((button) => {
-          button.disabled = true;
-        });
-        this.imageDiv.classList.add('showed');
-        let answers = false;
-        if (btnDiv.textContent === `${index + 1} ${example.word.wordTranslate}`) {
-          btnDiv.classList.add('correct');
-          answers = true;
-          this.corrects.push(example.word);
-        } else {
-          btnDiv.classList.add('wrong');
-          this.wrongs.push(example.word);
-        }
-        if (typeof userWords === 'object') {
-          this.stat.writeWordStat('audio', example.word, answers).catch((err) => console.error(err));
-        }
-        this.image.src = `http://localhost:3000/${example.word.image}`;
-        this.text.innerHTML = `${example.word.word} <p>${example.word.wordTranslate}</p>`;
-      });
+      btnDiv.addEventListener(
+        'click',
+        () => {
+          const btns = variantsBtns.querySelectorAll('button');
+          btns.forEach((button) => {
+            button.disabled = true;
+          });
+          this.imageDiv.classList.add('showed');
+          let answers = false;
+          if (btnDiv.textContent === `${index + 1} ${example.word.wordTranslate}`) {
+            btnDiv.classList.add('correct');
+            answers = true;
+            this.corrects.push(example.word);
+          } else {
+            btnDiv.classList.add('wrong');
+            this.wrongs.push(example.word);
+          }
+          if (typeof userWords === 'object') {
+            this.stat.writeWordStat('audio', example.word, answers).catch((err) => console.error(err));
+          }
+          this.image.src = `http://localhost:3000/${example.word.image}`;
+          this.text.innerHTML = `${example.word.word} <p>${example.word.wordTranslate}</p>`;
+        },
+        { once: true }
+      );
       variantsBtns.append(btnDiv);
     });
     nextBtn.addEventListener('click', () => {
@@ -168,14 +174,19 @@ export default class AudioGame {
   };
 
   initBtnListener(variantsBtns: HTMLDivElement) {
-    window.addEventListener('keyup', (e) => {
-      const number: number = +e.key;
-      if (number > 0 && number < 6) {
-        const buttons = variantsBtns.querySelectorAll('button');
-        const button = buttons[number - 1];
-        button.click();
-      }
-    });
+    document.body.addEventListener(
+      'keydown',
+      (e) => {
+        e.stopPropagation();
+        const number: number = +e.key;
+        if (number > 0 && number < 6) {
+          const buttons = variantsBtns.querySelectorAll('button');
+          const button = buttons[number - 1];
+          button.click();
+        }
+      },
+      { once: true }
+    );
     window.addEventListener('done', () => {
       this.gameBody.innerHTML = '';
       this.gameBody.append(this.result.drawResult(this.corrects, this.wrongs));
@@ -183,6 +194,7 @@ export default class AudioGame {
   }
 
   async startGame(group: number, pageNum?: number) {
+    this.audio.src = '';
     const authStr = localStorage.getItem('authDataRSlang');
     let userWords: IUserWord[] | number | undefined;
     if (authStr) {
