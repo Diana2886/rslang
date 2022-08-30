@@ -1,4 +1,4 @@
-import Model, { baseURL } from '../model/components/index';
+import Model from '../model/components/index';
 import TextbookModel from '../model/textbookModel';
 import { difficultyColors, IOptional } from '../types/index';
 import PageIds from '../view/pages/app/pageIds';
@@ -14,41 +14,24 @@ class TextbookController {
   listenPlayWordButton() {
     document.body.addEventListener('click', (e) => {
       const target = e.target as HTMLElement;
-      const audioPlay = (paths: string[]) => {
-        const audio = new Audio(paths[0]);
-        audio.autoplay = true;
-        audio.onended = () => {
-          for (let i = 1; i < paths.length; i += 1) {
-            paths.shift();
-            audioPlay(paths);
-          }
-        };
-      };
       if (target.classList.contains('word__play')) {
-        console.log(target.id);
         (async () => {
           const words = await Model.getWords(TextbookModel.page, TextbookModel.group);
-          words.forEach((item) => {
-            const audios = [
-              `${baseURL}/${item.audio}`,
-              `${baseURL}/${item.audioMeaning}`,
-              `${baseURL}/${item.audioExample}`,
-            ];
-            if (item.id === target.id) {
-              audioPlay(audios);
-            }
-          });
+          const difficultWords = await this.textbookModel.getDifficultWords();
+          this.textbookModel.playWord(TextbookModel.isDifficultWordsGroup ? difficultWords : words, target);
         })().catch((err: Error) => console.warn(err.message));
       }
     });
   }
 
-  rerenderWords() {
+  rerenderWords(wordsType: string) {
     const wordsWrapper = document.querySelector('.words__wrapper') as HTMLElement;
     wordsWrapper.innerHTML = '';
     const textbookPage = new TextbookPage(PageIds.Textbook);
     (async () => {
-      wordsWrapper.append(await textbookPage.renderWords(TextbookModel.page, TextbookModel.group));
+      const words = await Model.getWords(TextbookModel.page, TextbookModel.group);
+      const difficultWords = await this.textbookModel.getDifficultWords();
+      wordsWrapper.append(await textbookPage.renderWords(wordsType === 'words' ? words : difficultWords));
     })().catch((err: Error) => console.warn(err.message));
   }
 
@@ -56,60 +39,65 @@ class TextbookController {
     document.body.addEventListener('click', (e) => {
       const target = e.target as HTMLElement;
       if (target.classList.contains('level__item')) {
+        TextbookModel.isDifficultWordsGroup = false;
+        this.textbookModel.controlGamesButtonAccess();
+        this.textbookModel.controlPageButtonsAccess(false);
         (document.querySelector('.levels-btn') as HTMLButtonElement).innerHTML = `Level ${target.innerHTML}`;
         TextbookModel.group = +target.id.split('level')[1] - 1;
         TextbookModel.page = 0;
         (document.querySelector('.pages-btn') as HTMLButtonElement).innerHTML = `Page ${TextbookModel.page + 1}`;
-        this.rerenderWords();
-        this.resetPageStyles();
-        this.checkPageStyle();
+        this.rerenderWords('words');
+        this.textbookModel.resetPageStyles();
+        (async () => {
+          await this.textbookModel.checkPageStyle();
+        })().catch((err: Error) => console.warn(err.message));
+        this.textbookModel.updatePaginationState();
       }
     });
-  }
-
-  checkPageStyle() {
-    (async () => {
-      await this.textbookModel.checkPageForPickedWords();
-    })().catch((err: Error) => console.warn(err.message));
-  }
-
-  resetPageStyles() {
-    const wordsWrapper = document.querySelector('.words__wrapper') as HTMLElement;
-    const pagesButton = document.querySelector('.pages-btn') as HTMLElement;
-    wordsWrapper.style.boxShadow = 'none';
-    wordsWrapper.style.backgroundColor = 'inherit';
-    pagesButton.style.border = '1px solid #F0C932';
   }
 
   listenPageButton() {
     document.body.addEventListener('click', (e) => {
       const target = e.target as HTMLElement;
       const pagesButton = document.querySelector('.pages-btn') as HTMLButtonElement;
+      const checkPageStyle = () => {
+        (async () => {
+          await this.textbookModel.checkPageStyle();
+        })().catch((err: Error) => console.warn(err.message));
+      };
       if (target.classList.contains('page__item')) {
         pagesButton.innerHTML = target.innerHTML;
         TextbookModel.page = +target.id.split('page')[1] - 1;
-        const wordsWrapper = document.querySelector('.words__wrapper') as HTMLElement;
-        wordsWrapper.innerHTML = '';
-        const textbookPage = new TextbookPage(PageIds.Textbook);
-        (async () => {
-          wordsWrapper.append(await textbookPage.renderWords(TextbookModel.page, TextbookModel.group));
-        })().catch((err: Error) => console.warn(err.message));
-        this.checkPageStyle();
+        this.rerenderWords('words');
+        checkPageStyle();
+        this.textbookModel.updatePaginationState();
       }
       if (target.closest('.page-prev')) {
         if (TextbookModel.page > 0) TextbookModel.page -= 1;
         pagesButton.innerHTML = `Page ${TextbookModel.page + 1}`;
-        this.rerenderWords();
-        this.resetPageStyles();
-        this.checkPageStyle();
+        this.rerenderWords('words');
+        this.textbookModel.resetPageStyles();
+        checkPageStyle();
+        this.textbookModel.updatePaginationState();
       }
       if (target.closest('.page-next')) {
-        const PAGES_AMOUNT = 30;
-        if (TextbookModel.page < PAGES_AMOUNT) TextbookModel.page += 1;
+        if (TextbookModel.page < TextbookModel.PAGES_AMOUNT) TextbookModel.page += 1;
         pagesButton.innerHTML = `Page ${TextbookModel.page + 1}`;
-        this.rerenderWords();
-        this.resetPageStyles();
-        this.checkPageStyle();
+        this.rerenderWords('words');
+        this.textbookModel.resetPageStyles();
+        checkPageStyle();
+        this.textbookModel.updatePaginationState();
+      }
+    });
+  }
+
+  listenDifficultWordsButton() {
+    document.body.addEventListener('click', (e) => {
+      const target = e.target as HTMLElement;
+      if (target.classList.contains('btn-difficult-words')) {
+        this.rerenderWords('difficultWords');
+        this.textbookModel.resetPageStyles();
+        this.textbookModel.setDifficultWordsPage();
       }
     });
   }
@@ -138,15 +126,23 @@ class TextbookController {
       };
       wordButtons.forEach((item) => {
         if (target.classList.contains(`${item}-button`)) {
-          wordContainer.style.backgroundColor = difficultyColors[item];
+          if (target.innerHTML !== 'remove') wordContainer.style.backgroundColor = difficultyColors[item];
           const wordId = wordContainer.id.split('word-id-')[1];
           (async () => {
             const userWord = await this.model.getUserWord(wordId);
             if (typeof userWord === 'number') {
               await this.model.createUserWord(wordId, { difficulty: item, optional });
-              await this.textbookModel.checkPageForPickedWords();
+              this.textbookModel.resetPageStyles();
+              await this.textbookModel.checkPageStyle();
             } else if (userWord.difficulty !== item) {
               await this.model.updateUserWord(wordId, { difficulty: item });
+              this.textbookModel.resetPageStyles();
+              await this.textbookModel.checkPageStyle();
+            }
+            if (target.classList.contains('difficult-button') && target.innerHTML === 'remove') {
+              await this.model.deleteUserWord(wordId);
+              console.log(await this.model.getUserWords());
+              this.rerenderWords('difficultWords');
             }
           })().catch((err: Error) => console.warn(err.message));
         }

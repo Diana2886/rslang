@@ -2,7 +2,7 @@ import TextbookModel from '../../../model/textbookModel';
 import Model, { baseURL } from '../../../model/components/index';
 import Page from '../../core/templates/page';
 import PageIds from '../app/pageIds';
-import { difficultyColors, levelColors, Levels } from '../../../types/index';
+import { difficultyColors, IWord, LevelColors, Levels } from '../../../types/index';
 import Footer from '../../core/components/footer/index';
 import AudioGame from '../audioChallenge/audioChallenge';
 
@@ -13,52 +13,57 @@ class TextbookPage extends Page {
 
   model = new Model();
 
-  async renderWords(page: number, group: number) {
+  textbookModel = new TextbookModel();
+
+  async renderWords(words: IWord[]) {
     const wordsContainer = document.createElement('div');
     wordsContainer.classList.add('words__container');
     const wordsWrapper = document.createElement('div');
     wordsWrapper.classList.add('words__wrapper');
-    const WORDS_AMOUNT = 20;
-    const words = await Model.getWords(page, group);
     const userWords = await this.model.getUserWords();
-    for (let i = 0; i < WORDS_AMOUNT; i += 1) {
-      const imgPath = `${baseURL}/${words[i].image}`;
+    words.forEach((item) => {
+      const imgPath = `${baseURL}/${item.image}`;
       const wordContainer = document.createElement('div');
       wordContainer.classList.add('word__container');
-      wordContainer.id = `word-id-${words[i].id}`;
+      wordContainer.id = `word-id-${TextbookModel.getWordId(item)}`;
+      wordContainer.style.boxShadow = `0px 8px 8px ${LevelColors[item.group]}30`;
       if (typeof userWords === 'object') {
-        userWords.forEach((item) => {
-          if (item.wordId === words[i].id) {
-            wordContainer.style.backgroundColor = difficultyColors[item.difficulty as string];
+        userWords.forEach((el) => {
+          if (el.wordId === item.id) {
+            wordContainer.style.backgroundColor = difficultyColors[el.difficulty as string];
           }
         });
       }
       const template = `
         <img class="word__img" src="${imgPath}" alt="image">
         <div class="word__content">
-          <div class="word-translation__wrapper" style="border-left: 3px solid ${
-            levelColors[Levels[TextbookModel.group]]
-          }">
+          <div class="word-translation__wrapper" style="border-left: 3px solid ${LevelColors[item.group]}">
             <div class="word__wrapper">
-              <h4 class="word">${words[i].word}</h4>
-              <h5 class="transcription">${words[i].transcription}</h5>
-              <span class="word__play" id="${words[i].id}"></span>
+              <h4 class="word">${item.word}</h4>
+              <h5 class="transcription">${item.transcription}</h5>
+              <span class="word__play" id="${TextbookModel.getWordId(item)}"></span>
             </div>
-            <p class="translation">${words[i].wordTranslate}</p>
+            <p class="translation">${item.wordTranslate}</p>
           </div>
-          <p class="phrase phrase-en_meaning">${words[i].textMeaning}</p>
-          <p class="phrase phrase-ru phrase-ru_meaning">${words[i].textMeaningTranslate}</p>
-          <p class="phrase phrase-en_example">${words[i].textExample}</p>
-          <p class="phrase phrase-ru phrase-ru_example">${words[i].textExampleTranslate}</p>
+          <p class="phrase phrase-en_meaning">${item.textMeaning}</p>
+          <p class="phrase phrase-ru phrase-ru_meaning">${item.textMeaningTranslate}</p>
+          <p class="phrase phrase-en_example">${item.textExample}</p>
+          <p class="phrase phrase-ru phrase-ru_example">${item.textExampleTranslate}</p>
           <div class="word__buttons" style="display: ${localStorage.getItem('authDataRSlang') ? 'flex' : 'none'}">
-            <button class="btn btn-primary difficult-button">difficult</button>
-            <button class="btn btn-secondary learned-button">learned</button>
+            <button class="btn btn-primary difficult-button">${
+              TextbookModel.isDifficultWordsGroup ? 'remove' : 'difficult'
+            }</button>
+            ${
+              !TextbookModel.isDifficultWordsGroup
+                ? '<button class="btn btn-secondary learned-button">learned</button>'
+                : ''
+            }
           </div>
         </div>
       `;
       wordContainer.innerHTML = template;
       wordsContainer.append(wordContainer);
-    }
+    });
     wordsWrapper.append(wordsContainer);
     const footer = new Footer();
     this.container.append(wordsWrapper, footer.renderFooter());
@@ -78,7 +83,7 @@ class TextbookPage extends Page {
     for (let i = 0; i < GROUPS_AMOUNT; i += 1) {
       template += `
         <li><button class="dropdown-item level__item" id="level${i + 1}" type="button" style="background-color:${
-        levelColors[Levels[i]]
+        LevelColors[i]
       }">${Levels[i]}</button></li>
       `;
     }
@@ -88,14 +93,13 @@ class TextbookPage extends Page {
   }
 
   renderPaginationElement() {
-    const PAGES_AMOUNT = 30;
     const paginationElement = document.createElement('div');
     paginationElement.classList.add('pagination');
     let template = `
       <nav aria-label="Page navigation example">
         <ul class="pagination">
           <li class="page-item">
-            <button class="page-link page-prev" type="button" aria-label="Previous">
+            <button class="btn btn-secondary page-link page-prev" type="button" aria-label="Previous">
               <span aria-hidden="true">&lt;</span>
             </button>
           </li>
@@ -104,7 +108,7 @@ class TextbookPage extends Page {
           </button>
           <ul class="dropdown-menu dropdown-pages dropdown-menu-end" aria-labelledby="dropdownMenu2">
     `;
-    for (let i = 0; i < PAGES_AMOUNT; i += 1) {
+    for (let i = 0; i < TextbookModel.PAGES_AMOUNT; i += 1) {
       template += `
         <li><button class="dropdown-item page__item page${i + 1}" id="page${i + 1}" type="button">Page ${
         i + 1
@@ -114,7 +118,7 @@ class TextbookPage extends Page {
     template += `
           </ul>
           <li class="page-item">
-            <button class="page-link page-next" type="button" aria-label="Next">
+            <button class="btn btn-secondary page-link page-next" type="button" aria-label="Next">
               <span aria-hidden="true">&gt;</span>
             </button>
           </li>
@@ -170,11 +174,7 @@ class TextbookPage extends Page {
   }
 
   renderDifficultWordsButton() {
-    const template = `
-      <a class="link target" aria-current="page" href="#${PageIds.DifficultWords}">
-        <button type="button" class="btn btn-primary btn-difficult-words">Difficult words</button>
-      </a>
-    `;
+    const template = `<button type="button" class="btn btn-primary btn-difficult-words">Difficult words</button>`;
     const difficultWordsButton = document.createElement('div');
     difficultWordsButton.innerHTML = template;
     return difficultWordsButton;
@@ -217,9 +217,12 @@ class TextbookPage extends Page {
   render() {
     this.container.append(this.renderTextbookContainer());
     (async () => {
-      await this.renderWords(TextbookModel.page, TextbookModel.group);
+      const words = await Model.getWords(TextbookModel.page, TextbookModel.group);
+      const difficultWords = await this.textbookModel.getDifficultWords();
+      await this.renderWords(TextbookModel.isDifficultWordsGroup ? difficultWords : words);
+      if (TextbookModel.isDifficultWordsGroup) this.textbookModel.setDifficultWordsPage();
       const textbookModel = new TextbookModel();
-      await textbookModel.checkPageForPickedWords();
+      await textbookModel.checkPageStyle();
     })().catch((err: Error) => console.warn(err.message));
     return this.container;
   }
