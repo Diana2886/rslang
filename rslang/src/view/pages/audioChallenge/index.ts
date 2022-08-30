@@ -65,6 +65,7 @@ class AudioChallenge extends Page {
     document.body.addEventListener('keyup', (e) => {
       const number: number = +e.key;
       if (number > 0 && number < 7) {
+        const variantsBtns: HTMLButtonElement | null = document.querySelector('.variants__btns');
         const levelPress = number - 1;
         if (chooseLevel) {
           const inputs = chooseLevel.querySelectorAll('input');
@@ -74,6 +75,13 @@ class AudioChallenge extends Page {
           startButton.autofocus = true;
           startButton.classList.remove('disabled');
           chooseLevel.classList.add('active');
+        }
+        if (variantsBtns) {
+          if (number > 0 && number < 6) {
+            const buttons = variantsBtns.querySelectorAll('button');
+            const button = buttons[number - 1];
+            button.click();
+          }
         }
       }
       if (e.code === 'Enter') {

@@ -1,5 +1,6 @@
 export interface IWord {
   id: string;
+  _id?: string;
   group: number;
   page: number;
   word: string;
@@ -13,6 +14,11 @@ export interface IWord {
   wordTranslate: string;
   textMeaningTranslate: string;
   textExampleTranslate: string;
+}
+
+export interface IAggregatedWords {
+  paginatedResults: IWord[];
+  totalCount: 'object';
 }
 
 export interface IOptional {
@@ -119,14 +125,14 @@ interface IColors {
   [key: string]: string;
 }
 
-export const levelColors: IColors = {
-  A1: '#198754',
-  A2: '#ffc107',
-  B1: '#fd7e14',
-  B2: '#dc3545',
-  C1: '#d63384',
-  C2: '#6f42c1',
-};
+export enum LevelColors {
+  '#198754',
+  '#ffc107',
+  '#fd7e14',
+  '#dc3545',
+  '#d63384',
+  '#6f42c1',
+}
 
 export const difficultyColors: IColors = {
   difficult: '#DDDEFA',
