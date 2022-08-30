@@ -13,6 +13,10 @@ class TextbookModel {
 
   model = new Model();
 
+  checkAuthorization() {
+    return Boolean(localStorage.getItem('authDataRSlang'));
+  }
+
   playWord(words: IWord[], target: HTMLElement) {
     const audioPlay = (paths: string[]) => {
       const audio = new Audio(paths[0]);
@@ -36,7 +40,7 @@ class TextbookModel {
     const wordsWrapper = document.querySelector('.words__wrapper') as HTMLElement;
     const pagesButton = document.querySelector('.pages-btn') as HTMLElement;
     wordsWrapper.style.boxShadow = 'none';
-    wordsWrapper.style.backgroundColor = 'inherit';
+    wordsWrapper.style.border = 'inherit';
     pagesButton.style.border = '1px solid #F0C932';
   }
 
@@ -45,7 +49,6 @@ class TextbookModel {
       localStorage.setItem('group', `${TextbookModel.group}`);
       localStorage.setItem('page', `${TextbookModel.page}`);
       localStorage.setItem('difficultWords', String(TextbookModel.isDifficultWordsGroup));
-      console.log(TextbookModel.isDifficultWordsGroup);
     };
     window.addEventListener('beforeunload', setLocalStorage);
 
@@ -57,33 +60,34 @@ class TextbookModel {
         TextbookModel.page = +(localStorage.getItem('page') as string);
       }
       if (localStorage.getItem('difficultWords')) {
-        console.log(localStorage.getItem('difficultWords'));
         if (localStorage.getItem('difficultWords') === 'false') TextbookModel.isDifficultWordsGroup = false;
         else TextbookModel.isDifficultWordsGroup = Boolean(localStorage.getItem('difficultWords'));
-        console.log(TextbookModel.isDifficultWordsGroup, Boolean(localStorage.getItem('difficultWords')));
       }
     };
     window.addEventListener('DOMContentLoaded', getLocalStorage);
   }
 
   async getDifficultWords() {
-    const userWords = await this.model.getUserWords();
-    let wordsCount = 0;
-    if (typeof userWords === 'object') {
-      const difficultWords = userWords.filter((word) => word.difficulty === 'difficult');
-      wordsCount = difficultWords.length;
+    if (this.checkAuthorization()) {
+      const userWords = await this.model.getUserWords();
+      let wordsCount = 0;
+      if (typeof userWords === 'object') {
+        const difficultWords = userWords.filter((word) => word.difficulty === 'difficult');
+        wordsCount = difficultWords.length;
+      }
+      const difficultWordsRes = await this.model.getAggregatedWords(
+        '{"userWord.difficulty":"difficult"}',
+        undefined,
+        undefined,
+        wordsCount
+      );
+      let difficultWords: IWord[] = [];
+      if (typeof difficultWordsRes === 'object') {
+        difficultWords = difficultWordsRes[0].paginatedResults;
+      }
+      return difficultWords;
     }
-    const difficultWordsRes = await this.model.getAggregatedWords(
-      '{"userWord.difficulty":"difficult"}',
-      undefined,
-      undefined,
-      wordsCount
-    );
-    let difficultWords: IWord[] = [];
-    if (typeof difficultWordsRes === 'object') {
-      difficultWords = difficultWordsRes[0].paginatedResults;
-    }
-    return difficultWords;
+    return [];
   }
 
   setDifficultWordsPage() {
@@ -93,28 +97,33 @@ class TextbookModel {
     this.controlPageButtonsAccess(true);
     this.controlGamesButtonAccess();
     const wordsWrapper = document.querySelector('.words__wrapper') as HTMLElement;
-    wordsWrapper.style.backgroundColor = '#545BE850';
+    if (this.checkAuthorization()) {
+      wordsWrapper.style.border = '3px solid #545BE850';
+      wordsWrapper.style.boxShadow = '0px 0px 8px rgba(0, 0, 0, 0.1)';
+    } else wordsWrapper.innerText = 'Please, login...';
   }
 
   async checkPageStyle() {
     let count = 0;
     const words = await Model.getWords(TextbookModel.page, TextbookModel.group);
-    const userWords = await this.model.getUserWords();
-    words.forEach((word) => {
-      if (typeof userWords === 'object') {
-        userWords.forEach((item) => {
-          if (word.id === item.wordId && item.difficulty === 'learned') count += 1;
-        });
+    if (this.checkAuthorization()) {
+      const userWords = await this.model.getUserWords();
+      words.forEach((word) => {
+        if (typeof userWords === 'object') {
+          userWords.forEach((item) => {
+            if (word.id === item.wordId && item.difficulty === 'learned') count += 1;
+          });
+        }
+      });
+      if (!TextbookModel.isDifficultWordsGroup) {
+        const wordsWrapper = document.querySelector('.words__wrapper') as HTMLElement;
+        const pagesButton = document.querySelector('.pages-btn') as HTMLElement;
+        wordsWrapper.style.boxShadow = count === 20 ? '0px 0px 8px rgba(0, 0, 0, 0.1)' : 'none';
+        wordsWrapper.style.border = count === 20 ? '3px solid #F0C93250' : 'none';
+        pagesButton.style.border = count === 20 ? '1px solid #545BE8' : '1px solid #F0C932';
+        const gamesButton = document.querySelector('.textbook-games__button') as HTMLButtonElement;
+        gamesButton.disabled = count === 20;
       }
-    });
-    if (!TextbookModel.isDifficultWordsGroup) {
-      const wordsWrapper = document.querySelector('.words__wrapper') as HTMLElement;
-      const pagesButton = document.querySelector('.pages-btn') as HTMLElement;
-      wordsWrapper.style.boxShadow = count === 20 ? '0px 0px 8px rgba(0, 0, 0, 0.1)' : 'none';
-      wordsWrapper.style.backgroundColor = count === 20 ? '#F0C93250' : 'inherit';
-      pagesButton.style.border = count === 20 ? '1px solid #545BE8' : '1px solid #F0C932';
-      const gamesButton = document.querySelector('.textbook-games__button') as HTMLButtonElement;
-      gamesButton.disabled = count === 20;
     }
   }
 
@@ -133,7 +142,6 @@ class TextbookModel {
     const prevButton = document.querySelector('.page-prev') as HTMLButtonElement;
     const nextButton = document.querySelector('.page-next') as HTMLButtonElement;
     prevButton.disabled = !(TextbookModel.page > 0);
-    console.log(TextbookModel.page);
     nextButton.disabled = !(TextbookModel.page < TextbookModel.PAGES_AMOUNT - 1);
   }
 
