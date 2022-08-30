@@ -1,4 +1,14 @@
-import { IAggregatedWords, IAuth, INewUser, ISignIn, IUser, IUserWord, IWord, QueryData, WordsGroup } from '../../types/index';
+import {
+  IAggregatedWords,
+  IAuth,
+  INewUser,
+  ISignIn,
+  IUser,
+  IUserWord,
+  IWord,
+  QueryData,
+  WordsGroup,
+} from '../../types/index';
 
 export const baseURL = 'http://localhost:3000';
 enum Path {
