@@ -95,9 +95,9 @@ class TextbookController {
     document.body.addEventListener('click', (e) => {
       const target = e.target as HTMLElement;
       if (target.classList.contains('btn-difficult-words')) {
-        this.textbookModel.setDifficultWordsPage();
         this.rerenderWords('difficultWords');
         this.textbookModel.resetPageStyles();
+        this.textbookModel.setDifficultWordsPage();
       }
     });
   }
