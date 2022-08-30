@@ -93,12 +93,12 @@ class Sprint extends Page {
       </div>
       <div class="sprint-play-wrapper animate__zoomIn">
         <div class="game-info-block">
-          <div class="sprint-timer"><span>60</span> sek</div>
+          <div class="sprint-timer"><span>60</span> sec</div>
           <div class="sprint-point">0</div>
         </div>
         <div class="game-play-block">
-          <div class="time-animation-block">тут будет анимация времени на каждый секунд</div>
-          <div class="some-animation">тут будет анимация чего то для интереса</div>
+          <div class="time-animation-block">gives <span>+10</span> points</div>
+          <div class="some-animation"> correct <span>0</span> times</div>
           <div class="task-block">
             <div class="word-sound">
               <audio src=""></audio>

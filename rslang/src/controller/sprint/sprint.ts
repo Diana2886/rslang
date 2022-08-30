@@ -1,7 +1,8 @@
 /* eslint-disable no-dupe-else-if */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import Model from '../../model/components/index';
-import { IWord } from '../../types/index';
+import { IUserWord, IWord } from '../../types/index';
+import Statistic from '../statistics/index';
 
 const baseUrl = 'http://localhost:3000';
 
@@ -32,7 +33,10 @@ export default class SprintController {
 
   score: number;
 
+  static: Statistic;
+
   constructor() {
+    this.static = new Statistic();
     this.model = new Model();
     this.correctWords = [];
     this.wrongWords = [];
@@ -77,12 +81,33 @@ export default class SprintController {
   }
 
   async checkLevel(elem: HTMLElement | number) {
-    if (typeof elem === 'number') {
-      this.wordsArray = await Model.getWords(elem, this.level);
+    let userWods: string[] | undefined = [];
+    const serWods = await this.model.getUserWords();
+    if (serWods === 0) {
+      userWods = undefined;
     } else {
+      userWods = (serWods as IUserWord[]).map((item) => item.wordId) as string[];
+    }
+    if (typeof elem === 'number') {
+      const words = await Model.getWords(elem, this.level);
+      if (!userWods) {
+        this.wordsArray = words;
+      } else {
+        this.wordsArray = words.filter((item) => !(userWods as string[]).includes(item.id));
+      }
+    } else {
+      this.counter = 0;
+      this.point = 10;
+      this.score = 0;
       const lvl = elem.id;
       this.level = +lvl[lvl.length - 1] - 1;
-      this.wordsArray = await Model.getWords(this.page, this.level);
+      const words = await Model.getWords(this.page, this.level);
+      if (!userWods) {
+        this.wordsArray = words;
+      } else {
+        this.wordsArray = words.filter((item) => !(userWods as string[]).includes(item.id));
+      }
+      console.log(this.wordsArray);
       const startBtn = elem.parentElement?.nextElementSibling as HTMLButtonElement;
       startBtn.disabled = false;
     }
@@ -96,38 +121,66 @@ export default class SprintController {
       if (counterTime === 0) {
         clearInterval(timer);
         this.modalActive();
+        if (this.checkLogIn()) {
+          this.sendResultToStatic();
+        }
+        this.wrongWords = [];
+        this.correctWords = [];
       }
       sprintTimer.innerHTML = `${counterTime}`;
     }, 1000);
   }
 
+  checkLogIn() {
+    const logPar = localStorage.getItem('sthmPasMail');
+    const tokenUser = localStorage.getItem('newUserDataRSlang');
+    const creatUser = localStorage.getItem('authDataRSlang');
+    if (logPar !== null || tokenUser !== null || creatUser !== null) {
+      return true;
+    }
+    return false;
+  }
+
+  sendResultToStatic() {
+    this.wrongWords.forEach(async (item) => {
+      const res = await this.static.writeWordStat('sprint', item, false);
+    });
+    this.correctWords.forEach(async (item) => {
+      const res = await this.static.writeWordStat('sprint', item, true);
+    });
+  }
+
   countScore(str: string) {
     const scoreBlock = document.querySelector('.sprint-point') as HTMLElement;
-    // let score = 0;
-    // let point = 10;
-    // let count = 0;
+    const correctPointBlock = document.querySelector('.time-animation-block span') as HTMLElement;
+    const counterBlock = document.querySelector('.some-animation span') as HTMLElement;
 
     if (str === 'correct') {
-      if (this.counter === 3) {
-        this.point += 10;
+      if (this.counter === 3 && this.point < 80) {
+        this.point *= 2;
         this.score += this.point;
+        correctPointBlock.textContent = `+${this.point}`;
         scoreBlock.textContent = `${this.score}`;
         this.counter = 0;
         this.counter += 1;
+        counterBlock.textContent = `${this.counter}`;
       } else {
         this.score += this.point;
+        correctPointBlock.textContent = `+${this.point}`;
         scoreBlock.textContent = `${this.score}`;
         this.counter += 1;
+        counterBlock.textContent = `${this.counter}`;
       }
-    } else {
-      this.point -= 10;
+    } else if (str === 'wrong') {
+      this.point = 10;
+      correctPointBlock.textContent = `+${this.point}`;
       this.counter = 0;
+      counterBlock.textContent = `${this.counter}`;
     }
   }
 
   async pastWordToPlayGame(elem: HTMLElement) {
-    // this.sprintTimer();
-
+    this.sprintTimer();
     const parent = elem.parentElement;
     parent!.classList.add('check-level-act');
     (<HTMLElement>document.querySelector('.sprint-play-wrapper')).classList.add('sprint-play-wrapper-active');
@@ -148,16 +201,18 @@ export default class SprintController {
     russiaWord.innerHTML = this.rusWords[this.count].wordTranslate;
     audioTag.src = `${baseUrl}/${this.engWords[this.count].audio}`;
 
-    window.addEventListener('keydown', async (e) => {
-      const key = e.code;
-      if (key === 'ArrowRight' || key === 'ArrowLeft') {
-        await this.nextWord(key);
-      }
-    });
+    window.addEventListener('keydown', this.arrow);
     correctBtn.addEventListener('click', this.nextWord);
     wrongtBtn.addEventListener('click', this.nextWord);
     await this.nextWord('start');
   }
+
+  arrow = async (e: KeyboardEvent) => {
+    const key = e.code;
+    if (key === 'ArrowRight' || key === 'ArrowLeft') {
+      await this.nextWord(key);
+    }
+  };
 
   pastEffect(str: string) {
     const gameBlock = <HTMLElement>document.querySelector('.sprint-play-wrapper');
@@ -185,10 +240,9 @@ export default class SprintController {
       return;
     }
     if (this.count === this.len - 1) {
-      this.modalActive();
+      // this.modalActive();
       this.count = 0;
       this.page += 1;
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises
       await this.checkLevel(this.page);
     }
     const rusWord = this.rusWords[this.count];
@@ -302,7 +356,7 @@ export default class SprintController {
     const modalWrapper = document.querySelector('.modal-wrapper') as HTMLElement;
     const wrongTable = document.querySelector('.wrong-answer') as HTMLTableElement;
     const correctTable = document.querySelector('.correct-answer') as HTMLTableElement;
-
+    window.removeEventListener('keydown', this.arrow);
     modalBG.classList.add('modal-bg-act');
     modalWrapper.classList.add('modal-wrapper-act');
     correctTable.innerHTML = '';
@@ -332,7 +386,9 @@ export default class SprintController {
     const checkLevel = document.querySelector('.check-level') as HTMLElement;
     const playWrapper = document.querySelector('.sprint-play-wrapper') as HTMLElement;
     const targ = document.querySelector('.btn-check') as HTMLElement;
-
+    this.counter = 0;
+    this.point = 10;
+    this.score = 0;
     if (str === 'repeat') {
       modalBG.classList.remove('modal-bg-act');
       modalWrapper.classList.remove('modal-wrapper-act');
