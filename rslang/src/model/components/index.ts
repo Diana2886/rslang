@@ -1,4 +1,4 @@
-import { IAuth, INewUser, ISignIn, IUser, IUserWord, IWord, QueryData, WordsGroup } from '../../types/index';
+import { IAggregatedWords, IAuth, INewUser, ISignIn, IUser, IUserWord, IWord, QueryData, WordsGroup } from '../../types/index';
 
 export const baseURL = 'http://localhost:3000';
 enum Path {
@@ -196,7 +196,12 @@ class Model {
     }
   }
 
-  async getAggregatedWords(filter: string, group?: number, page?: number, count?: number): Promise<IWord[] | number> {
+  async getAggregatedWords(
+    filter: string,
+    group?: number,
+    page?: number,
+    count?: number
+  ): Promise<IAggregatedWords[] | number> {
     let status = 0;
     const authStr = localStorage.getItem('authDataRSlang');
     let authDataRSlang: IAuth | undefined;
@@ -227,7 +232,7 @@ class Model {
         }
       );
       status = response.status;
-      const words = await (<Promise<IWord[]>>response.json());
+      const words = await (<Promise<IAggregatedWords[]>>response.json());
       return words;
     } catch (error) {
       console.error(error);
