@@ -15,12 +15,22 @@ export interface IWord {
   textExampleTranslate: string;
 }
 
-interface IOptional {
-  [key: string]: string | boolean;
+export interface IOptional {
+  audio: IResult;
+  sprint: IResult;
+  serial: number;
+}
+
+interface IResult {
+  [data: string]: {
+    allGames: number;
+    corrects: number;
+  };
 }
 
 export interface IUserWord {
-  difficulty: string;
+  wordId?: string;
+  difficulty?: string;
   optional?: IOptional;
 }
 
@@ -43,9 +53,26 @@ export interface ISetting {
   optional?: IOptional;
 }
 
+export interface IStatOptional {
+  [date: string]: {
+    audio: {
+      newWords: number;
+      learnedWords: number;
+    };
+    sprint: {
+      newWords: number;
+      learnedWords: number;
+    };
+    textbook: {
+      newWords: number;
+      learnedWords: number;
+    };
+  };
+}
+
 export interface IStatistic {
   learnedWords: number;
-  optional?: IOptional;
+  optional: IStatOptional;
 }
 
 export type QueryData = {
@@ -68,6 +95,11 @@ export interface IEmpyObj {
   [key: string]: string;
 }
 
+export type GameData = {
+  word: IWord;
+  variants: IWord[];
+};
+
 export enum Levels {
   A1,
   A2,
@@ -88,4 +120,9 @@ export const levelColors: IColors = {
   B2: '#dc3545',
   C1: '#d63384',
   C2: '#6f42c1',
+};
+
+export const difficultyColors: IColors = {
+  difficult: '#DDDEFA',
+  learned: '#FCF4D6',
 };

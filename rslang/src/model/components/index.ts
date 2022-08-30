@@ -1,4 +1,14 @@
-import { IAuth, INewUser, ISignIn, IUser, IUserWord, IWord, QueryData, WordsGroup } from '../../types/index';
+import {
+  IAuth,
+  INewUser,
+  ISignIn,
+  IStatistic,
+  IUser,
+  IUserWord,
+  IWord,
+  QueryData,
+  WordsGroup,
+} from '../../types/index';
 
 export const baseURL = 'http://localhost:3000';
 enum Path {
@@ -6,6 +16,7 @@ enum Path {
   users = '/users',
   signIn = '/signin',
   aggregatedWords = '/aggregatedWords',
+  statistics = '/statistics',
 }
 export enum Result {
   success = 200,
@@ -51,8 +62,7 @@ class Model {
     }
   }
 
-  // eslint-disable-next-line consistent-return
-  async createUser(user: IUser): Promise<number | undefined> {
+  async createUser(user: IUser): Promise<number> {
     let status = 0;
     try {
       const response = await fetch(`${baseURL}${Path.users}`, {
@@ -63,10 +73,6 @@ class Model {
         },
         body: JSON.stringify(user),
       });
-      const { email, password } = user;
-      const obj = { email, password };
-      localStorage.setItem('sthmPasMail', JSON.stringify(obj));
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const newUser = await (<Promise<INewUser>>response.json());
       status = response.status;
       if (status === Result.success) {
@@ -80,7 +86,6 @@ class Model {
   }
 
   async signIn(user: ISignIn): Promise<number> {
-    // let status = 0;
     try {
       const response = await fetch(`${baseURL}${Path.signIn}`, {
         method: 'POST',
@@ -90,13 +95,14 @@ class Model {
         },
         body: JSON.stringify(user),
       });
-
+      const { email, password } = user;
+      const startDate = new Date();
       const authDataRSlang = await (<Promise<IAuth>>response.json());
-      // status = +response.status;
+      const obj = { email, password, startDate };
+      localStorage.setItem('sthmPasMail', JSON.stringify(obj));
       localStorage.setItem('authDataRSlang', JSON.stringify(authDataRSlang));
       return 200;
     } catch (error) {
-      // console.error(error);
       return 403;
     }
   }
@@ -240,47 +246,144 @@ class Model {
     }
   }
 
-  async createData() {
-    const random = (max: number) => Math.floor(Math.random() * max) + 1;
-    const newArr: IWord[] = [];
-    const gameData: {
-      word: IWord;
-      variants: IWord[];
-    }[] = [];
-    const indexes: number[] = [];
-    const words = await Model.getWords(1, 0);
-
-    while (indexes.length < 20) {
-      const index = random(19);
-      indexes.push(index);
+  async getUserWord(wordId: string) {
+    let status = 0;
+    const authStr = localStorage.getItem('authDataRSlang');
+    let authDataRSlang: IAuth | undefined;
+    if (authStr) {
+      authDataRSlang = <IAuth>JSON.parse(authStr);
     }
-    indexes.forEach((index) => {
-      newArr.push(words[index]);
-    });
-    console.log(newArr);
-
-    newArr.forEach((word) => {
-      const variants: IWord[] = [];
-      while (variants.length < 4) {
-        const index = random(19);
-        const item = words[index];
-        if (!variants.includes(item) && item !== word) {
-          variants.push(item);
-        }
-      }
-      const i = random(4);
-      variants.splice(i, 0, word);
-      gameData.push({
-        word,
-        variants,
+    try {
+      if (!authDataRSlang) throw new Error('unauthorized user');
+      const response = await fetch(`${baseURL}${Path.users}/${authDataRSlang.userId}${Path.words}/${wordId}`, {
+        headers: {
+          Authorization: `Bearer ${authDataRSlang.token}`,
+          'Content-Type': 'application/json',
+        },
       });
-    });
+      status = response.status;
+      const userWord = await (<Promise<IUserWord>>response.json());
+      switch (status) {
+        case 200:
+          return userWord;
+        case 401:
+          throw new Error('Access token is missing or invalid');
+        case 404:
+          throw new Error(`User's word not found`);
+        default:
+          return status;
+      }
+    } catch (error) {
+      return status;
+    }
+  }
 
-    const gameBody = document.createElement('div');
-    gameBody.className = 'game-body';
-    const audio = document.createElement('audio');
-    audio.autoplay = true;
-    return gameData;
+  async updateUserWord(wordId: string, userWord: IUserWord): Promise<void> {
+    let status = 0;
+    const authStr = localStorage.getItem('authDataRSlang');
+    let authDataRSlang: IAuth | undefined;
+    if (authStr) {
+      authDataRSlang = <IAuth>JSON.parse(authStr);
+    }
+    try {
+      if (!authDataRSlang) throw new Error('unauthorized user');
+      const response = await fetch(`${baseURL}${Path.users}/${authDataRSlang.userId}${Path.words}/${wordId}`, {
+        method: 'PUT',
+        headers: {
+          Authorization: `Bearer ${authDataRSlang.token}`,
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userWord),
+      });
+      status = response.status;
+
+      switch (status) {
+        case 200:
+          console.log('The user word has been updated');
+          break;
+        case 400:
+          throw new Error('Bad request');
+        case 401:
+          throw new Error('Access token is missing or invalid');
+        default:
+          break;
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async getStatistic() {
+    let status = 0;
+    const authStr = localStorage.getItem('authDataRSlang');
+    let authDataRSlang: IAuth | undefined;
+    if (authStr) {
+      authDataRSlang = <IAuth>JSON.parse(authStr);
+    }
+    try {
+      if (!authDataRSlang) throw new Error('unauthorized user');
+      const response = await fetch(`${baseURL}${Path.users}/${authDataRSlang.userId}${Path.statistics}`, {
+        headers: {
+          Authorization: `Bearer ${authDataRSlang.token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+      status = response.status;
+      const statistic = await (<Promise<IStatistic>>response.json());
+      switch (status) {
+        case 200:
+          console.log('get statistics: Successful operation');
+          break;
+        case 400:
+          throw new Error('Access token is missing or invalid');
+        case 401:
+          throw new Error('Statistics not found');
+        default:
+          break;
+      }
+      return statistic;
+    } catch (error) {
+      console.error(error);
+      return status;
+    }
+  }
+
+  async updateStatistic(statistic: IStatistic): Promise<void> {
+    let status = 0;
+    console.log(statistic);
+    const authStr = localStorage.getItem('authDataRSlang');
+    let authDataRSlang: IAuth | undefined;
+    if (authStr) {
+      authDataRSlang = <IAuth>JSON.parse(authStr);
+    }
+    try {
+      if (!authDataRSlang) throw new Error('unauthorized user');
+      const response = await fetch(`${baseURL}${Path.users}/${authDataRSlang.userId}${Path.statistics}`, {
+        method: 'PUT',
+        headers: {
+          Authorization: `Bearer ${authDataRSlang.token}`,
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(statistic),
+      });
+      status = response.status;
+
+      switch (status) {
+        case 200:
+          console.log('The statistics has been updated');
+          break;
+        case 400:
+          throw new Error('Bad request');
+        case 401:
+          throw new Error('Access token is missing or invalid');
+        default:
+          break;
+      }
+    } catch (error) {
+      console.error(error);
+    }
   }
 }
 
