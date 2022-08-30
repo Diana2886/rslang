@@ -79,7 +79,6 @@ class AudioChallenge extends Page {
       if (e.code === 'Enter') {
         const nextBtn: HTMLButtonElement | null = document.querySelector('.audio-call__next');
         const modalBtn: HTMLButtonElement | null = document.querySelector('.modal__start-audio');
-
         if (nextBtn) {
           nextBtn.click();
         }
@@ -88,6 +87,13 @@ class AudioChallenge extends Page {
         }
         if (chooseLevel?.classList.contains('active')) {
           startButton.click();
+        }
+      }
+
+      if (e.code === 'Space') {
+        const playAudioBtn: HTMLButtonElement | null = document.querySelector('.play-image');
+        if (playAudioBtn) {
+          playAudioBtn.click();
         }
       }
     });
