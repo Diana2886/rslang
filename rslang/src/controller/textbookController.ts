@@ -141,7 +141,6 @@ class TextbookController {
             }
             if (target.classList.contains('difficult-button') && target.innerHTML === 'remove') {
               await this.model.deleteUserWord(wordId);
-              console.log(await this.model.getUserWords());
               this.rerenderWords('difficultWords');
             }
           })().catch((err: Error) => console.warn(err.message));

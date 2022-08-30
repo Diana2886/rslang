@@ -45,7 +45,6 @@ class TextbookModel {
       localStorage.setItem('group', `${TextbookModel.group}`);
       localStorage.setItem('page', `${TextbookModel.page}`);
       localStorage.setItem('difficultWords', String(TextbookModel.isDifficultWordsGroup));
-      console.log(TextbookModel.isDifficultWordsGroup);
     };
     window.addEventListener('beforeunload', setLocalStorage);
 
@@ -57,10 +56,8 @@ class TextbookModel {
         TextbookModel.page = +(localStorage.getItem('page') as string);
       }
       if (localStorage.getItem('difficultWords')) {
-        console.log(localStorage.getItem('difficultWords'));
         if (localStorage.getItem('difficultWords') === 'false') TextbookModel.isDifficultWordsGroup = false;
         else TextbookModel.isDifficultWordsGroup = Boolean(localStorage.getItem('difficultWords'));
-        console.log(TextbookModel.isDifficultWordsGroup, Boolean(localStorage.getItem('difficultWords')));
       }
     };
     window.addEventListener('DOMContentLoaded', getLocalStorage);
@@ -133,7 +130,6 @@ class TextbookModel {
     const prevButton = document.querySelector('.page-prev') as HTMLButtonElement;
     const nextButton = document.querySelector('.page-next') as HTMLButtonElement;
     prevButton.disabled = !(TextbookModel.page > 0);
-    console.log(TextbookModel.page);
     nextButton.disabled = !(TextbookModel.page < TextbookModel.PAGES_AMOUNT - 1);
   }
 

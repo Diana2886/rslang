@@ -222,6 +222,7 @@ class TextbookPage extends Page {
       await this.renderWords(TextbookModel.isDifficultWordsGroup ? difficultWords : words);
       if (TextbookModel.isDifficultWordsGroup) this.textbookModel.setDifficultWordsPage();
       const textbookModel = new TextbookModel();
+      textbookModel.updatePaginationState();
       await textbookModel.checkPageStyle();
     })().catch((err: Error) => console.warn(err.message));
     return this.container;
