@@ -11,10 +11,6 @@ let navItems = [
     text: 'Textbook',
   },
   {
-    id: PageIds.DifficultWords,
-    text: 'Difficult words',
-  },
-  {
     id: PageIds.Games,
     text: 'Games',
   },
@@ -77,7 +73,7 @@ class Header extends Component {
             }" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             ${item.text}
             </a>
-            <ul class="dropdown-menu">
+            <ul class="dropdown-menu dropdown-menu-end">
         `;
         Games.forEach((game) => {
           template += `

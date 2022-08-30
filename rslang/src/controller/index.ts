@@ -1,4 +1,3 @@
-import Model from '../model/components/index';
 import TextbookModel from '../model/textbookModel';
 import AppView from '../view/pages/app/index';
 import HeaderController from './headerController';
@@ -8,9 +7,8 @@ import SprintController from './sprint/sprint';
 
 class App {
   start() {
-    const model = new Model();
+    const textbookModel = new TextbookModel();
     TextbookModel.setLocalStorageSettings();
-    // TextbookModel.checkLogin();
     const view = new AppView();
     view.run();
     const headerController = new HeaderController();
@@ -20,6 +18,8 @@ class App {
     textbookController.listenLevelButton();
     textbookController.listenPageButton();
     textbookController.listenWordButtons();
+    textbookModel.updatePaginationState();
+    textbookController.listenDifficultWordsButton();
     const login = new AuthController();
     login.checkElem();
     const sprint = new SprintController();

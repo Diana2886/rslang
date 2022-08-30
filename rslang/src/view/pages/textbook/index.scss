@@ -22,7 +22,7 @@
 }
 
 .pagination {
-  gap: 4px;
+  gap: 2px;
 }
 
 .pages-btn {
@@ -30,6 +30,7 @@
 }
 
 .page-link {
+  width: auto;
   background-color: $secondary;
   color: #000000;
 }
@@ -50,7 +51,7 @@
 .words__wrapper {
   max-width: 1032px;
   margin: 0 auto;
-  min-height: 100vw;
+  min-height: calc(100vh - 306px);
   padding: 1rem 0;
   margin-bottom: 1rem;
 }
