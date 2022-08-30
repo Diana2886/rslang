@@ -59,9 +59,26 @@ export interface ISetting {
   optional?: IOptional;
 }
 
+export interface IStatOptional {
+  [date: string]: {
+    audio: {
+      newWords: number;
+      learnedWords: number;
+    };
+    sprint: {
+      newWords: number;
+      learnedWords: number;
+    };
+    textbook: {
+      newWords: number;
+      learnedWords: number;
+    };
+  };
+}
+
 export interface IStatistic {
   learnedWords: number;
-  optional?: IOptional;
+  optional: IStatOptional;
 }
 
 export type QueryData = {

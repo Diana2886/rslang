@@ -3,6 +3,7 @@ import {
   IAuth,
   INewUser,
   ISignIn,
+  IStatistic,
   IUser,
   IUserWord,
   IWord,
@@ -16,6 +17,7 @@ enum Path {
   users = '/users',
   signIn = '/signin',
   aggregatedWords = '/aggregatedWords',
+  statistics = '/statistics',
 }
 export enum Result {
   success = 200,
@@ -305,6 +307,78 @@ class Model {
       switch (status) {
         case 200:
           console.log('The user word has been updated');
+          break;
+        case 400:
+          throw new Error('Bad request');
+        case 401:
+          throw new Error('Access token is missing or invalid');
+        default:
+          break;
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async getStatistic() {
+    let status = 0;
+    const authStr = localStorage.getItem('authDataRSlang');
+    let authDataRSlang: IAuth | undefined;
+    if (authStr) {
+      authDataRSlang = <IAuth>JSON.parse(authStr);
+    }
+    try {
+      if (!authDataRSlang) throw new Error('unauthorized user');
+      const response = await fetch(`${baseURL}${Path.users}/${authDataRSlang.userId}${Path.statistics}`, {
+        headers: {
+          Authorization: `Bearer ${authDataRSlang.token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+      status = response.status;
+      const statistic = await (<Promise<IStatistic>>response.json());
+      switch (status) {
+        case 200:
+          console.log('get statistics: Successful operation');
+          break;
+        case 400:
+          throw new Error('Access token is missing or invalid');
+        case 401:
+          throw new Error('Statistics not found');
+        default:
+          break;
+      }
+      return statistic;
+    } catch (error) {
+      console.error(error);
+      return status;
+    }
+  }
+
+  async updateStatistic(statistic: IStatistic): Promise<void> {
+    let status = 0;
+    console.log(statistic);
+    const authStr = localStorage.getItem('authDataRSlang');
+    let authDataRSlang: IAuth | undefined;
+    if (authStr) {
+      authDataRSlang = <IAuth>JSON.parse(authStr);
+    }
+    try {
+      if (!authDataRSlang) throw new Error('unauthorized user');
+      const response = await fetch(`${baseURL}${Path.users}/${authDataRSlang.userId}${Path.statistics}`, {
+        method: 'PUT',
+        headers: {
+          Authorization: `Bearer ${authDataRSlang.token}`,
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(statistic),
+      });
+      status = response.status;
+
+      switch (status) {
+        case 200:
+          console.log('The statistics has been updated');
           break;
         case 400:
           throw new Error('Bad request');

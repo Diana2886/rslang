@@ -31,9 +31,9 @@ class AppView {
       case `${PageIds.Main}`:
         page = new MainPage(idPage);
         break;
-      case `${PageIds.LogIn}`:
-        page = new LogInPage(idPage);
-        break;
+      // case `${PageIds.LogIn}`:
+      //   page = new LogInPage(idPage);
+      //   break;
       case `${PageIds.Statistics}`:
         page = new StatisticsPage(idPage);
         break;
@@ -63,23 +63,12 @@ class AppView {
   }
 
   private enableRouteChange() {
-    let checker = '';
-    Header.navContainer.addEventListener('click', (e) => {
-      checker = 'checked';
-      const target = e.target as HTMLAnchorElement;
-      const name = target.dataset.page;
-      if (name !== undefined) {
-        AppView.renderNewPage(name);
-      }
-    });
+    const cont = document.querySelector('.container') as HTMLElement;
 
     window.addEventListener('hashchange', () => {
-      if (checker === 'checked') {
-        checker = '';
-      } else {
-        const hash = window.location.hash.slice(1);
-        AppView.renderNewPage(hash);
-      }
+      cont.nextElementSibling?.remove();
+      const hash = window.location.hash.slice(1);
+      AppView.renderNewPage(hash);
     });
   }
 
