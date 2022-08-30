@@ -92,6 +92,8 @@ class TextbookModel {
     levelButton.innerHTML = 'Level';
     this.controlPageButtonsAccess(true);
     this.controlGamesButtonAccess();
+    const wordsWrapper = document.querySelector('.words__wrapper') as HTMLElement;
+    wordsWrapper.style.backgroundColor = '#545BE850';
   }
 
   async checkPageStyle() {
@@ -105,13 +107,15 @@ class TextbookModel {
         });
       }
     });
-    const wordsWrapper = document.querySelector('.words__wrapper') as HTMLElement;
-    const pagesButton = document.querySelector('.pages-btn') as HTMLElement;
-    wordsWrapper.style.boxShadow = count === 20 ? '0px 0px 8px rgba(0, 0, 0, 0.1)' : 'none';
-    wordsWrapper.style.backgroundColor = count === 20 ? '#F0C93260' : 'inherit';
-    pagesButton.style.border = count === 20 ? '1px solid #545BE8' : '1px solid #F0C932';
-    const gamesButton = document.querySelector('.textbook-games__button') as HTMLButtonElement;
-    if (!TextbookModel.isDifficultWordsGroup) gamesButton.disabled = count === 20;
+    if (!TextbookModel.isDifficultWordsGroup) {
+      const wordsWrapper = document.querySelector('.words__wrapper') as HTMLElement;
+      const pagesButton = document.querySelector('.pages-btn') as HTMLElement;
+      wordsWrapper.style.boxShadow = count === 20 ? '0px 0px 8px rgba(0, 0, 0, 0.1)' : 'none';
+      wordsWrapper.style.backgroundColor = count === 20 ? '#F0C93250' : 'inherit';
+      pagesButton.style.border = count === 20 ? '1px solid #545BE8' : '1px solid #F0C932';
+      const gamesButton = document.querySelector('.textbook-games__button') as HTMLButtonElement;
+      gamesButton.disabled = count === 20;
+    }
   }
 
   controlPageButtonsAccess(flag: boolean) {
