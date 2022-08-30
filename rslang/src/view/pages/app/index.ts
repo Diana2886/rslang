@@ -6,9 +6,7 @@ import PageIds from './pageIds';
 import ErrorPage, { ErrorTypes } from '../error/index';
 import TextbookPage from '../textbook/index';
 import AudioChallenge from '../audioChallenge/index';
-import DifficultWordsPage from '../difficultWords/index';
 import Sprint from '../sprint/index';
-import LogInPage from '../logIn/index';
 
 class AppView {
   private static container: HTMLElement = document.createElement('div');
@@ -31,9 +29,6 @@ class AppView {
       case `${PageIds.Main}`:
         page = new MainPage(idPage);
         break;
-      // case `${PageIds.LogIn}`:
-      //   page = new LogInPage(idPage);
-      //   break;
       case `${PageIds.Statistics}`:
         page = new StatisticsPage(idPage);
         break;
@@ -45,9 +40,6 @@ class AppView {
         break;
       case `${PageIds.Sprint}`:
         page = new Sprint(idPage);
-        break;
-      case `${PageIds.DifficultWords}`:
-        page = new DifficultWordsPage(idPage);
         break;
       default:
         page = new ErrorPage(idPage, ErrorTypes.Error_404);
