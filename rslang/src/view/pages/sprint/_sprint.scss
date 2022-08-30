@@ -1,5 +1,5 @@
-@import "./sprint-title-animation.scss";
-@import "./bell-animation";
+// @import "./sprint-title-animation.scss";
+// @import "./bell-animation";
 
 .sprint-wrapper{
   width: 95vw;
@@ -121,7 +121,7 @@
 .third-svg path{
   fill: black;
 }
-h5{
+.game-sprint-title{
   margin-top: 15px;
   text-align: center
 }
@@ -210,22 +210,31 @@ h5{
 #word-sound{
   cursor: pointer;
 }
-/* полоса прокрутки (скроллбар) */
-::-webkit-scrollbar {
-  width: 5px; /* ширина для вертикального скролла */
-  height: 8px; /* высота для горизонтального скролла */
-  background-color: #a1a4a7;
+.correct{
+  // border: 1px solid green;
+  box-shadow: -2px -1px 35px 15px rgba(47, 255, 0, 0.21);
 }
+.wrong{
+  // border: 1px solid red;
+  box-shadow: -2px -1px 35px 15px rgba(255, 0, 0, 0.21);
+}
+
+/* полоса прокрутки (скроллбар) */
+// ::-webkit-scrollbar {
+//   width: 5px; /* ширина для вертикального скролла */
+//   height: 8px; /* высота для горизонтального скролла */
+//   background-color: #a1a4a7;
+// }
 
 /* ползунок скроллбара */
-::-webkit-scrollbar-thumb {
-  background-color: #2d2c2c;
-  border-radius: 9em;
-}
+// ::-webkit-scrollbar-thumb {
+//   background-color: #2d2c2c;
+//   border-radius: 9em;
+// }
 
-::-webkit-scrollbar-thumb:hover {
-  background-color: #253861;
-}
+// ::-webkit-scrollbar-thumb:hover {
+//   background-color: #253861;
+// }
 
 @media (max-width: 768px) {
   .modal-wrapper{

@@ -26,6 +26,12 @@ export default class SprintController {
 
   rusWords: IWord[];
 
+  counter: number;
+
+  point: number;
+
+  score: number;
+
   constructor() {
     this.model = new Model();
     this.correctWords = [];
@@ -37,6 +43,10 @@ export default class SprintController {
     this.page = 0;
     this.count = 0;
     this.len = 0;
+
+    this.score = 0;
+    this.point = 10;
+    this.counter = 0;
   }
 
   checkSprintElem() {
@@ -78,7 +88,7 @@ export default class SprintController {
     }
   }
 
-  async pastWordToPlayGame(elem: HTMLElement) {
+  sprintTimer() {
     const sprintTimer = document.querySelector('.sprint-timer span') as HTMLElement;
     let counterTime = 60;
     const timer = setInterval(() => {
@@ -89,10 +99,34 @@ export default class SprintController {
       }
       sprintTimer.innerHTML = `${counterTime}`;
     }, 1000);
-    
-    // setTimeout(() => {
-    //   this.modalActive();
-    // }, 5000);
+  }
+
+  countScore(str: string) {
+    const scoreBlock = document.querySelector('.sprint-point') as HTMLElement;
+    // let score = 0;
+    // let point = 10;
+    // let count = 0;
+
+    if (str === 'correct') {
+      if (this.counter === 3) {
+        this.point += 10;
+        this.score += this.point;
+        scoreBlock.textContent = `${this.score}`;
+        this.counter = 0;
+        this.counter += 1;
+      } else {
+        this.score += this.point;
+        scoreBlock.textContent = `${this.score}`;
+        this.counter += 1;
+      }
+    } else {
+      this.point -= 10;
+      this.counter = 0;
+    }
+  }
+
+  async pastWordToPlayGame(elem: HTMLElement) {
+    // this.sprintTimer();
 
     const parent = elem.parentElement;
     parent!.classList.add('check-level-act');
@@ -125,8 +159,24 @@ export default class SprintController {
     await this.nextWord('start');
   }
 
+  pastEffect(str: string) {
+    const gameBlock = <HTMLElement>document.querySelector('.sprint-play-wrapper');
+    if (str === 'correct') {
+      gameBlock.classList.add('correct');
+      gameBlock.classList.remove('wrong');
+    } else {
+      gameBlock.classList.remove('correct');
+      gameBlock.classList.add('wrong');
+    }
+  }
+
+  removeEffect() {
+    const gameBlock = <HTMLElement>document.querySelector('.sprint-play-wrapper');
+    gameBlock.classList.remove('correct');
+    gameBlock.classList.remove('wrong');
+  }
+
   nextWord = async (e: Event | string) => {
-    console.log('pastga tushvotti');
     const taskBlock = document.querySelector('.task-block') as HTMLElement;
     const soundWord = taskBlock.children[0].children[0] as HTMLAudioElement;
     const englishWord = taskBlock.children[1] as HTMLElement;
@@ -149,59 +199,83 @@ export default class SprintController {
 
     if (e === 'ArrowRight' && rusWord.word === engWord.word) {
       this.correctWords.push(engWord);
+      this.countScore('correct');
+      this.pastEffect('correct');
       this.count += 1;
       englishWord.innerHTML = this.engWords[this.count].word;
       russiaWord.innerHTML = this.rusWords[this.count].wordTranslate;
+      setTimeout(() => this.removeEffect(), 100);
       return;
     }
     if (e === 'ArrowRight' && rusWord.word !== engWord.word) {
       this.wrongWords.push(engWord);
+      this.countScore('wrong');
+      this.pastEffect('wrong');
       this.count += 1;
       englishWord.innerHTML = this.engWords[this.count].word;
       russiaWord.innerHTML = this.rusWords[this.count].wordTranslate;
+      setTimeout(() => this.removeEffect(), 100);
       return;
     }
     if (e === 'ArrowLeft' && rusWord.word === engWord.word) {
       this.wrongWords.push(engWord);
+      this.countScore('wrong');
+      this.pastEffect('wrong');
       this.count += 1;
       englishWord.innerHTML = this.engWords[this.count].word;
       russiaWord.innerHTML = this.rusWords[this.count].wordTranslate;
+      setTimeout(() => this.removeEffect(), 100);
       return;
     }
     if (e === 'ArrowLeft' && rusWord.word !== engWord.word) {
       this.correctWords.push(engWord);
+      this.countScore('correct');
+      this.pastEffect('correct');
       this.count += 1;
       englishWord.innerHTML = this.engWords[this.count].word;
       russiaWord.innerHTML = this.rusWords[this.count].wordTranslate;
+      setTimeout(() => this.removeEffect(), 100);
       return;
     }
     const target = (e as Event).target as HTMLButtonElement;
     if (target.classList.contains('btn-success') && rusWord.word === engWord.word) {
       this.correctWords.push(engWord);
+      this.countScore('correct');
+      this.pastEffect('correct');
       this.count += 1;
       englishWord.innerHTML = this.engWords[this.count].word;
       russiaWord.innerHTML = this.rusWords[this.count].wordTranslate;
+      setTimeout(() => this.removeEffect(), 100);
       return;
     }
     if (target.classList.contains('btn-success') && rusWord.word !== engWord.word) {
       this.wrongWords.push(engWord);
+      this.countScore('wrong');
+      this.pastEffect('wrong');
       this.count += 1;
       englishWord.innerHTML = this.engWords[this.count].word;
       russiaWord.innerHTML = this.rusWords[this.count].wordTranslate;
+      setTimeout(() => this.removeEffect(), 100);
       return;
     }
     if (target.classList.contains('btn-danger') && rusWord.word !== engWord.word) {
       this.correctWords.push(engWord);
+      this.countScore('correct');
+      this.pastEffect('correct');
       this.count += 1;
       englishWord.innerHTML = this.engWords[this.count].word;
       russiaWord.innerHTML = this.rusWords[this.count].wordTranslate;
+      setTimeout(() => this.removeEffect(), 100);
       return;
     }
     if (target.classList.contains('btn-danger') && rusWord.word === engWord.word) {
       this.wrongWords.push(engWord);
+      this.countScore('wrong');
+      this.pastEffect('wrong');
       this.count += 1;
       englishWord.innerHTML = this.engWords[this.count].word;
       russiaWord.innerHTML = this.rusWords[this.count].wordTranslate;
+      setTimeout(() => this.removeEffect(), 100);
     }
   };
 
