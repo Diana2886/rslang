@@ -43,7 +43,7 @@ export default class Statistic {
         userWord.optional[gameName][key].corrects += answers ? 1 : 0;
         userWord.optional.serial = answers ? userWord.optional.serial + 1 : 0;
         if (answers) {
-          await this.checkSerial(userWord, gameName);
+          await this.checkSerial(userWord, gameName, key);
         }
       }
       if (typeof resUWord === 'object') {
@@ -55,27 +55,30 @@ export default class Statistic {
         }
       } else {
         await this.model.createUserWord(example.id, { difficulty: 'new', optional: userWord.optional });
-        await this.writeGlobalStat('new', gameName);
+        await this.writeGlobalStat('new', gameName, key);
       }
       await this.writeBestSerial(gameName, answers, key);
     }
   }
 
-  async checkSerial(userWord: IUserWord, gameName: 'audio' | 'sprint' | 'textbook') {
+  async checkSerial(userWord: IUserWord, gameName: 'audio' | 'sprint' | 'textbook', key: string) {
     if (userWord.difficulty === 'difficult') {
       if (userWord.optional?.serial === 5) {
         userWord.difficulty = 'learned';
-        await this.writeGlobalStat('learned', gameName);
+        await this.writeGlobalStat('learned', gameName, key);
       }
     } else if (userWord.optional?.serial === 3) {
       userWord.difficulty = 'learned';
-      await this.writeGlobalStat('learned', gameName);
+      await this.writeGlobalStat('learned', gameName, key);
     }
   }
 
-  async writeGlobalStat(type: 'new' | 'learned', source: 'audio' | 'sprint' | 'textbook', minus?: boolean) {
-    const date = new Date();
-    const key = `${date.getDate()}${date.getMonth()}${date.getFullYear()}`;
+  async writeGlobalStat(
+    type: 'new' | 'learned',
+    source: 'audio' | 'sprint' | 'textbook',
+    key: string,
+    minus?: boolean
+  ) {
     let statistic = await this.model.getStatistic();
     if (typeof statistic === 'number') {
       statistic = {

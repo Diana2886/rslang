@@ -144,16 +144,16 @@ class TextbookController {
               if (typeof userWord === 'number') {
                 await this.model.createUserWord(wordId, { difficulty: item, optional });
                 if (target.classList.contains('learned-button')) {
-                  await statistics.writeGlobalStat('learned', 'textbook');
+                  await statistics.writeGlobalStat('learned', 'textbook', key);
                 }
                 this.textbookModel.resetPageStyles();
                 await this.textbookModel.checkPageStyle();
               } else if (userWord.difficulty !== item) {
                 if (target.classList.contains('learned-button')) {
-                  await statistics.writeGlobalStat('learned', 'textbook');
+                  await statistics.writeGlobalStat('learned', 'textbook', key);
                 }
                 if (target.classList.contains('difficult-button') && cardColor === 'rgb(252, 244, 214)') {
-                  await statistics.writeGlobalStat('learned', 'textbook', true);
+                  await statistics.writeGlobalStat('learned', 'textbook', key, true);
                   if (userWord.optional) {
                     userWord.optional.serial = 0;
                   }
