@@ -1,4 +1,3 @@
-import Model from '../model/components/index';
 import TextbookModel from '../model/textbookModel';
 import AppView from '../view/pages/app/index';
 import HeaderController from './headerController';

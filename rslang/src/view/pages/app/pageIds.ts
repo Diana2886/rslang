@@ -5,7 +5,6 @@ const enum PageIds {
   Games = 'games',
   AudioChallenge = 'audioChallenge-page',
   Sprint = 'sprint-page',
-  DifficultWords = 'difficultWords-page',
   LogIn = 'logIn-page',
 }
 

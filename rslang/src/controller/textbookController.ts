@@ -1,6 +1,6 @@
-import Model, { baseURL } from '../model/components/index';
+import Model from '../model/components/index';
 import TextbookModel from '../model/textbookModel';
-import { difficultyColors, IOptional, IWord } from '../types/index';
+import { difficultyColors, IOptional } from '../types/index';
 import PageIds from '../view/pages/app/pageIds';
 import TextbookPage from '../view/pages/textbook/index';
 
