@@ -37,22 +37,23 @@ export default class ViewStat {
     newWordsInfo.className = `day-${type}__new-words`;
     newWordsInfo.innerHTML = `<span>New words</span>: ${this.data[type].newWords}`;
 
-    const dayLearnedInfo = document.createElement('p');
-    dayLearnedInfo.className = `day-${type}__learned`;
-    dayLearnedInfo.innerHTML = `<span>Learned words</span>: ${this.data[type].learned}`;
-
     const dayWinsInfo = document.createElement('p');
     dayWinsInfo.className = `day-${type}__wins`;
     const winsProcStr = this.data[type].winsPercent ? this.data[type].winsPercent : 'not played';
     if (winsProcStr !== false) {
       dayWinsInfo.innerHTML = `<span>Correct answers</span>: ${winsProcStr}${winsProcStr !== 'not played' ? '%' : ''}`;
     }
-    [commonStatTitle, newWordsInfo, dayLearnedInfo, dayWinsInfo].forEach((item) => dayStat.append(item));
+    [commonStatTitle, newWordsInfo, dayWinsInfo].forEach((item) => dayStat.append(item));
     if (type !== 'common') {
       const dayBestInfo = document.createElement('p');
       dayBestInfo.className = `day-${type}__best`;
       dayBestInfo.innerHTML = `<span>Best win streak:</span> ${this.data[type].bestSeries}`;
       dayStat.append(dayBestInfo);
+    } else {
+      const dayLearnedInfo = document.createElement('p');
+      dayLearnedInfo.className = `day-${type}__learned`;
+      dayLearnedInfo.innerHTML = `<span>Learned words</span>: ${this.data[type].learned}`;
+      dayStat.append(dayLearnedInfo);
     }
     return dayStat;
   }
