@@ -64,14 +64,20 @@ export interface IStatOptional {
     audio: {
       newWords: number;
       learnedWords: number;
+      series: number;
+      bestSeries: number;
     };
     sprint: {
       newWords: number;
       learnedWords: number;
+      series: number;
+      bestSeries: number;
     };
     textbook: {
       newWords: number;
       learnedWords: number;
+      series: number;
+      bestSeries: number;
     };
   };
 }
