@@ -1,21 +1,5 @@
 import Model from '../../../model/components/index';
-import { IStatistic } from '../../../types/index';
-
-interface IStatData {
-  allLearned: number;
-  dayNewWords: number;
-  dayLearned: number;
-  dayWinsProc: number;
-  dayTextbookLearned: number;
-  dayAudioNew: number;
-  daySprintNew: number;
-  dayAudioSeries: number;
-  daySprintSeries: number;
-  dayAudioWinsProc: number;
-  daySprintWinsProc: number;
-  dayAudioLearned: number;
-  daySprintLearned: number;
-}
+import { IStatData, IStatistic } from '../../../types/index';
 
 export default class StatData {
   model: Model;
@@ -48,6 +32,7 @@ export default class StatData {
     const date = new Date();
     const key = `${date.getDate()}${date.getMonth()}${date.getFullYear()}`;
     this.statistic = await this.model.getStatistic();
+    const userWords = await this.model.getUserWords();
     if (typeof this.statistic === 'object') {
       this.data.allLearned = this.statistic.learnedWords;
       const dayStat = this.statistic.optional[key];
@@ -64,8 +49,26 @@ export default class StatData {
       this.data.daySprintSeries = currSprintBest > currSprintSeries ? currSprintBest : currSprintSeries;
       this.data.dayLearned = this.data.dayAudioLearned + this.data.daySprintLearned + this.data.dayTextbookLearned;
       this.data.dayNewWords = this.data.dayAudioNew + this.data.daySprintNew;
-      return this.data;
     }
-    return null;
+    if (typeof userWords === 'object') {
+      let dayAudioGames = 0;
+      let dayAudioWins = 0;
+      let daySprintGames = 0;
+      let daySprintWins = 0;
+      userWords.forEach((uWord) => {
+        if (uWord.optional) {
+          dayAudioGames += uWord.optional.audio[key].allGames;
+          dayAudioWins += uWord.optional.audio[key].corrects;
+          daySprintGames += uWord.optional.sprint[key].allGames;
+          daySprintWins += uWord.optional.sprint[key].corrects;
+        }
+      });
+
+      this.data.dayAudioWinsProc = dayAudioGames ? Math.round((dayAudioWins / dayAudioGames) * 100) : false;
+      this.data.daySprintWinsProc = daySprintGames ? Math.round((daySprintWins / daySprintGames) * 100) : false;
+      const allGames = dayAudioGames + daySprintGames;
+      this.data.dayWinsProc = allGames ? Math.round(((dayAudioWins + daySprintWins) / allGames) * 100) : false;
+    }
+    return this.data;
   }
 }
