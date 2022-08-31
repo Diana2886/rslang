@@ -100,7 +100,7 @@ class TextbookModel {
     if (this.checkAuthorization()) {
       wordsWrapper.style.border = '3px solid #545BE850';
       wordsWrapper.style.boxShadow = '0px 0px 8px rgba(0, 0, 0, 0.1)';
-    } else wordsWrapper.innerText = 'Please, login...';
+    } else wordsWrapper.innerText = 'Please select a level or sign in!';
   }
 
   async checkPageStyle() {
