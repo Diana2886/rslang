@@ -39,7 +39,7 @@ export default class StatData {
 
   async getData() {
     const date = new Date();
-    const key = `${date.getDate()}${date.getMonth()}${date.getFullYear()}`;
+    const key = `${date.getDate()}.${date.getMonth()}.${date.getFullYear()}`;
     this.statistic = await this.model.getStatistic();
     const userWords = await this.model.getUserWords();
     if (typeof this.statistic === 'object') {
