@@ -12,18 +12,27 @@ export default class StatData {
     this.model = new Model();
     this.data = {
       allLearned: 0,
-      dayNewWords: 0,
-      dayLearned: 0,
-      dayWinsProc: false,
-      dayTextbookLearned: 0,
-      dayAudioNew: 0,
-      daySprintNew: 0,
-      dayAudioSeries: 0,
-      daySprintSeries: 0,
-      dayAudioWinsProc: false,
-      daySprintWinsProc: false,
-      dayAudioLearned: 0,
-      daySprintLearned: 0,
+      common: {
+        learned: 0,
+        newWords: 0,
+        winsPercent: false,
+      },
+      audio: {
+        learned: 0,
+        newWords: 0,
+        winsPercent: false,
+        bestSeries: 0,
+      },
+      sprint: {
+        learned: 0,
+        newWords: 0,
+        winsPercent: false,
+        bestSeries: 0,
+      },
+      textbook: {
+        learned: 0,
+        newWords: 0,
+      },
     };
     this.statistic = 0;
   }
@@ -36,19 +45,19 @@ export default class StatData {
     if (typeof this.statistic === 'object') {
       this.data.allLearned = this.statistic.learnedWords;
       const dayStat = this.statistic.optional[key];
-      this.data.dayAudioLearned = dayStat.audio.learnedWords;
-      this.data.daySprintLearned = dayStat.sprint.learnedWords;
-      this.data.dayTextbookLearned = dayStat.textbook.learnedWords;
-      this.data.dayAudioNew = dayStat.audio.newWords;
-      this.data.daySprintNew = dayStat.sprint.newWords;
+      this.data.audio.learned = dayStat.audio.learnedWords;
+      this.data.sprint.learned = dayStat.sprint.learnedWords;
+      this.data.textbook.learned = dayStat.textbook.learnedWords;
+      this.data.audio.newWords = dayStat.audio.newWords;
+      this.data.sprint.newWords = dayStat.sprint.newWords;
       const currAudioSeries = dayStat.audio.series;
       const currAudioBest = dayStat.audio.bestSeries;
-      this.data.dayAudioSeries = currAudioBest > currAudioSeries ? currAudioBest : currAudioSeries;
+      this.data.audio.bestSeries = currAudioBest > currAudioSeries ? currAudioBest : currAudioSeries;
       const currSprintSeries = dayStat.sprint.series;
       const currSprintBest = dayStat.sprint.bestSeries;
-      this.data.daySprintSeries = currSprintBest > currSprintSeries ? currSprintBest : currSprintSeries;
-      this.data.dayLearned = this.data.dayAudioLearned + this.data.daySprintLearned + this.data.dayTextbookLearned;
-      this.data.dayNewWords = this.data.dayAudioNew + this.data.daySprintNew;
+      this.data.sprint.bestSeries = currSprintBest > currSprintSeries ? currSprintBest : currSprintSeries;
+      this.data.common.learned = this.data.audio.learned + this.data.sprint.learned + this.data.textbook.learned;
+      this.data.common.newWords = this.data.audio.newWords + this.data.sprint.newWords;
     }
     if (typeof userWords === 'object') {
       let dayAudioGames = 0;
@@ -64,10 +73,10 @@ export default class StatData {
         }
       });
 
-      this.data.dayAudioWinsProc = dayAudioGames ? Math.round((dayAudioWins / dayAudioGames) * 100) : false;
-      this.data.daySprintWinsProc = daySprintGames ? Math.round((daySprintWins / daySprintGames) * 100) : false;
+      this.data.audio.winsPercent = dayAudioGames ? Math.round((dayAudioWins / dayAudioGames) * 100) : false;
+      this.data.sprint.winsPercent = daySprintGames ? Math.round((daySprintWins / daySprintGames) * 100) : false;
       const allGames = dayAudioGames + daySprintGames;
-      this.data.dayWinsProc = allGames ? Math.round(((dayAudioWins + daySprintWins) / allGames) * 100) : false;
+      this.data.common.winsPercent = allGames ? Math.round(((dayAudioWins + daySprintWins) / allGames) * 100) : false;
     }
     return this.data;
   }

@@ -89,18 +89,27 @@ export interface IStatistic {
 
 export interface IStatData {
   allLearned: number;
-  dayNewWords: number;
-  dayLearned: number;
-  dayWinsProc: number | false;
-  dayTextbookLearned: number;
-  dayAudioNew: number;
-  daySprintNew: number;
-  dayAudioSeries: number;
-  daySprintSeries: number;
-  dayAudioWinsProc: number | false;
-  daySprintWinsProc: number | false;
-  dayAudioLearned: number;
-  daySprintLearned: number;
+  common: {
+    learned: number;
+    newWords: number;
+    winsPercent: number | false;
+  };
+  audio: {
+    learned: number;
+    newWords: number;
+    winsPercent: number | false;
+    bestSeries: number;
+  };
+  sprint: {
+    learned: number;
+    newWords: number;
+    winsPercent: number | false;
+    bestSeries: number;
+  };
+  textbook: {
+    learned: number;
+    newWords: number;
+  };
 }
 
 export type QueryData = {
