@@ -10,6 +10,9 @@ class StatisticsPage extends Page {
   drawStatPage() {
     const statSection = document.createElement('div');
     statSection.className = 'statistic';
+    const title = document.createElement('h5');
+    title.textContent = 'Daily statistics';
+    statSection.append(title);
     this.statView
       .drawDayStats()
       .then((element) => {

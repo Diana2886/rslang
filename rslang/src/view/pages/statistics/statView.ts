@@ -1,3 +1,4 @@
+import './statistics.scss';
 import { IStatData } from '../../../types/index';
 import StatData from './statData';
 
@@ -14,9 +15,6 @@ export default class ViewStat {
   async drawDayStats() {
     this.data = await this.statData.getData();
     const statBody = document.createElement('div');
-    const dailyTitle = document.createElement('h5');
-    dailyTitle.textContent = 'Daily statistics';
-    statBody.append(dailyTitle);
     statBody.className = 'statistic__body';
     const commonDaily = this.drawDayItem('common');
     const audioDaily = this.drawDayItem('audio');
@@ -30,7 +28,7 @@ export default class ViewStat {
 
   drawDayItem(type: 'common' | 'audio' | 'sprint') {
     const dayStat = document.createElement('div');
-    dayStat.className = `statistic__day-${type} day-common`;
+    dayStat.className = `statistic__day-${type} day-${type}`;
     const commonStatTitle = document.createElement('h6');
     commonStatTitle.textContent = type.toUpperCase();
 
@@ -45,9 +43,9 @@ export default class ViewStat {
 
     const dayWinsInfo = document.createElement('p');
     dayWinsInfo.className = `day-${type}__wins`;
-    const winsProcStr = this.data[type].winsPercent ? this.data[type].winsPercent : 'no games';
+    const winsProcStr = this.data[type].winsPercent ? this.data[type].winsPercent : 'not played';
     if (winsProcStr !== false) {
-      dayWinsInfo.innerHTML = `<span>Correct answers</span>: ${winsProcStr}%`;
+      dayWinsInfo.innerHTML = `<span>Correct answers</span>: ${winsProcStr}${winsProcStr !== 'not played' ? '%' : ''}`;
     }
     [commonStatTitle, newWordsInfo, dayLearnedInfo, dayWinsInfo].forEach((item) => dayStat.append(item));
     if (type !== 'common') {
