@@ -127,6 +127,9 @@ export default class Statistic {
       statistic.learnedWords += minus ? -1 : 1;
       const dayStat = statistic.optional[key];
       dayStat[source].learnedWords += minus ? -1 : 1;
+      if (dayStat[source].learnedWords < 0) {
+        dayStat[source].learnedWords = 0;
+      } 
     }
 
     await this.model.updateStatistic({ learnedWords: statistic.learnedWords, optional: statistic.optional });
