@@ -60,8 +60,7 @@ export default class AudioGame {
       }
       return true;
     };
-
-    if (typeof userWords === 'object') {
+    if (pageNum) {
       words = pageWords.filter(filterWords);
       if (words.length < 20) {
         let prevWords: IWord[] = [];
