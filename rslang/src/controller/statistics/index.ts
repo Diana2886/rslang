@@ -48,6 +48,17 @@ export default class Statistic {
       }
       if (typeof resUWord === 'object') {
         if (userWord.wordId) {
+          if (userWord.optional) {
+            const { audio, sprint } = userWord.optional;
+            let allGames = 0;
+            const values = [...Object.values(audio), ...Object.values(sprint)];
+            values.forEach((item) => {
+              allGames += item.allGames;
+            });
+            if (allGames === 1) {
+              await this.writeGlobalStat('new', gameName, key);
+            }
+          }
           await this.model.updateUserWord(userWord.wordId, {
             difficulty: userWord.difficulty,
             optional: userWord.optional,
@@ -124,15 +135,18 @@ export default class Statistic {
   async writeBestSerial(type: 'audio' | 'sprint', answer: boolean, date: string) {
     const statistic = await this.model.getStatistic();
     if (typeof statistic === 'object') {
+      const best = statistic.optional[date][type].bestSeries;
+      const current = statistic.optional[date][type].series;
       if (answer) {
         statistic.optional[date][type].series += 1;
-      } else {
-        const best = statistic.optional[date][type].bestSeries;
-        const current = statistic.optional[date][type].series;
-        statistic.optional[date][type].bestSeries = best < current ? current : best;
+        if (current + 1 > best) {
+          statistic.optional[date][type].bestSeries = current + 1;
+        }
+        await this.model.updateStatistic({ learnedWords: statistic.learnedWords, optional: statistic.optional });
+      } else if (current !== 0) {
         statistic.optional[date][type].series = 0;
+        await this.model.updateStatistic({ learnedWords: statistic.learnedWords, optional: statistic.optional });
       }
-      await this.model.updateStatistic({ learnedWords: statistic.learnedWords, optional: statistic.optional });
     }
   }
 }
