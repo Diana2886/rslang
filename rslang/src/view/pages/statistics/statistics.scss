@@ -1,0 +1,42 @@
+.statistic {
+  margin: 0 auto;
+  &__body {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+  }
+  &__games-block {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
+.day-sprint,
+.day-audio,
+.day-common{
+  background: #545BE8;
+  color: #fff;
+  H6{
+    font-weight: 700;
+  }
+  span {
+    font-weight: 600;
+  }
+  p{
+    margin-bottom: 0.5rem;
+  }
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 0 5px #000;
+  margin: 5px;
+}
+
+.day-audio{
+  background: #F0C932;
+  color: #000;
+}
+
+.day-sprint{
+  background: #7253A4
+}
