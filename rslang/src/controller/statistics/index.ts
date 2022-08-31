@@ -44,6 +44,9 @@ export default class Statistic {
         userWord.optional.serial = answers ? userWord.optional.serial + 1 : 0;
         if (answers) {
           await this.checkSerial(userWord, gameName, key);
+        } else if (userWord.difficulty === 'learned') {
+          userWord.difficulty = 'new';
+          await this.writeGlobalStat('learned', `${gameName}`, key, true);
         }
       }
       if (typeof resUWord === 'object') {
@@ -129,7 +132,7 @@ export default class Statistic {
       dayStat[source].learnedWords += minus ? -1 : 1;
       if (dayStat[source].learnedWords < 0) {
         dayStat[source].learnedWords = 0;
-      } 
+      }
     }
 
     await this.model.updateStatistic({ learnedWords: statistic.learnedWords, optional: statistic.optional });
