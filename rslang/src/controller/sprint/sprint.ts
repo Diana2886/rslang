@@ -80,20 +80,22 @@ export default class SprintController {
     await audio.play();
   }
 
-  async checkLevel(elem: HTMLElement | number) {
-    let userWods: string[] | undefined = [];
+  filterUserWords = async () => {
     const serWods = await this.model.getUserWords();
     if (serWods === 0) {
-      userWods = undefined;
-    } else {
-      userWods = (serWods as IUserWord[]).map((item) => item.wordId) as string[];
+      return undefined;
     }
+    return (serWods as IUserWord[]).map((item) => item.wordId) as string[];
+  };
+
+  async checkLevel(elem: HTMLElement | number) {
+    const userWods: string[] | undefined = await this.filterUserWords();
+
     if (typeof elem === 'number') {
-      const words = await Model.getWords(elem, this.level);
       if (!userWods) {
-        this.wordsArray = words;
+        this.wordsArray = await Model.getWords(elem, this.level);
       } else {
-        this.wordsArray = words.filter((item) => !(userWods as string[]).includes(item.id));
+        this.wordsArray = await this.filterWords(this.page, this.level, userWods);
       }
     } else {
       this.counter = 0;
@@ -101,17 +103,27 @@ export default class SprintController {
       this.score = 0;
       const lvl = elem.id;
       this.level = +lvl[lvl.length - 1] - 1;
-      const words = await Model.getWords(this.page, this.level);
+
       if (!userWods) {
-        this.wordsArray = words;
+        this.wordsArray = await Model.getWords(this.page, this.level);
       } else {
-        this.wordsArray = words.filter((item) => !(userWods as string[]).includes(item.id));
+        this.wordsArray = await this.filterWords(this.page, this.level, userWods);
       }
-      console.log(this.wordsArray);
+
       const startBtn = elem.parentElement?.nextElementSibling as HTMLButtonElement;
       startBtn.disabled = false;
     }
   }
+
+  filterWords = async (page: number, lvl: number, arr: string[]): Promise<IWord[]> => {
+    const words = await Model.getWords(page, lvl);
+    const newWords = words.filter((item: IWord) => !arr.includes(item.id));
+    if (newWords.length === 1) {
+      this.page = page + 1;
+      return this.filterWords(page + 1, lvl, arr);
+    }
+    return newWords;
+  };
 
   sprintTimer() {
     const sprintTimer = document.querySelector('.sprint-timer span') as HTMLElement;
@@ -179,11 +191,12 @@ export default class SprintController {
     }
   }
 
-  async pastWordToPlayGame(elem: HTMLElement) {
+  async pastWordToPlayGame(elem?: HTMLElement) {
     this.sprintTimer();
-    const parent = elem.parentElement;
+    const parent = elem!.parentElement;
     parent!.classList.add('check-level-act');
     (<HTMLElement>document.querySelector('.sprint-play-wrapper')).classList.add('sprint-play-wrapper-active');
+
     const audioTag = document.querySelector('audio') as HTMLAudioElement;
     const correctBtn = document.querySelector('.btn-success') as HTMLButtonElement;
     const wrongtBtn = document.querySelector('.btn-danger') as HTMLButtonElement;
@@ -191,7 +204,6 @@ export default class SprintController {
     const englishWord = taskBlock.children[1] as HTMLElement;
     const russiaWord = taskBlock.children[2] as HTMLElement;
     this.len = this.wordsArray.length;
-
     this.engWords = this.shuffleArray(this.wordsArray);
     this.rusWords = this.engWords.map((item, ind, arr) => {
       const random = Math.floor(Math.random() * 3) + ind;
@@ -200,11 +212,10 @@ export default class SprintController {
     englishWord.innerHTML = this.engWords[this.count].word;
     russiaWord.innerHTML = this.rusWords[this.count].wordTranslate;
     audioTag.src = `${baseUrl}/${this.engWords[this.count].audio}`;
-
+    await this.nextWord('start');
     window.addEventListener('keydown', this.arrow);
     correctBtn.addEventListener('click', this.nextWord);
     wrongtBtn.addEventListener('click', this.nextWord);
-    await this.nextWord('start');
   }
 
   arrow = async (e: KeyboardEvent) => {
@@ -217,18 +228,18 @@ export default class SprintController {
   pastEffect(str: string) {
     const gameBlock = <HTMLElement>document.querySelector('.sprint-play-wrapper');
     if (str === 'correct') {
-      gameBlock.classList.add('correct');
-      gameBlock.classList.remove('wrong');
+      gameBlock.classList.add('correct_sprint');
+      gameBlock.classList.remove('wrong_sprint');
     } else {
-      gameBlock.classList.remove('correct');
-      gameBlock.classList.add('wrong');
+      gameBlock.classList.remove('correct_sprint');
+      gameBlock.classList.add('wrong_sprint');
     }
   }
 
   removeEffect() {
     const gameBlock = <HTMLElement>document.querySelector('.sprint-play-wrapper');
-    gameBlock.classList.remove('correct');
-    gameBlock.classList.remove('wrong');
+    gameBlock.classList.remove('correct_sprint');
+    gameBlock.classList.remove('wrong_sprint');
   }
 
   nextWord = async (e: Event | string) => {
@@ -236,109 +247,57 @@ export default class SprintController {
     const soundWord = taskBlock.children[0].children[0] as HTMLAudioElement;
     const englishWord = taskBlock.children[1] as HTMLElement;
     const russiaWord = taskBlock.children[2] as HTMLElement;
-    if (e === 'start') {
-      return;
-    }
+
     if (this.count === this.len - 1) {
       // this.modalActive();
       this.count = 0;
       this.page += 1;
       await this.checkLevel(this.page);
+      this.engWords = this.shuffleArray(this.wordsArray);
+      this.rusWords = this.engWords.map((item, ind, arr) => {
+        const random = Math.floor(Math.random() * 3) + ind;
+        return arr[random] === undefined ? item : arr[random];
+      });
     }
     const rusWord = this.rusWords[this.count];
     const engWord = this.engWords[this.count];
-    const forAudio = this.engWords[this.count + 1];
+
+    if (e === 'start') {
+      return;
+    }
+    const result = this.checkAnswerWord(engWord.word, rusWord.word, e);
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+    result === 'correct' ? this.correctWords.push(engWord) : this.wrongWords.push(engWord);
+    this.countScore(result);
+    this.pastEffect(result);
+    this.count += 1;
+    setTimeout(() => this.removeEffect(), 100);
+
+    const forAudio = this.engWords[this.count];
     soundWord.src = '';
     soundWord.src = `${baseUrl}/${forAudio.audio}`;
-
-    if (e === 'ArrowRight' && rusWord.word === engWord.word) {
-      this.correctWords.push(engWord);
-      this.countScore('correct');
-      this.pastEffect('correct');
-      this.count += 1;
-      englishWord.innerHTML = this.engWords[this.count].word;
-      russiaWord.innerHTML = this.rusWords[this.count].wordTranslate;
-      setTimeout(() => this.removeEffect(), 100);
-      return;
-    }
-    if (e === 'ArrowRight' && rusWord.word !== engWord.word) {
-      this.wrongWords.push(engWord);
-      this.countScore('wrong');
-      this.pastEffect('wrong');
-      this.count += 1;
-      englishWord.innerHTML = this.engWords[this.count].word;
-      russiaWord.innerHTML = this.rusWords[this.count].wordTranslate;
-      setTimeout(() => this.removeEffect(), 100);
-      return;
-    }
-    if (e === 'ArrowLeft' && rusWord.word === engWord.word) {
-      this.wrongWords.push(engWord);
-      this.countScore('wrong');
-      this.pastEffect('wrong');
-      this.count += 1;
-      englishWord.innerHTML = this.engWords[this.count].word;
-      russiaWord.innerHTML = this.rusWords[this.count].wordTranslate;
-      setTimeout(() => this.removeEffect(), 100);
-      return;
-    }
-    if (e === 'ArrowLeft' && rusWord.word !== engWord.word) {
-      this.correctWords.push(engWord);
-      this.countScore('correct');
-      this.pastEffect('correct');
-      this.count += 1;
-      englishWord.innerHTML = this.engWords[this.count].word;
-      russiaWord.innerHTML = this.rusWords[this.count].wordTranslate;
-      setTimeout(() => this.removeEffect(), 100);
-      return;
-    }
-    const target = (e as Event).target as HTMLButtonElement;
-    if (target.classList.contains('btn-success') && rusWord.word === engWord.word) {
-      this.correctWords.push(engWord);
-      this.countScore('correct');
-      this.pastEffect('correct');
-      this.count += 1;
-      englishWord.innerHTML = this.engWords[this.count].word;
-      russiaWord.innerHTML = this.rusWords[this.count].wordTranslate;
-      setTimeout(() => this.removeEffect(), 100);
-      return;
-    }
-    if (target.classList.contains('btn-success') && rusWord.word !== engWord.word) {
-      this.wrongWords.push(engWord);
-      this.countScore('wrong');
-      this.pastEffect('wrong');
-      this.count += 1;
-      englishWord.innerHTML = this.engWords[this.count].word;
-      russiaWord.innerHTML = this.rusWords[this.count].wordTranslate;
-      setTimeout(() => this.removeEffect(), 100);
-      return;
-    }
-    if (target.classList.contains('btn-danger') && rusWord.word !== engWord.word) {
-      this.correctWords.push(engWord);
-      this.countScore('correct');
-      this.pastEffect('correct');
-      this.count += 1;
-      englishWord.innerHTML = this.engWords[this.count].word;
-      russiaWord.innerHTML = this.rusWords[this.count].wordTranslate;
-      setTimeout(() => this.removeEffect(), 100);
-      return;
-    }
-    if (target.classList.contains('btn-danger') && rusWord.word === engWord.word) {
-      this.wrongWords.push(engWord);
-      this.countScore('wrong');
-      this.pastEffect('wrong');
-      this.count += 1;
-      englishWord.innerHTML = this.engWords[this.count].word;
-      russiaWord.innerHTML = this.rusWords[this.count].wordTranslate;
-      setTimeout(() => this.removeEffect(), 100);
-    }
+    englishWord.innerHTML = this.engWords[this.count].word;
+    russiaWord.innerHTML = this.rusWords[this.count].wordTranslate;
   };
 
-  shuffleArray(array: IWord[]) {
-    for (let i = array.length - 1; i > 0; i -= 1) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]];
+  checkAnswerWord(eng: string, rus: string, elem: string | Event) {
+    if (typeof elem === 'string') {
+      if ((eng === rus && elem === 'ArrowRight') || (eng !== rus && elem === 'ArrowLeft')) {
+        return 'correct';
+      }
+      return 'wrong';
     }
-    return array;
+    const target = elem.target as HTMLElement;
+    // eslint-disable-next-line prettier/prettier
+      if ((eng === rus && target.classList.contains('btn-success')) || (eng !== rus && target.classList.contains('btn-danger'))) {
+      return 'correct';
+    }
+    return 'wrong';
+  }
+
+  shuffleArray(array: IWord[]) {
+    const arr = array.sort(() => Math.random() - 0.5);
+    return arr;
   }
 
   fullScreen(elem: HTMLElement) {
@@ -380,7 +339,6 @@ export default class SprintController {
   }
 
   modalClose(elem: HTMLElement, str: string) {
-    // console.log(elem);
     const modalBG = document.querySelector('.modal-bg') as HTMLElement;
     const modalWrapper = document.querySelector('.modal-wrapper') as HTMLElement;
     const checkLevel = document.querySelector('.check-level') as HTMLElement;
@@ -390,6 +348,8 @@ export default class SprintController {
     this.point = 10;
     this.score = 0;
     if (str === 'repeat') {
+      this.correctWords = [];
+      this.wrongWords = [];
       modalBG.classList.remove('modal-bg-act');
       modalWrapper.classList.remove('modal-wrapper-act');
       checkLevel.classList.remove('check-level-act');
@@ -397,6 +357,8 @@ export default class SprintController {
       // eslint-disable-next-line @typescript-eslint/no-floating-promises
       this.checkLevel(targ);
     } else {
+      this.correctWords = [];
+      this.wrongWords = [];
       modalBG.remove();
       modalWrapper.remove();
     }
