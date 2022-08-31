@@ -11,7 +11,7 @@ class StatisticsPage extends Page {
     const statSection = document.createElement('div');
     statSection.className = 'statistic';
     this.statView
-      .drawStats()
+      .drawDayStats()
       .then((element) => {
         statSection.append(element);
       })
