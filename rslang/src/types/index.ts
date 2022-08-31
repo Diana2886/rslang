@@ -87,6 +87,22 @@ export interface IStatistic {
   optional: IStatOptional;
 }
 
+export interface IStatData {
+  allLearned: number;
+  dayNewWords: number;
+  dayLearned: number;
+  dayWinsProc: number | boolean;
+  dayTextbookLearned: number;
+  dayAudioNew: number;
+  daySprintNew: number;
+  dayAudioSeries: number;
+  daySprintSeries: number;
+  dayAudioWinsProc: number | boolean;
+  daySprintWinsProc: number | boolean;
+  dayAudioLearned: number;
+  daySprintLearned: number;
+}
+
 export type QueryData = {
   key: string;
   value: string;
