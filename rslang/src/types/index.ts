@@ -91,14 +91,14 @@ export interface IStatData {
   allLearned: number;
   dayNewWords: number;
   dayLearned: number;
-  dayWinsProc: number | boolean;
+  dayWinsProc: number | false;
   dayTextbookLearned: number;
   dayAudioNew: number;
   daySprintNew: number;
   dayAudioSeries: number;
   daySprintSeries: number;
-  dayAudioWinsProc: number | boolean;
-  daySprintWinsProc: number | boolean;
+  dayAudioWinsProc: number | false;
+  daySprintWinsProc: number | false;
   dayAudioLearned: number;
   daySprintLearned: number;
 }
