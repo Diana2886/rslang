@@ -73,7 +73,7 @@
 }
 
 .word__img {
-  width: 300px;
+  width: 250px;
   min-height: 200px;
   object-fit: cover;
   object-position: center center;
@@ -124,5 +124,10 @@
 
 .word__buttons {
   display: flex;
+  align-items: center;
   gap: 1rem;
+}
+
+.games-progress {
+  margin-bottom: 0;
 }
