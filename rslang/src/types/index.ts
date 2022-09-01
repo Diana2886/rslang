@@ -87,6 +87,16 @@ export interface IStatistic {
   optional: IStatOptional;
 }
 
+export interface ISettingsOptional {
+  showTranslation: boolean;
+  showWordButtons: boolean;
+}
+
+export interface ISettings {
+  wordsPerDay: 0;
+  optional: ISettingsOptional;
+}
+
 export type QueryData = {
   key: string;
   value: string;
