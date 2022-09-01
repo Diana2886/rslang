@@ -35,15 +35,15 @@ export default class ViewStat {
     const sprintDaily = this.drawDayItem('sprint');
     const gameDaily = document.createElement('div');
     gameDaily.className = 'statistic__games-block';
-    [audioDaily, sprintDaily].forEach((item) => gameDaily.append(item));
-    [commonDaily, gameDaily].forEach((item) => statBody.append(item));
+    // [audioDaily, sprintDaily].forEach((item) => gameDaily.append(item));
+    [commonDaily, audioDaily, sprintDaily].forEach((item) => statBody.append(item));
     return statBody;
   }
 
   drawDayItem(type: 'common' | 'audio' | 'sprint') {
     const dayStat = document.createElement('div');
     dayStat.className = `statistic__day-${type} day-${type}`;
-    const commonStatTitle = document.createElement('h6');
+    const commonStatTitle = document.createElement('h5');
     commonStatTitle.textContent = type.toUpperCase();
 
     const newWordsInfo = document.createElement('p');
@@ -93,19 +93,19 @@ export default class ViewStat {
               (item) => `${item.date.getFullYear()}-${item.date.getMonth()}-${item.date.getDate()}`
             ),
           ],
-          ['Новые слова', ...this.newsChartsData.map((item) => item.value)],
-          ['Изученные слова', ...this.learnedChartsData.map((item) => item.value)],
+          ['New words', ...this.newsChartsData.map((item) => item.value)],
+          ['Learned words', ...this.learnedChartsData.map((item) => item.value)],
         ],
         type: 'bar',
       },
       color: {
         pattern: ['#545BE8', '#F0C932'],
-    },
+      },
       axis: {
         x: {
           type: 'timeseries',
           tick: {
-            format: '%Y-%m-%d',
+            format: '%d.%m',
           },
         },
       },
