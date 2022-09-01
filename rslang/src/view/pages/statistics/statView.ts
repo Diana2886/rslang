@@ -48,12 +48,19 @@ export default class ViewStat {
       const dayBestInfo = document.createElement('p');
       dayBestInfo.className = `day-${type}__best`;
       dayBestInfo.innerHTML = `<span>Best win streak:</span> ${this.data[type].bestSeries}`;
-      dayStat.append(dayBestInfo);
-    } else {
       const dayLearnedInfo = document.createElement('p');
       dayLearnedInfo.className = `day-${type}__learned`;
       dayLearnedInfo.innerHTML = `<span>Learned words</span>: ${this.data[type].learned}`;
-      dayStat.append(dayLearnedInfo);
+      [dayBestInfo, dayLearnedInfo].forEach((item) => dayStat.append(item));
+    } else {
+      const dayLearnedInfo = document.createElement('p');
+      const dayTextLearnedInfo = document.createElement('p');
+      dayTextLearnedInfo.className = `day-textbook__learned`;
+      dayTextLearnedInfo.innerHTML = `<span>Textbook learned</span>: ${this.data.textbook.learned}`;
+
+      dayLearnedInfo.className = `day-${type}__learned`;
+      dayLearnedInfo.innerHTML = `<span>All learned</span>: ${this.data[type].learned}`;
+      [dayLearnedInfo, dayTextLearnedInfo].forEach((item) => dayStat.append(item));
     }
     return dayStat;
   }
