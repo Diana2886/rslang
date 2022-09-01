@@ -1,5 +1,7 @@
+import c3 from 'c3';
+import 'c3/c3.min.css';
+import { IChartData, IStatData } from '../../../types/index';
 import './statistics.scss';
-import { IStatData } from '../../../types/index';
 import StatData from './statData';
 
 export default class ViewStat {
@@ -7,13 +9,25 @@ export default class ViewStat {
 
   data: IStatData;
 
+  newsChartsData: IChartData[];
+
+  learnedChartsData: IChartData[];
+
   constructor() {
     this.statData = new StatData();
     this.data = this.statData.data;
+    this.newsChartsData = [];
+    this.learnedChartsData = [];
   }
 
   async drawDayStats() {
-    this.data = await this.statData.getData();
+    const { data, periodData } = await this.statData.getData();
+    this.data = data;
+    if (periodData) {
+      const { newsChartData, learnedChartData } = periodData;
+      this.newsChartsData = newsChartData;
+      this.learnedChartsData = learnedChartData;
+    }
     const statBody = document.createElement('div');
     statBody.className = 'statistic__body';
     const commonDaily = this.drawDayItem('common');
@@ -63,5 +77,40 @@ export default class ViewStat {
       [dayLearnedInfo, dayTextLearnedInfo].forEach((item) => dayStat.append(item));
     }
     return dayStat;
+  }
+
+  drawChart() {
+    const chartDiv = document.createElement('div');
+    chartDiv.className = `chart`;
+    const chart = c3.generate({
+      bindto: '#chart',
+      data: {
+        x: 'x',
+        columns: [
+          [
+            'x',
+            ...this.newsChartsData.map(
+              (item) => `${item.date.getFullYear()}-${item.date.getMonth()}-${item.date.getDate()}`
+            ),
+          ],
+          ['Новые слова', ...this.newsChartsData.map((item) => item.value)],
+          ['Изученные слова', ...this.learnedChartsData.map((item) => item.value)],
+        ],
+        type: 'bar',
+      },
+      color: {
+        pattern: ['#545BE8', '#F0C932'],
+    },
+      axis: {
+        x: {
+          type: 'timeseries',
+          tick: {
+            format: '%Y-%m-%d',
+          },
+        },
+      },
+    });
+    chartDiv.append(chart.element);
+    return chartDiv;
   }
 }

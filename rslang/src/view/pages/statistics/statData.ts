@@ -1,5 +1,5 @@
 import Model from '../../../model/components/index';
-import { IStatData, IStatistic } from '../../../types/index';
+import { IChartData, IStatData, IStatistic } from '../../../types/index';
 
 export default class StatData {
   model: Model;
@@ -39,9 +39,13 @@ export default class StatData {
 
   async getData() {
     const date = new Date();
-    const key = `${date.getDate()}/${date.getMonth()}/${date.getFullYear()}}`;
+    const key = `${Math.ceil(date.getMinutes())}/${date.getMonth()}/${date.getFullYear()}`;
     this.statistic = await this.model.getStatistic();
     const userWords = await this.model.getUserWords();
+    let periodData: { newsChartData: IChartData[]; learnedChartData: IChartData[] } | null = null;
+    if (typeof this.statistic === 'object') {
+      periodData = this.getPeriodData(this.statistic);
+    }
     if (typeof this.statistic === 'object' && this.statistic.optional[key]) {
       this.data.allLearned = this.statistic.learnedWords;
       const dayStat = this.statistic.optional[key];
@@ -78,6 +82,30 @@ export default class StatData {
       const allGames = dayAudioGames + daySprintGames;
       this.data.common.winsPercent = allGames ? Math.round(((dayAudioWins + daySprintWins) / allGames) * 100) : false;
     }
-    return this.data;
+    return { data: this.data, periodData };
+  }
+
+  getPeriodData(stat: IStatistic) {
+    let newsChartData: IChartData[] = [];
+    let learnedChartData: IChartData[] = [];
+
+    const { optional } = stat;
+    const dateKeys = Object.keys(optional);
+    const getChartData = (name: 'newWords' | 'learnedWords') => {
+      const chartData = [
+        ...dateKeys.map((dateStr) => {
+          const dayData = optional[dateStr];
+          const value = dayData.audio[name] + dayData.sprint[name] + dayData.textbook[name];
+          const [day, month, year] = dateStr.split('/');
+          const date = new Date(+year, +month, +day);
+          return { date, value };
+        }),
+      ];
+      return chartData;
+    };
+    newsChartData = getChartData('newWords');
+    learnedChartData = getChartData('learnedWords');
+
+    return { newsChartData, learnedChartData };
   }
 }
