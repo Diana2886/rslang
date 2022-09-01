@@ -173,6 +173,11 @@ export default class Statistic {
   async writeBestSerial(type: 'audio' | 'sprint', answer: boolean, date: string) {
     const statistic = await this.model.getStatistic();
     if (typeof statistic === 'object') {
+      if (!statistic.optional[date]) {
+        const { optional } = statistic;
+        const keys = Object.keys(optional);
+        date = keys[keys.length - 1];
+      }
       const best = statistic.optional[date][type].bestSeries;
       const current = statistic.optional[date][type].series;
       if (answer) {
