@@ -203,7 +203,6 @@ class TextbookController {
           optional[Object.keys(item)[0] as keyof ISettingsOptional] = checkboxItem.checked;
           (async () => {
             await this.model.updateSettings({ optional });
-            console.log(await this.model.getSettings());
           })().catch((err: Error) => console.warn(err.message));
         });
       }
