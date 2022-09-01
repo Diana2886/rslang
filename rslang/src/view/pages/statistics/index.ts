@@ -1,4 +1,5 @@
 import Model from '../../../model/components/index';
+import Footer from '../../core/components/footer/index';
 import Page from '../../core/templates/page';
 import ViewStat from './statView';
 
@@ -28,8 +29,9 @@ class StatisticsPage extends Page {
   }
 
   render() {
+    const footer = new Footer();
     this.container.innerHTML = '';
-    this.container.append(this.drawStatPage());
+    this.container.append(this.drawStatPage(), footer.renderFooter());
     return this.container;
   }
 }
