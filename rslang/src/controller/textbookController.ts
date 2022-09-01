@@ -175,6 +175,32 @@ class TextbookController {
       });
     });
   }
+
+  listenSettingsModalWindow() {
+    document.body.addEventListener('click', (e) => {
+      const target = e.target as HTMLElement;
+      if (target.classList.contains('btn-settings')) {
+        const settingsCheckboxIds = [
+          { translationCheck: ['translation', 'phrase-ru_meaning', 'phrase-ru_example'] },
+          { wordButtonsCheck: ['difficult-button', 'learned-button'] },
+        ];
+        settingsCheckboxIds.forEach((item) => {
+          const checkboxItem = document.querySelector(`#${Object.keys(item)[0]}`) as HTMLInputElement;
+          const elementsForHiding = Object.values(item)[0] as string[];
+          console.log();
+          const hideElements = () => {
+            elementsForHiding.forEach((el) => {
+              const elements = document.querySelectorAll(`.${el}`);
+              elements.forEach((element) => {
+                (element as HTMLElement).style.display = checkboxItem.checked ? 'block' : 'none';
+              });
+            });
+          };
+          checkboxItem.addEventListener('change', hideElements);
+        });
+      }
+    });
+  }
 }
 
 export default TextbookController;
