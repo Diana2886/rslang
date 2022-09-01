@@ -87,6 +87,31 @@ export interface IStatistic {
   optional: IStatOptional;
 }
 
+export interface IStatData {
+  allLearned: number;
+  common: {
+    learned: number;
+    newWords: number;
+    winsPercent: number | false;
+  };
+  audio: {
+    learned: number;
+    newWords: number;
+    winsPercent: number | false;
+    bestSeries: number;
+  };
+  sprint: {
+    learned: number;
+    newWords: number;
+    winsPercent: number | false;
+    bestSeries: number;
+  };
+  textbook: {
+    learned: number;
+    newWords: number;
+  };
+}
+
 export interface ISettingsOptional {
   showTranslation: boolean;
   showWordButtons: boolean;

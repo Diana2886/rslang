@@ -1,13 +1,31 @@
+import Model from '../../../model/components/index';
 import Page from '../../core/templates/page';
+import ViewStat from './statView';
 
 class StatisticsPage extends Page {
-  static TextObject = {
-    MainTitle: 'Statistics Page',
-  };
+  model = new Model();
+
+  statView = new ViewStat();
+
+  drawStatPage() {
+    const statSection = document.createElement('div');
+    statSection.className = 'statistic';
+    const title = document.createElement('h5');
+    title.textContent = 'Daily statistics';
+    statSection.append(title);
+    this.statView
+      .drawDayStats()
+      .then((element) => {
+        statSection.append(element);
+      })
+      .catch((err) => console.log(err));
+
+    return statSection;
+  }
 
   render() {
-    const title = this.createHeaderTitle(StatisticsPage.TextObject.MainTitle);
-    this.container.append(title);
+    this.container.innerHTML = '';
+    this.container.append(this.drawStatPage());
     return this.container;
   }
 }
