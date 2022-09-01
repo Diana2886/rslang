@@ -10,7 +10,7 @@ export default class Statistic {
 
   async writeWordStat(gameName: 'audio' | 'sprint', example: IWord, answers: boolean) {
     const date = new Date();
-    const key = `${date.getDate()}/${date.getMonth()}/${date.getFullYear()}}`;
+    const key = `${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`;
     const userWords = await this.model.getUserWords();
     let userWord: IUserWord = {};
     let resUWord: number | IUserWord = 0;

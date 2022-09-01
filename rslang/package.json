@@ -41,6 +41,8 @@
     "webpack-merge": "^5.8.0"
   },
   "dependencies": {
-    "@types/bootstrap": "^5.2.3"
+    "@types/bootstrap": "^5.2.3",
+    "@types/c3": "^0.7.8",
+    "c3": "^0.7.20"
   }
 }
