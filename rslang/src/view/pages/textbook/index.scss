@@ -12,8 +12,14 @@
 
 .textbook-tools__container {
   display: flex;
-  gap: 1rem;
+  justify-content: space-between;
   margin-bottom: 1rem;
+}
+
+.textbook-tools-main__container,
+.textbook-tools-addition__container {
+  display: flex;
+  gap: 1rem;
 }
 
 .dropdown-pages {

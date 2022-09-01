@@ -210,7 +210,7 @@ class TextbookPage extends Page {
 
   renderSettingsButton() {
     const template = `
-      <button type="button" class="btn btn-dark btn-settings" data-bs-toggle="modal" data-bs-target="#exampleModal">
+      <button type="button" class="btn btn-primary btn-settings" data-bs-toggle="modal" data-bs-target="#exampleModal">
         Settings
       </button>
       <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -263,9 +263,18 @@ class TextbookPage extends Page {
   renderTextbookToolsContainer() {
     const textbookToolsContainer = document.createElement('div');
     textbookToolsContainer.classList.add('textbook-tools__container');
-    textbookToolsContainer.append(this.renderLevelsElement(), this.renderPaginationElement(), this.renderGamesButton());
+    const textbookToolsMainContainer = document.createElement('div');
+    textbookToolsMainContainer.classList.add('textbook-tools-main__container');
+    textbookToolsMainContainer.append(
+      this.renderLevelsElement(),
+      this.renderPaginationElement(),
+      this.renderGamesButton()
+    );
+    const textbookToolsAdditionContainer = document.createElement('div');
+    textbookToolsAdditionContainer.classList.add('textbook-tools-addition__container');
     if (this.textbookModel.checkAuthorization())
-      textbookToolsContainer.append(this.renderDifficultWordsButton(), this.renderSettingsButton());
+      textbookToolsAdditionContainer.append(this.renderDifficultWordsButton(), this.renderSettingsButton());
+    textbookToolsContainer.append(textbookToolsMainContainer, textbookToolsAdditionContainer);
     return textbookToolsContainer;
   }
 
