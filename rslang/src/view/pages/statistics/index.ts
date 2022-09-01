@@ -1,4 +1,5 @@
 import Model from '../../../model/components/index';
+import Footer from '../../core/components/footer/index';
 import Page from '../../core/templates/page';
 import ViewStat from './statView';
 
@@ -10,13 +11,17 @@ class StatisticsPage extends Page {
   drawStatPage() {
     const statSection = document.createElement('div');
     statSection.className = 'statistic';
-    const title = document.createElement('h5');
-    title.textContent = 'Daily statistics';
-    statSection.append(title);
+    const titleDaily = document.createElement('h3');
+    titleDaily.textContent = 'Daily statistics';
+    const titleLong = document.createElement('h3');
+    titleLong.textContent = 'Long term statistics';
+    statSection.append(titleDaily);
     this.statView
       .drawDayStats()
       .then((element) => {
         statSection.append(element);
+        statSection.append(titleLong);
+        statSection.append(this.statView.drawChart());
       })
       .catch((err) => console.log(err));
 
@@ -24,8 +29,9 @@ class StatisticsPage extends Page {
   }
 
   render() {
+    const footer = new Footer();
     this.container.innerHTML = '';
-    this.container.append(this.drawStatPage());
+    this.container.append(this.drawStatPage(), footer.renderFooter());
     return this.container;
   }
 }
