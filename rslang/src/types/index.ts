@@ -163,3 +163,8 @@ export const difficultyColors: IColors = {
   difficult: '#DDDEFA',
   learned: '#FCF4D6',
 };
+
+export interface IChartData {
+  date: Date;
+  value: number;
+}
