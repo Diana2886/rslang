@@ -4,6 +4,7 @@ import {
   INewUser,
   ISignIn,
   IStatistic,
+  ISettings,
   IUser,
   IUserWord,
   IWord,
@@ -18,6 +19,7 @@ enum Path {
   signIn = '/signin',
   aggregatedWords = '/aggregatedWords',
   statistics = '/statistics',
+  settings = '/settings',
 }
 export enum Result {
   success = 200,
@@ -378,6 +380,77 @@ class Model {
       switch (status) {
         case 200:
           console.log('The statistics has been updated');
+          break;
+        case 400:
+          throw new Error('Bad request');
+        case 401:
+          throw new Error('Access token is missing or invalid');
+        default:
+          break;
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async getSettings() {
+    let status = 0;
+    const authStr = localStorage.getItem('authDataRSlang');
+    let authDataRSlang: IAuth | undefined;
+    if (authStr) {
+      authDataRSlang = <IAuth>JSON.parse(authStr);
+    }
+    try {
+      if (!authDataRSlang) throw new Error('unauthorized user');
+      const response = await fetch(`${baseURL}${Path.users}/${authDataRSlang.userId}${Path.settings}`, {
+        headers: {
+          Authorization: `Bearer ${authDataRSlang.token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+      status = response.status;
+      const settings = await (<Promise<ISettings>>response.json());
+      switch (status) {
+        case 200:
+          console.log('Get settings: Successful operation');
+          break;
+        case 400:
+          throw new Error('Access token is missing or invalid');
+        case 401:
+          throw new Error('Settings not found');
+        default:
+          break;
+      }
+      return settings;
+    } catch (error) {
+      console.error(error);
+      return status;
+    }
+  }
+
+  async updateSettings(settings: ISettings): Promise<void> {
+    let status = 0;
+    const authStr = localStorage.getItem('authDataRSlang');
+    let authDataRSlang: IAuth | undefined;
+    if (authStr) {
+      authDataRSlang = <IAuth>JSON.parse(authStr);
+    }
+    try {
+      if (!authDataRSlang) throw new Error('unauthorized user');
+      const response = await fetch(`${baseURL}${Path.users}/${authDataRSlang.userId}${Path.settings}`, {
+        method: 'PUT',
+        headers: {
+          Authorization: `Bearer ${authDataRSlang.token}`,
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(settings),
+      });
+      status = response.status;
+
+      switch (status) {
+        case 200:
+          console.log('The settings has been updated');
           break;
         case 400:
           throw new Error('Bad request');
