@@ -24,6 +24,8 @@ class TextbookPage extends Page {
     if (this.textbookModel.checkAuthorization()) {
       userWords = await this.model.getUserWords();
     }
+    let allGamesStatistics: number;
+    let correctAnswersStatistics: number;
     words.forEach((item) => {
       const imgPath = `${baseURL}/${item.image}`;
       const wordContainer = document.createElement('div');
@@ -37,7 +39,11 @@ class TextbookPage extends Page {
           }
         });
       }
-      const template = `
+      (async () => {
+        allGamesStatistics = (await this.textbookModel.getStatisticsForTextbookWord(item.id)).allGames;
+        correctAnswersStatistics = (await this.textbookModel.getStatisticsForTextbookWord(item.id)).correctAnswers;
+        const incorrectAnswers = allGamesStatistics - correctAnswersStatistics;
+        const template = `
         <img class="word__img" src="${imgPath}" alt="image">
         <div class="word__content">
           <div class="word-translation__wrapper" style="border-left: 3px solid ${LevelColors[item.group]}">
@@ -61,11 +67,14 @@ class TextbookPage extends Page {
                 ? '<button class="btn btn-secondary learned-button">learned</button>'
                 : ''
             }
+            <p class="games-progress">Correct answers: ${correctAnswersStatistics}</p>
+            <p class="games-progress">Incorrect answers: ${incorrectAnswers >= 0 ? incorrectAnswers : 0}</p>
           </div>
         </div>
       `;
-      wordContainer.innerHTML = template;
-      wordsContainer.append(wordContainer);
+        wordContainer.innerHTML = template;
+        wordsContainer.append(wordContainer);
+      })().catch((err: Error) => console.warn(err.message));
     });
     wordsWrapper.append(wordsContainer);
     const footer = new Footer();
@@ -181,6 +190,13 @@ class TextbookPage extends Page {
     const difficultWordsButton = document.createElement('div');
     difficultWordsButton.innerHTML = template;
     return difficultWordsButton;
+  }
+
+  renderSettingsButton() {
+    const template = `<button type="button" class="btn btn-dark btn-settings">Settings</button>`;
+    const settingsButton = document.createElement('div');
+    settingsButton.innerHTML = template;
+    return settingsButton;
   }
 
   renderModalAudio(title: string, description: string) {
