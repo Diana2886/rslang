@@ -90,7 +90,7 @@ export default class ViewStat {
           [
             'x',
             ...this.newsChartsData.map(
-              (item) => `${item.date.getFullYear()}-${item.date.getMonth()}-${item.date.getDate()}`
+              (item) => `${item.date.getFullYear()}-${item.date.getMonth() + 1}-${item.date.getDate()}`
             ),
           ],
           ['New words', ...this.newsChartsData.map((item) => item.value)],
