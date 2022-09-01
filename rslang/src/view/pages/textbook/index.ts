@@ -43,51 +43,65 @@ class TextbookPage extends Page {
         allGamesStatistics = (await this.textbookModel.getStatisticsForTextbookWord(item.id)).allGames;
         correctAnswersStatistics = (await this.textbookModel.getStatisticsForTextbookWord(item.id)).correctAnswers;
         const incorrectAnswers = allGamesStatistics - correctAnswersStatistics;
-        const template = `
-        <img class="word__img" src="${imgPath}" alt="image">
-        <div class="word__content">
-          <div class word-text__wrapper>
-            <div class="word-translation__wrapper" style="border-left: 3px solid ${LevelColors[item.group]}">
-              <div class="word__wrapper">
-                <h4 class="word">${item.word}</h4>
-                <h5 class="transcription">${item.transcription}</h5>
-                <span class="word__play" id="${TextbookModel.getWordId(item)}"></span>
+        const settings = await this.model.getSettings();
+        let template = '';
+        if (settings && typeof settings === 'object') {
+          template = `
+            <img class="word__img" src="${imgPath}" alt="image">
+            <div class="word__content">
+              <div class word-text__wrapper>
+                <div class="word-translation__wrapper" style="border-left: 3px solid ${LevelColors[item.group]}">
+                  <div class="word__wrapper">
+                    <h4 class="word">${item.word}</h4>
+                    <h5 class="transcription">${item.transcription}</h5>
+                    <span class="word__play" id="${TextbookModel.getWordId(item)}"></span>
+                  </div>
+                  <p class="translation" style="display:${settings.optional.translationCheck ? 'block' : 'none'}">${
+            item.wordTranslate
+          }</p>
+                </div>
+                <div class="phrase__wrapper phrase-meaning__wrapper">
+                  <p class="phrase phrase-en_meaning">${item.textMeaning}</p>
+                  <p class="phrase phrase-ru phrase-ru_meaning" style="display:${
+                    settings.optional.translationCheck ? 'block' : 'none'
+                  }">${item.textMeaningTranslate}</p>
+                </div>
+                <div class="phrase__wrapper phrase-example__wrapper">
+                  <p class="phrase phrase-en_example">${item.textExample}</p>
+                  <p class="phrase phrase-ru phrase-ru_example" style="display:${
+                    settings.optional.translationCheck ? 'block' : 'none'
+                  }">${item.textExampleTranslate}</p>
+                </div>
               </div>
-              <p class="translation">${item.wordTranslate}</p>
-            </div>
-            <div class="phrase__wrapper phrase-meaning__wrapper">
-              <p class="phrase phrase-en_meaning">${item.textMeaning}</p>
-              <p class="phrase phrase-ru phrase-ru_meaning">${item.textMeaningTranslate}</p>
-            </div>
-            <div class="phrase__wrapper phrase-example__wrapper">
-              <p class="phrase phrase-en_example">${item.textExample}</p>
-              <p class="phrase phrase-ru phrase-ru_example">${item.textExampleTranslate}</p>
-            </div>
-          </div>
-          <div class="word-buttons-stat__container">
-            <div class="word__buttons" style="display: ${this.textbookModel.checkAuthorization() ? 'flex' : 'none'}">
-              <button class="btn btn-primary difficult-button">${
-                TextbookModel.isDifficultWordsGroup ? 'remove' : 'difficult'
-              }</button>
-              ${
-                !TextbookModel.isDifficultWordsGroup
-                  ? '<button class="btn btn-secondary learned-button">learned</button>'
-                  : ''
-              }
-            </div>
-            ${
-              (await this.textbookModel.isUserWordExist(item.id)) && allGamesStatistics !== 0
-                ? `
-              <div class="word-games-stat__container">
-                <p class="word-games-stat">Correct answers: ${correctAnswersStatistics}</p>
-                <p class="word-games-stat">Incorrect answers: ${incorrectAnswers >= 0 ? incorrectAnswers : 0}</p>
+              <div class="word-buttons-stat__container">
+                <div class="word__buttons" style="display: ${
+                  this.textbookModel.checkAuthorization() ? 'flex' : 'none'
+                }">
+                  <button class="btn btn-primary difficult-button" style="display:${
+                    settings.optional.translationCheck ? 'block' : 'none'
+                  }">${TextbookModel.isDifficultWordsGroup ? 'remove' : 'difficult'}</button>
+                  ${
+                    !TextbookModel.isDifficultWordsGroup
+                      ? `<button class="btn btn-secondary learned-button" style="display:${
+                          settings.optional.translationCheck ? 'block' : 'none'
+                        }">learned</button>`
+                      : ''
+                  }
+                </div>
+                ${
+                  (await this.textbookModel.isUserWordExist(item.id)) && allGamesStatistics !== 0
+                    ? `
+                  <div class="word-games-stat__container">
+                    <p class="word-games-stat">Correct answers: ${correctAnswersStatistics}</p>
+                    <p class="word-games-stat">Incorrect answers: ${incorrectAnswers >= 0 ? incorrectAnswers : 0}</p>
+                  </div>
+                `
+                    : ''
+                }
               </div>
-            `
-                : ''
-            }
-          </div>
-        </div>
-      `;
+            </div>
+          `;
+        }
         wordContainer.innerHTML = template;
         wordsContainer.append(wordContainer);
       })().catch((err: Error) => console.warn(err.message));
@@ -208,39 +222,47 @@ class TextbookPage extends Page {
     return difficultWordsButton;
   }
 
-  renderSettingsButton() {
-    const template = `
-      <button type="button" class="btn btn-primary btn-settings" data-bs-toggle="modal" data-bs-target="#exampleModal">
-        Settings
-      </button>
-      <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">Settings</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="" id="translationCheck" checked>
-                <label class="form-check-label" for="translationCheck">
-                  Display translation
-                </label>
+  async renderSettingsButton() {
+    const settings = await this.model.getSettings();
+    let template = '';
+    if (settings && typeof settings === 'object') {
+      template = `
+        <button type="button" class="btn btn-primary btn-settings" data-bs-toggle="modal" data-bs-target="#exampleModal">
+          Settings
+        </button>
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-settings">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Settings</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="" id="wordButtonsCheck" checked>
-                <label class="form-check-label" for="wordButtonsCheck">
-                  Show action buttons for words
-                </label>
+              <div class="modal-body">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" value="" id="translationCheck" ${
+                    settings.optional.translationCheck ? 'checked' : ''
+                  }>
+                  <label class="form-check-label" for="translationCheck">
+                    Display translation
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" value="" id="wordButtonsCheck" ${
+                    settings.optional.wordButtonsCheck ? 'checked' : ''
+                  }>
+                  <label class="form-check-label" for="wordButtonsCheck">
+                    Show action buttons for words
+                  </label>
+                </div>
               </div>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    `;
+      `;
+    }
     const settingsButton = document.createElement('div');
     settingsButton.innerHTML = template;
     return settingsButton;
@@ -260,7 +282,7 @@ class TextbookPage extends Page {
     return { modal, buttonStart };
   }
 
-  renderTextbookToolsContainer() {
+  async renderTextbookToolsContainer() {
     const textbookToolsContainer = document.createElement('div');
     textbookToolsContainer.classList.add('textbook-tools__container');
     const textbookToolsMainContainer = document.createElement('div');
@@ -273,22 +295,22 @@ class TextbookPage extends Page {
     const textbookToolsAdditionContainer = document.createElement('div');
     textbookToolsAdditionContainer.classList.add('textbook-tools-addition__container');
     if (this.textbookModel.checkAuthorization())
-      textbookToolsAdditionContainer.append(this.renderDifficultWordsButton(), this.renderSettingsButton());
+      textbookToolsAdditionContainer.append(this.renderDifficultWordsButton(), await this.renderSettingsButton());
     textbookToolsContainer.append(textbookToolsMainContainer, textbookToolsAdditionContainer);
     return textbookToolsContainer;
   }
 
-  renderTextbookContainer() {
+  async renderTextbookContainer() {
     const textbookContainer = document.createElement('div');
     textbookContainer.classList.add('textbook__container');
     const title = this.createHeaderTitle(TextbookPage.TextObject.MainTitle);
-    textbookContainer.append(title, this.renderTextbookToolsContainer());
+    textbookContainer.append(title, await this.renderTextbookToolsContainer());
     return textbookContainer;
   }
 
   render() {
-    this.container.append(this.renderTextbookContainer());
     (async () => {
+      this.container.append(await this.renderTextbookContainer());
       const words = await Model.getWords(TextbookModel.page, TextbookModel.group);
       const difficultWords = await this.textbookModel.getDifficultWords();
       await this.renderWords(TextbookModel.isDifficultWordsGroup ? difficultWords : words);

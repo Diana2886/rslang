@@ -1,6 +1,6 @@
 import Model from '../model/components/index';
 import TextbookModel from '../model/textbookModel';
-import { difficultyColors, IOptional } from '../types/index';
+import { difficultyColors, IOptional, ISettingsOptional } from '../types/index';
 import PageIds from '../view/pages/app/pageIds';
 import TextbookPage from '../view/pages/textbook/index';
 import Statistic from './statistics/index';
@@ -179,15 +179,18 @@ class TextbookController {
   listenSettingsModalWindow() {
     document.body.addEventListener('click', (e) => {
       const target = e.target as HTMLElement;
-      if (target.classList.contains('btn-settings')) {
+      if (target.closest('.modal-settings')) {
         const settingsCheckboxIds = [
           { translationCheck: ['translation', 'phrase-ru_meaning', 'phrase-ru_example'] },
           { wordButtonsCheck: ['difficult-button', 'learned-button'] },
         ];
+        const optional: ISettingsOptional = {
+          translationCheck: true,
+          wordButtonsCheck: true,
+        };
         settingsCheckboxIds.forEach((item) => {
           const checkboxItem = document.querySelector(`#${Object.keys(item)[0]}`) as HTMLInputElement;
           const elementsForHiding = Object.values(item)[0] as string[];
-          console.log();
           const hideElements = () => {
             elementsForHiding.forEach((el) => {
               const elements = document.querySelectorAll(`.${el}`);
@@ -197,6 +200,11 @@ class TextbookController {
             });
           };
           checkboxItem.addEventListener('change', hideElements);
+          optional[Object.keys(item)[0] as keyof ISettingsOptional] = checkboxItem.checked;
+          (async () => {
+            await this.model.updateSettings({ optional });
+            console.log(await this.model.getSettings());
+          })().catch((err: Error) => console.warn(err.message));
         });
       }
     });
