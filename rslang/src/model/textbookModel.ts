@@ -159,25 +159,32 @@ class TextbookModel {
     return word.id;
   }
 
-  async getStatisticsForTextbookWord(id: string) {
+  async isUserWordExist(id: string) {
     const userWords = await this.model.getUserWords();
-    let allGames = 0;
-    let correctAnswers = 0;
     if (typeof userWords === 'object') {
       let count = 0;
       userWords.forEach((word) => {
         if (word.wordId !== id) count += 1;
       });
       if (count !== userWords.length) {
-        const userWord = await this.model.getUserWord(id);
-        if (typeof userWord === 'object' && userWord.optional) {
-          const { audio, sprint } = userWord.optional;
-          const values = [...Object.values(audio), ...Object.values(sprint)];
-          values.forEach((item) => {
-            allGames += item.allGames;
-            correctAnswers += item.corrects;
-          });
-        }
+        return true;
+      }
+    }
+    return false;
+  }
+
+  async getStatisticsForTextbookWord(id: string) {
+    let allGames = 0;
+    let correctAnswers = 0;
+    if (await this.isUserWordExist(id)) {
+      const userWord = await this.model.getUserWord(id);
+      if (typeof userWord === 'object' && userWord.optional) {
+        const { audio, sprint } = userWord.optional;
+        const values = [...Object.values(audio), ...Object.values(sprint)];
+        values.forEach((item) => {
+          allGames += item.allGames;
+          correctAnswers += item.corrects;
+        });
       }
     }
     return { allGames, correctAnswers };
