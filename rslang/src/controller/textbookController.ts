@@ -120,7 +120,7 @@ class TextbookController {
       }
       const wordButtons = ['difficult', 'learned'];
       const date = new Date();
-      const key = `${date.getDate()}.${date.getMonth()}.${date.getFullYear()}`;
+      const key = `${date.getDate()}/${date.getMonth()}/${date.getFullYear()}}`;
       const optional: IOptional = {
         audio: {
           [key]: {

@@ -10,7 +10,7 @@ export default class Statistic {
 
   async writeWordStat(gameName: 'audio' | 'sprint', example: IWord, answers: boolean) {
     const date = new Date();
-    const key = `${date.getDate()}.${date.getMonth()}.${date.getFullYear()}`;
+    const key = `${date.getDate()}/${date.getMonth()}/${date.getFullYear()}}`;
     const userWords = await this.model.getUserWords();
     let userWord: IUserWord = {};
     let resUWord: number | IUserWord = 0;
@@ -39,6 +39,16 @@ export default class Statistic {
       }
 
       if (userWord.optional) {
+        if (!userWord.optional.audio[key]) {
+          userWord.optional.audio[key] = {
+            allGames: 0,
+            corrects: 0,
+          };
+          userWord.optional.sprint[key] = {
+            allGames: 0,
+            corrects: 0,
+          };
+        }
         userWord.optional[gameName][key].allGames += 1;
         userWord.optional[gameName][key].corrects += answers ? 1 : 0;
         userWord.optional.serial = answers ? userWord.optional.serial + 1 : 0;
@@ -122,6 +132,31 @@ export default class Statistic {
       };
     }
 
+    if (typeof statistic === 'object') {
+      if (!statistic.optional[key]) {
+        statistic.optional[key] = {
+          audio: {
+            newWords: 0,
+            learnedWords: 0,
+            series: 0,
+            bestSeries: 0,
+          },
+          sprint: {
+            newWords: 0,
+            learnedWords: 0,
+            series: 0,
+            bestSeries: 0,
+          },
+          textbook: {
+            newWords: 0,
+            learnedWords: 0,
+            series: 0,
+            bestSeries: 0,
+          },
+        };
+      }
+    }
+
     if (type === 'new') {
       const dayStat = statistic.optional[key];
       dayStat[source].newWords += 1;
@@ -130,9 +165,6 @@ export default class Statistic {
       statistic.learnedWords += minus ? -1 : 1;
       const dayStat = statistic.optional[key];
       dayStat[source].learnedWords += minus ? -1 : 1;
-      if (dayStat[source].learnedWords < 0) {
-        dayStat[source].learnedWords = 0;
-      }
     }
 
     await this.model.updateStatistic({ learnedWords: statistic.learnedWords, optional: statistic.optional });

@@ -39,10 +39,10 @@ export default class StatData {
 
   async getData() {
     const date = new Date();
-    const key = `${date.getDate()}.${date.getMonth()}.${date.getFullYear()}`;
+    const key = `${date.getDate()}/${date.getMonth()}/${date.getFullYear()}}`;
     this.statistic = await this.model.getStatistic();
     const userWords = await this.model.getUserWords();
-    if (typeof this.statistic === 'object') {
+    if (typeof this.statistic === 'object' && this.statistic.optional[key]) {
       this.data.allLearned = this.statistic.learnedWords;
       const dayStat = this.statistic.optional[key];
       this.data.audio.learned = dayStat.audio.learnedWords;
@@ -65,7 +65,7 @@ export default class StatData {
       let daySprintGames = 0;
       let daySprintWins = 0;
       userWords.forEach((uWord) => {
-        if (uWord.optional) {
+        if (uWord.optional?.audio[key]) {
           dayAudioGames += uWord.optional.audio[key].allGames;
           dayAudioWins += uWord.optional.audio[key].corrects;
           daySprintGames += uWord.optional.sprint[key].allGames;
