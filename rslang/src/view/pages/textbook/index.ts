@@ -27,6 +27,10 @@ class TextbookPage extends Page {
     }
     let allGamesStatistics: number;
     let correctAnswersStatistics: number;
+    const isTranslationDisplayed = async (key: keyof ISettingsOptional) => {
+      const optional = await this.textbookModel.getOptional();
+      return optional[key] ? 'block' : 'none';
+    };
     words.forEach((item) => {
       const imgPath = `${baseURL}/${item.image}`;
       const wordContainer = document.createElement('div');
@@ -44,10 +48,6 @@ class TextbookPage extends Page {
         allGamesStatistics = (await this.textbookModel.getStatisticsForTextbookWord(item.id)).allGames;
         correctAnswersStatistics = (await this.textbookModel.getStatisticsForTextbookWord(item.id)).correctAnswers;
         const incorrectAnswers = allGamesStatistics - correctAnswersStatistics;
-        const isTranslationDisplayed = async (key: keyof ISettingsOptional) => {
-          const optional = await this.textbookModel.getOptional();
-          return optional[key] ? 'block' : 'none';
-        };
         const template = `
             <img class="word__img" src="${imgPath}" alt="image">
             <div class="word__content">
@@ -224,11 +224,6 @@ class TextbookPage extends Page {
   }
 
   async renderSettingsButton() {
-    // let settings: ISettings = {};
-    // const settingsValue = await this.model.getSettings();
-    // if (settingsValue && typeof settingsValue === 'object') {
-    //   TextbookModel.settings = settingsValue;
-    // }
     const isCheckboxChecked = async (key: keyof ISettingsOptional) => {
       const optional = await this.textbookModel.getOptional();
       return optional[key] ? 'checked' : '';
