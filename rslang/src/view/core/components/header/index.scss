@@ -6,6 +6,26 @@
   background-color: #ffffff;
 }
 
+.navbar-nav {
+  @media (max-width: 991px) {
+    width: 100%;
+  }
+}
+
+.nav-item .dropdown {
+  @media (max-width: 991px) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+.nav-games {
+  @media (max-width: 991px) {
+    text-align: center;
+  }
+}
+
 .container {
   max-width: 100vw;
 }
