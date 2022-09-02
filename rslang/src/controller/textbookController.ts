@@ -28,14 +28,20 @@ class TextbookController {
   rerenderWords(wordsType: string) {
     this.textbookModel.resetPageStyles();
     this.textbookModel.checkAuthorization();
-    const textbookToolsContainer = document.querySelector('.textbook-tools__container') as HTMLElement;
+    const textbookToolsAdditionContainer = document.querySelector('.textbook-tools-addition__container') as HTMLElement;
     const difficultWordsButton = document.querySelector('.btn-difficult-words');
-    if (this.textbookModel.checkAuthorization()) {
-      if (!difficultWordsButton) textbookToolsContainer.append(this.textbookPage.renderDifficultWordsButton());
-    } else if (difficultWordsButton) difficultWordsButton.remove();
+    const settingsButton = document.querySelector('.btn-settings');
     const wordsWrapper = document.querySelector('.words__wrapper') as HTMLElement;
     wordsWrapper.innerHTML = '';
     (async () => {
+      if (this.textbookModel.checkAuthorization()) {
+        if (!difficultWordsButton)
+          textbookToolsAdditionContainer.append(this.textbookPage.renderDifficultWordsButton());
+        if (!settingsButton) textbookToolsAdditionContainer.append(await this.textbookPage.renderSettingsButton());
+      } else {
+        if (difficultWordsButton) difficultWordsButton.remove();
+        if (settingsButton) settingsButton.remove();
+      }
       const words = await Model.getWords(TextbookModel.page, TextbookModel.group);
       const difficultWords = await this.textbookModel.getDifficultWords();
       wordsWrapper.append(await this.textbookPage.renderWords(wordsType === 'words' ? words : difficultWords));
@@ -179,15 +185,11 @@ class TextbookController {
   listenSettingsModalWindow() {
     document.body.addEventListener('click', (e) => {
       const target = e.target as HTMLElement;
-      if (target.closest('.modal-settings')) {
+      if (target.closest('.form-check')) {
         const settingsCheckboxIds = [
           { translationCheck: ['translation', 'phrase-ru_meaning', 'phrase-ru_example'] },
           { wordButtonsCheck: ['difficult-button', 'learned-button'] },
         ];
-        const optional: ISettingsOptional = {
-          translationCheck: true,
-          wordButtonsCheck: true,
-        };
         settingsCheckboxIds.forEach((item) => {
           const checkboxItem = document.querySelector(`#${Object.keys(item)[0]}`) as HTMLInputElement;
           const elementsForHiding = Object.values(item)[0] as string[];
@@ -199,11 +201,17 @@ class TextbookController {
               });
             });
           };
+          const updateSettings = () => {
+            (async () => {
+              const optional = await this.textbookModel.getOptional();
+              optional[Object.keys(item)[0] as keyof ISettingsOptional] = checkboxItem.checked;
+              console.log(optional);
+              await this.model.updateSettings({ optional });
+              // console.log(await this.model.getSettings());
+            })().catch((err: Error) => console.warn(err.message));
+          };
           checkboxItem.addEventListener('change', hideElements);
-          optional[Object.keys(item)[0] as keyof ISettingsOptional] = checkboxItem.checked;
-          (async () => {
-            await this.model.updateSettings({ optional });
-          })().catch((err: Error) => console.warn(err.message));
+          checkboxItem.addEventListener('change', updateSettings);
         });
       }
     });

@@ -1,8 +1,9 @@
+/* eslint-disable no-nested-ternary */
 import TextbookModel from '../../../model/textbookModel';
 import Model, { baseURL } from '../../../model/components/index';
 import Page from '../../core/templates/page';
 import PageIds from '../app/pageIds';
-import { difficultyColors, IUserWord, IWord, LevelColors, Levels } from '../../../types/index';
+import { difficultyColors, ISettingsOptional, IUserWord, IWord, LevelColors, Levels } from '../../../types/index';
 import Footer from '../../core/components/footer/index';
 import AudioGame from '../audioChallenge/audioChallenge';
 
@@ -43,10 +44,11 @@ class TextbookPage extends Page {
         allGamesStatistics = (await this.textbookModel.getStatisticsForTextbookWord(item.id)).allGames;
         correctAnswersStatistics = (await this.textbookModel.getStatisticsForTextbookWord(item.id)).correctAnswers;
         const incorrectAnswers = allGamesStatistics - correctAnswersStatistics;
-        const settings = await this.model.getSettings();
-        let template = '';
-        if (settings && typeof settings === 'object') {
-          template = `
+        const isTranslationDisplayed = async (key: keyof ISettingsOptional) => {
+          const optional = await this.textbookModel.getOptional();
+          return optional[key] ? 'block' : 'none';
+        };
+        const template = `
             <img class="word__img" src="${imgPath}" alt="image">
             <div class="word__content">
               <div class word-text__wrapper>
@@ -56,35 +58,35 @@ class TextbookPage extends Page {
                     <h5 class="transcription">${item.transcription}</h5>
                     <span class="word__play" id="${TextbookModel.getWordId(item)}"></span>
                   </div>
-                  <p class="translation" style="display:${settings.optional.translationCheck ? 'block' : 'none'}">${
-            item.wordTranslate
-          }</p>
+                  <p class="translation" style="display:${await isTranslationDisplayed('translationCheck')}">${
+          item.wordTranslate
+        }</p>
                 </div>
                 <div class="phrase__wrapper phrase-meaning__wrapper">
                   <p class="phrase phrase-en_meaning">${item.textMeaning}</p>
-                  <p class="phrase phrase-ru phrase-ru_meaning" style="display:${
-                    settings.optional.translationCheck ? 'block' : 'none'
-                  }">${item.textMeaningTranslate}</p>
+                  <p class="phrase phrase-ru phrase-ru_meaning" style="display:${await isTranslationDisplayed(
+                    'translationCheck'
+                  )}">${item.textMeaningTranslate}</p>
                 </div>
                 <div class="phrase__wrapper phrase-example__wrapper">
                   <p class="phrase phrase-en_example">${item.textExample}</p>
-                  <p class="phrase phrase-ru phrase-ru_example" style="display:${
-                    settings.optional.translationCheck ? 'block' : 'none'
-                  }">${item.textExampleTranslate}</p>
+                  <p class="phrase phrase-ru phrase-ru_example" style="display:${await isTranslationDisplayed(
+                    'translationCheck'
+                  )}">${item.textExampleTranslate}</p>
                 </div>
               </div>
               <div class="word-buttons-stat__container">
                 <div class="word__buttons" style="display: ${
                   this.textbookModel.checkAuthorization() ? 'flex' : 'none'
                 }">
-                  <button class="btn btn-primary difficult-button" style="display:${
-                    settings.optional.translationCheck ? 'block' : 'none'
-                  }">${TextbookModel.isDifficultWordsGroup ? 'remove' : 'difficult'}</button>
+                  <button class="btn btn-primary difficult-button" style="display:${await isTranslationDisplayed(
+                    'wordButtonsCheck'
+                  )}">${TextbookModel.isDifficultWordsGroup ? 'remove' : 'difficult'}</button>
                   ${
                     !TextbookModel.isDifficultWordsGroup
-                      ? `<button class="btn btn-secondary learned-button" style="display:${
-                          settings.optional.translationCheck ? 'block' : 'none'
-                        }">learned</button>`
+                      ? `<button class="btn btn-secondary learned-button" style="display:${await isTranslationDisplayed(
+                          'wordButtonsCheck'
+                        )}">learned</button>`
                       : ''
                   }
                 </div>
@@ -101,7 +103,6 @@ class TextbookPage extends Page {
               </div>
             </div>
           `;
-        }
         wordContainer.innerHTML = template;
         wordsContainer.append(wordContainer);
       })().catch((err: Error) => console.warn(err.message));
@@ -223,46 +224,51 @@ class TextbookPage extends Page {
   }
 
   async renderSettingsButton() {
-    const settings = await this.model.getSettings();
-    let template = '';
-    if (settings && typeof settings === 'object') {
-      template = `
-        <button type="button" class="btn btn-primary btn-settings" data-bs-toggle="modal" data-bs-target="#exampleModal">
-          Settings
-        </button>
-        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-          <div class="modal-dialog modal-settings modal-dialog-centered">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Settings</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-                <div class="form-check">
-                  <input class="form-check-input" type="checkbox" value="" id="translationCheck" ${
-                    settings.optional.translationCheck ? 'checked' : ''
-                  }>
-                  <label class="form-check-label" for="translationCheck">
-                    Display translation
-                  </label>
-                </div>
-                <div class="form-check">
-                  <input class="form-check-input" type="checkbox" value="" id="wordButtonsCheck" ${
-                    settings.optional.wordButtonsCheck ? 'checked' : ''
-                  }>
-                  <label class="form-check-label" for="wordButtonsCheck">
-                    Show action buttons for words
-                  </label>
-                </div>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              </div>
+    // let settings: ISettings = {};
+    // const settingsValue = await this.model.getSettings();
+    // if (settingsValue && typeof settingsValue === 'object') {
+    //   TextbookModel.settings = settingsValue;
+    // }
+    const isCheckboxChecked = async (key: keyof ISettingsOptional) => {
+      const optional = await this.textbookModel.getOptional();
+      return optional[key] ? 'checked' : '';
+    };
+    const template = `
+    <button type="button" class="btn btn-primary btn-settings" data-bs-toggle="modal" data-bs-target="#exampleModal">
+      Settings
+    </button>
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-settings modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Settings</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="" id="translationCheck" ${await isCheckboxChecked(
+                'translationCheck'
+              )}>
+              <label class="form-check-label" for="translationCheck">
+                Display translation
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="" id="wordButtonsCheck" ${await isCheckboxChecked(
+                'wordButtonsCheck'
+              )}>
+              <label class="form-check-label" for="wordButtonsCheck">
+                Show action buttons for words
+              </label>
             </div>
           </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          </div>
         </div>
-      `;
-    }
+      </div>
+    </div>
+  `;
     const settingsButton = document.createElement('div');
     settingsButton.innerHTML = template;
     return settingsButton;

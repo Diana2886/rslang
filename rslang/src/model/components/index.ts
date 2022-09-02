@@ -412,7 +412,6 @@ class Model {
       const settings = await (<Promise<ISettings>>response.json());
       switch (status) {
         case 200:
-          console.log('Get settings: Successful operation');
           break;
         case 400:
           throw new Error('Access token is missing or invalid');
@@ -450,7 +449,6 @@ class Model {
 
       switch (status) {
         case 200:
-          console.log('The settings has been updated');
           break;
         case 400:
           throw new Error('Bad request');

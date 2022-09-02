@@ -11,10 +11,27 @@ class TextbookModel {
 
   static PAGES_AMOUNT = 30;
 
+  // static settings: ISettings = {};
+
   model = new Model();
 
   checkAuthorization() {
     return Boolean(localStorage.getItem('authDataRSlang'));
+  }
+
+  async getOptional() {
+    const optional = {
+      translationCheck: true,
+      wordButtonsCheck: true,
+    };
+    if (this.checkAuthorization()) {
+      const settings = await this.model.getSettings();
+      if (typeof settings === 'object') {
+        optional.translationCheck = settings.optional?.translationCheck;
+        optional.wordButtonsCheck = settings.optional?.wordButtonsCheck;
+      }
+    }
+    return optional;
   }
 
   playWord(words: IWord[], target: HTMLElement) {
@@ -160,14 +177,16 @@ class TextbookModel {
   }
 
   async isUserWordExist(id: string) {
-    const userWords = await this.model.getUserWords();
-    if (typeof userWords === 'object') {
-      let count = 0;
-      userWords.forEach((word) => {
-        if (word.wordId !== id) count += 1;
-      });
-      if (count !== userWords.length) {
-        return true;
+    if (this.checkAuthorization()) {
+      const userWords = await this.model.getUserWords();
+      if (typeof userWords === 'object') {
+        let count = 0;
+        userWords.forEach((word) => {
+          if (word.wordId !== id) count += 1;
+        });
+        if (count !== userWords.length) {
+          return true;
+        }
       }
     }
     return false;
@@ -176,7 +195,7 @@ class TextbookModel {
   async getStatisticsForTextbookWord(id: string) {
     let allGames = 0;
     let correctAnswers = 0;
-    if (await this.isUserWordExist(id)) {
+    if (this.checkAuthorization() && (await this.isUserWordExist(id))) {
       const userWord = await this.model.getUserWord(id);
       if (typeof userWord === 'object' && userWord.optional) {
         const { audio, sprint } = userWord.optional;
