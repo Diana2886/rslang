@@ -206,6 +206,9 @@
   display: flex;
   flex-direction: column;
   width: 65%;
+  @media (max-width: 991px) {
+    width: 100%;
+  }
 }
 
 .dev__img {
@@ -217,10 +220,10 @@
   @media (max-width: 991px) {
     width: 100%;
     height: 300px;
+    margin-bottom: 1rem;
   }
 }
 
 .dev__text {
   margin-bottom: 0;
 }
-
