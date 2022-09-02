@@ -1,5 +1,5 @@
 /* eslint-disable no-underscore-dangle */
-import { IWord } from '../types/index';
+import { IUserWord, IWord } from '../types/index';
 import Model, { baseURL } from './components/index';
 
 class TextbookModel {
@@ -11,6 +11,8 @@ class TextbookModel {
 
   static PAGES_AMOUNT = 30;
 
+  static userWords: IUserWord[] | number = [];
+
   optional = {
     translationCheck: true,
     wordButtonsCheck: true,
@@ -20,6 +22,10 @@ class TextbookModel {
 
   checkAuthorization() {
     return Boolean(localStorage.getItem('authDataRSlang'));
+  }
+
+  async getUserWords() {
+    TextbookModel.userWords = await this.model.getUserWords();
   }
 
   async getOptional() {
@@ -91,16 +97,15 @@ class TextbookModel {
 
   async getDifficultWords() {
     if (this.checkAuthorization()) {
-      const userWords = await this.model.getUserWords();
       let wordsCount = 0;
-      if (typeof userWords === 'object') {
-        const difficultWords = userWords.filter((word) => word.difficulty === 'difficult');
+      if (typeof TextbookModel.userWords === 'object') {
+        const difficultWords = TextbookModel.userWords.filter((word) => word.difficulty === 'difficult');
         wordsCount = difficultWords.length;
       }
       const difficultWordsRes = await this.model.getAggregatedWords(
         '{"userWord.difficulty":"difficult"}',
         undefined,
-        undefined,
+        0,
         wordsCount
       );
       let difficultWords: IWord[] = [];
@@ -129,10 +134,9 @@ class TextbookModel {
     let count = 0;
     const words = await Model.getWords(TextbookModel.page, TextbookModel.group);
     if (this.checkAuthorization()) {
-      const userWords = await this.model.getUserWords();
       words.forEach((word) => {
-        if (typeof userWords === 'object') {
-          userWords.forEach((item) => {
+        if (typeof TextbookModel.userWords === 'object') {
+          TextbookModel.userWords.forEach((item) => {
             if (word.id === item.wordId && item.difficulty === 'learned') count += 1;
           });
         }
@@ -181,15 +185,14 @@ class TextbookModel {
     return word.id;
   }
 
-  async isUserWordExist(id: string) {
+  isUserWordExist(id: string) {
     if (this.checkAuthorization()) {
-      const userWords = await this.model.getUserWords();
-      if (typeof userWords === 'object') {
+      if (typeof TextbookModel.userWords === 'object') {
         let count = 0;
-        userWords.forEach((word) => {
+        TextbookModel.userWords.forEach((word) => {
           if (word.wordId !== id) count += 1;
         });
-        if (count !== userWords.length) {
+        if (count !== TextbookModel.userWords.length) {
           return true;
         }
       }
@@ -200,7 +203,7 @@ class TextbookModel {
   async getStatisticsForTextbookWord(id: string) {
     let allGames = 0;
     let correctAnswers = 0;
-    if (this.checkAuthorization() && (await this.isUserWordExist(id))) {
+    if (this.checkAuthorization() && this.isUserWordExist(id)) {
       const userWord = await this.model.getUserWord(id);
       if (typeof userWord === 'object' && userWord.optional) {
         const { audio, sprint } = userWord.optional;
