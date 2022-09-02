@@ -207,18 +207,18 @@ export default class AudioGame {
     const signalIcon = document.createElement('img');
     signalDiv.className = 'audio-call__signal';
     signalIcon.className = this.signal.muted ? 'signal' : 'mute';
-    signalIcon.src = this.signal.muted ? 'assets/svg/mute.svg' : 'assets/svg/soundSignal.svg';
+    signalIcon.src = this.signal.muted ? 'assets/svg/volume-xmark.svg' : 'assets/svg/volume-high.svg';
     signalDiv.append(signalIcon);
     signalIcon.addEventListener('click', (e) => {
       const element = <HTMLElement>e.target;
       if (element.classList.contains('mute')) {
         this.signal.muted = true;
-        signalIcon.src = 'assets/svg/mute.svg';
+        signalIcon.src = 'assets/svg/volume-xmark.svg';
         signalIcon.classList.remove('mute');
       } else {
         this.signal.muted = false;
         signalIcon.classList.add('mute');
-        signalIcon.src = 'assets/svg/soundSignal.svg';
+        signalIcon.src = 'assets/svg/volume-high.svg';
       }
       localStorage.setItem('muteState', String(this.signal.muted));
     });

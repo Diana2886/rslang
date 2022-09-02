@@ -45,16 +45,14 @@
 }
 &__signal{
   display: inline-block;
-  width: 33px;
+  height: 30px;
+  width: 30px;
   line-height: 42px;
+  margin-left: 5px;
 
   img{
-    width: 100%;
+    height: 100%;
     border-radius: 5px;
-    box-shadow: 0 0 2px #000;
-    &:hover{
-      box-shadow: 0 0 4px #000;
-    }
   }
  }
 }
