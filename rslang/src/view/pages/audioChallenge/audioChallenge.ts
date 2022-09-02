@@ -128,7 +128,7 @@ export default class AudioGame {
     const signalDiv = this.initSounds();
     nextBtn.className = 'audio-call__next btn btn-info';
     nextBtn.innerHTML = `Next  <kbd>↵</kbd>`;
-
+    nextBtn.disabled = false;
     example.variants.forEach((item, index) => {
       const btnDiv = document.createElement('button');
       btnDiv.className = 'audio-call__choose-btn';
@@ -165,6 +165,7 @@ export default class AudioGame {
     });
     variantsBtns.append(signalDiv);
     nextBtn.addEventListener('click', () => {
+      nextBtn.disabled = true;
       this.index += 1;
       const buttons = variantsBtns.querySelectorAll('button');
       if (!buttons[0].disabled) {
@@ -226,6 +227,8 @@ export default class AudioGame {
   }
 
   async startGame(group: number, pageNum?: number) {
+    this.corrects = [];
+    this.wrongs = [];
     this.audio.src = '';
     const authStr = localStorage.getItem('authDataRSlang');
     let userWords: IUserWord[] | number | undefined;
