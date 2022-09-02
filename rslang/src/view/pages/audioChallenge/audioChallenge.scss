@@ -41,9 +41,25 @@
     }
     &.wrong{
       background: rgb(235, 5, 5);
-   }
 }
 }
+&__signal{
+  display: inline-block;
+  width: 33px;
+  line-height: 42px;
+
+  img{
+    width: 100%;
+    border-radius: 5px;
+    box-shadow: 0 0 2px #000;
+    &:hover{
+      box-shadow: 0 0 4px #000;
+    }
+  }
+ }
+}
+
+
 .contaier {
   height: 100%;
 }
@@ -106,7 +122,8 @@
 }
 .game-body {
   display: flex;
-  min-height: 90vh;
+  height: 90vh;
+  min-height: 420px;
   flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
