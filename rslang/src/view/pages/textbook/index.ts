@@ -27,9 +27,16 @@ class TextbookPage extends Page {
     }
     let allGamesStatistics: number;
     let correctAnswersStatistics: number;
-    const isTranslationDisplayed = async (key: keyof ISettingsOptional) => {
-      const optional = await this.textbookModel.getOptional();
-      return optional[key] ? 'block' : 'none';
+
+    if (this.textbookModel.checkAuthorization()) {
+      const settings = await this.model.getSettings();
+      if (typeof settings === 'object') {
+        this.textbookModel.optional.translationCheck = settings.optional?.translationCheck;
+        this.textbookModel.optional.wordButtonsCheck = settings.optional?.wordButtonsCheck;
+      }
+    }
+    const isTranslationDisplayed = (key: keyof ISettingsOptional) => {
+      return this.textbookModel.optional[key] ? 'block' : 'none';
     };
     words.forEach((item) => {
       const imgPath = `${baseURL}/${item.image}`;

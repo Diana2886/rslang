@@ -11,7 +11,10 @@ class TextbookModel {
 
   static PAGES_AMOUNT = 30;
 
-  // static settings: ISettings = {};
+  optional = {
+    translationCheck: true,
+    wordButtonsCheck: true,
+  };
 
   model = new Model();
 
@@ -56,9 +59,11 @@ class TextbookModel {
   resetPageStyles() {
     const wordsWrapper = document.querySelector('.words__wrapper') as HTMLElement;
     const pagesButton = document.querySelector('.pages-btn') as HTMLElement;
-    wordsWrapper.style.boxShadow = 'none';
-    wordsWrapper.style.border = 'inherit';
-    pagesButton.style.border = '1px solid #F0C932';
+    if (wordsWrapper || pagesButton) {
+      wordsWrapper.style.boxShadow = 'none';
+      wordsWrapper.style.border = 'inherit';
+      pagesButton.style.border = '1px solid #F0C932';
+    }
   }
 
   static setLocalStorageSettings(): void {

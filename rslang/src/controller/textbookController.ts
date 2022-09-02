@@ -32,21 +32,23 @@ class TextbookController {
     const difficultWordsButton = document.querySelector('.btn-difficult-words');
     const settingsButton = document.querySelector('.btn-settings');
     const wordsWrapper = document.querySelector('.words__wrapper') as HTMLElement;
-    wordsWrapper.innerHTML = '';
-    (async () => {
-      if (this.textbookModel.checkAuthorization()) {
-        if (!difficultWordsButton)
-          textbookToolsAdditionContainer.append(this.textbookPage.renderDifficultWordsButton());
-        if (!settingsButton) textbookToolsAdditionContainer.append(await this.textbookPage.renderSettingsButton());
-      } else {
-        if (difficultWordsButton) difficultWordsButton.remove();
-        if (settingsButton) settingsButton.remove();
-      }
-      const words = await Model.getWords(TextbookModel.page, TextbookModel.group);
-      const difficultWords = await this.textbookModel.getDifficultWords();
-      wordsWrapper.append(await this.textbookPage.renderWords(wordsType === 'words' ? words : difficultWords));
-      await this.textbookModel.checkPageStyle();
-    })().catch((err: Error) => console.warn(err.message));
+    if (wordsWrapper) {
+      wordsWrapper.innerHTML = '';
+      (async () => {
+        if (this.textbookModel.checkAuthorization()) {
+          if (!difficultWordsButton)
+            textbookToolsAdditionContainer.append(this.textbookPage.renderDifficultWordsButton());
+          if (!settingsButton) textbookToolsAdditionContainer.append(await this.textbookPage.renderSettingsButton());
+        } else {
+          if (difficultWordsButton) difficultWordsButton.remove();
+          if (settingsButton) settingsButton.remove();
+        }
+        const words = await Model.getWords(TextbookModel.page, TextbookModel.group);
+        const difficultWords = await this.textbookModel.getDifficultWords();
+        wordsWrapper.append(await this.textbookPage.renderWords(wordsType === 'words' ? words : difficultWords));
+        await this.textbookModel.checkPageStyle();
+      })().catch((err: Error) => console.warn(err.message));
+    }
   }
 
   listenLevelButton() {
