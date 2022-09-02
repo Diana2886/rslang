@@ -13,6 +13,10 @@ export default class Statistic {
     const key = `${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`;
     const userWords = await this.model.getUserWords();
     let userWord: IUserWord = {};
+    const signal = new Audio(undefined);
+    signal.volume = 0.3;
+    signal.src = answers ? 'assets/audio/correct.mp3' : 'assets/audio/wrong.mp3';
+    await signal.play();
     let resUWord: number | IUserWord = 0;
     if (typeof userWords === 'object') {
       if (userWords.some((word) => word.wordId === example.id)) {

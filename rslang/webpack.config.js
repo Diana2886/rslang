@@ -58,6 +58,11 @@ const baseConfig = {
           to: path.resolve(__dirname, './dist/assets/svg'),
           noErrorOnMissing: true,
         },
+        {
+          from: path.resolve(__dirname, './src/assets/audio'),
+          to: path.resolve(__dirname, './dist/assets/audio'),
+          noErrorOnMissing: true,
+        },
       ],
     }),
   ],
