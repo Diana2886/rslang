@@ -100,6 +100,8 @@ class MainPage extends Page {
     toolsText.innerText = MainPage.TextObject.ToolsText;
     toolsContent.append(toolsTitle, toolsText);
     pageWrapper.append(toolsContent);
+    const toolsWrapper = document.createElement('div');
+    toolsWrapper.classList.add('tools');
 
     MainPage.TextObject.Tools.forEach((item) => {
       const link = document.createElement('a');
@@ -118,8 +120,9 @@ class MainPage extends Page {
       toolText.innerText = item.content;
       tool.append(toolIcon, toolTitle, toolText);
       link.append(tool);
-      pageWrapper.append(link);
+      toolsWrapper.append(link);
     });
+    pageWrapper.append(toolsWrapper);
     toolsContainer.append(pageWrapper);
     return toolsContainer;
   }
