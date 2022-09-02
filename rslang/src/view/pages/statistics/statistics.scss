@@ -1,9 +1,9 @@
 
 .statistic {
   max-width: 1000px;
+  min-height: 100vh;
   padding: 50px 0;
   margin: 0 auto;
-
   h3 {
     text-align: center;
     margin-bottom: 30px;
@@ -12,15 +12,23 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    align-items: flex-start;
     margin-bottom: 50px;
     gap: 2rem;
+  }
+  &__games-block{
+    flex: 1 1 62%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 2rem;
+  }
+  &__info {
+    
   }
 }
 .day-sprint,
 .day-audio,
 .day-common{
-  flex: 1 1 31%;
   min-width: 300px;
   background: #fff;
   H5{
@@ -41,10 +49,16 @@
   }
 }
 
+.day-common{
+ flex: 1 1 31%;
+}
+
 .day-audio{
+  flex: 1 1 31%;
 }
 
 .day-sprint{
+  flex: 1 1 31%;
 }
 
 .chart {

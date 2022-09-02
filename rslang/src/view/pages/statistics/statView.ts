@@ -35,8 +35,8 @@ export default class ViewStat {
     const sprintDaily = this.drawDayItem('sprint');
     const gameDaily = document.createElement('div');
     gameDaily.className = 'statistic__games-block';
-    // [audioDaily, sprintDaily].forEach((item) => gameDaily.append(item));
-    [commonDaily, audioDaily, sprintDaily].forEach((item) => statBody.append(item));
+    [audioDaily, sprintDaily].forEach((item) => gameDaily.append(item));
+    [commonDaily, gameDaily].forEach((item) => statBody.append(item));
     return statBody;
   }
 
