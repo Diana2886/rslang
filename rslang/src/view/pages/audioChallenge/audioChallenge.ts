@@ -118,6 +118,8 @@ export default class AudioGame {
     this.image.src = 'assets/svg/compact-cassette.svg';
     this.audio.src = `http://localhost:3000/${example.word.audio}`;
     this.audio.autoplay = true;
+    const signal = new Audio(undefined);
+    signal.volume = 0.3;
     const variantsBtns = document.createElement('div');
     variantsBtns.className = 'variants__btns';
     const nextBtn = document.createElement('button');
@@ -146,6 +148,8 @@ export default class AudioGame {
             btnDiv.classList.add('wrong');
             this.wrongs.push(example.word);
           }
+          signal.src = answers ? 'assets/audio/correct.mp3' : 'assets/audio/wrong.mp3';
+          signal.play().catch((err) => console.log(err));
           if (typeof userWords === 'object') {
             this.stat.writeWordStat('audio', example.word, answers).catch((err) => console.error(err));
           }
@@ -158,8 +162,21 @@ export default class AudioGame {
     });
     nextBtn.addEventListener('click', () => {
       this.index += 1;
+      const buttons = variantsBtns.querySelectorAll('button');
+      if (!buttons[0].disabled) {
+        buttons.forEach((item) => {
+          item.disabled = true;
+        });
+        nextBtn.classList.add('wrong');
+        signal.src = 'assets/audio/wrong.mp3';
+        signal.play().catch((err) => console.log(err));
+        this.wrongs.push(example.word);
+        if (typeof userWords === 'object') {
+          this.stat.writeWordStat('audio', example.word, false).catch((err) => console.error(err));
+        }
+      }
       if (this.index < this.data.length) {
-        this.getProcessGame(userWords);
+        setTimeout(() => this.getProcessGame(userWords), 1000);
       } else {
         window.dispatchEvent(new CustomEvent('done'));
         this.index = 0;

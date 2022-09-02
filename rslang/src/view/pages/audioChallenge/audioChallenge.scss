@@ -112,6 +112,9 @@
   align-items: center;
   margin: 0 auto;
   animation: scale 0.5s;
+  .wrong{
+    box-shadow: 0 0 5px rgba(255, 11, 11, 0.959);
+  }
 }
 
 .greetBlock {
