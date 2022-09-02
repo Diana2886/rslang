@@ -64,14 +64,20 @@ export interface IStatOptional {
     audio: {
       newWords: number;
       learnedWords: number;
+      series: number;
+      bestSeries: number;
     };
     sprint: {
       newWords: number;
       learnedWords: number;
+      series: number;
+      bestSeries: number;
     };
     textbook: {
       newWords: number;
       learnedWords: number;
+      series: number;
+      bestSeries: number;
     };
   };
 }
@@ -79,6 +85,31 @@ export interface IStatOptional {
 export interface IStatistic {
   learnedWords: number;
   optional: IStatOptional;
+}
+
+export interface IStatData {
+  allLearned: number;
+  common: {
+    learned: number;
+    newWords: number;
+    winsPercent: number | false;
+  };
+  audio: {
+    learned: number;
+    newWords: number;
+    winsPercent: number | false;
+    bestSeries: number;
+  };
+  sprint: {
+    learned: number;
+    newWords: number;
+    winsPercent: number | false;
+    bestSeries: number;
+  };
+  textbook: {
+    learned: number;
+    newWords: number;
+  };
 }
 
 export type QueryData = {
@@ -132,3 +163,8 @@ export const difficultyColors: IColors = {
   difficult: '#DDDEFA',
   learned: '#FCF4D6',
 };
+
+export interface IChartData {
+  date: Date;
+  value: number;
+}

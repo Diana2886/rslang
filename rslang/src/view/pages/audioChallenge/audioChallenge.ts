@@ -60,8 +60,7 @@ export default class AudioGame {
       }
       return true;
     };
-
-    if (typeof userWords === 'object') {
+    if (!(pageNum === undefined)) {
       words = pageWords.filter(filterWords);
       if (words.length < 20) {
         let prevWords: IWord[] = [];
@@ -87,7 +86,6 @@ export default class AudioGame {
       words = pageWords;
     }
     const newArr: IWord[] = words.sort(() => Math.random() - 0.5);
-
     newArr.forEach((word) => {
       let variants: IWord[] = [];
       while (variants.length < 4) {

@@ -21,25 +21,27 @@ class AudioChallenge extends Page {
     audioCallText.textContent = 'Listen these words and choose the correct translation';
     const levelBtnBody = this.drawLevelBtn();
 
-    const startButton = document.createElement('div');
+    const startButton = document.createElement('button');
+    startButton.type = 'button';
+
     const chooseLevel = levelBtnBody.querySelector('.choose-level');
     startButton.className = 'game-start__btn';
-    startButton.classList.add('disabled');
+    startButton.disabled = true;
     let level = 0;
 
     chooseLevel?.addEventListener('change', (e) => {
       chooseLevel.classList.add('active');
       const levelInput = <HTMLInputElement>e.target;
       level = +levelInput.value;
-      startButton.classList.remove('disabled');
+      startButton.disabled = false;
     });
     [audioCallTitle, image, audioCallText, levelBtnBody, startButton].forEach((element) => greetBlock.append(element));
-    startButton.innerHTML = `<button id="Audio-call-start" type="button" class="btn btn-primary">Start</button>`;
-
+    startButton.className = 'btn btn-primary';
+    startButton.textContent = 'Start';
     startButton.addEventListener(
       'click',
       (e) => {
-        startButton.classList.add('disabled');
+        startButton.disabled = false;
         greetBlock.innerHTML = '';
         chooseLevel?.classList.remove('active');
         this.audioGame
@@ -72,7 +74,6 @@ class AudioChallenge extends Page {
           const input = inputs[levelPress];
           input.checked = true;
           level = levelPress;
-          startButton.autofocus = true;
           startButton.classList.remove('disabled');
           chooseLevel.classList.add('active');
         }
@@ -88,6 +89,10 @@ class AudioChallenge extends Page {
         const nextBtn: HTMLButtonElement | null = document.querySelector('.audio-call__next');
         const modalBtn: HTMLButtonElement | null = document.querySelector('.modal__start-audio');
         if (nextBtn) {
+          startButton.disabled = true;
+          if (modalBtn){
+            modalBtn.disabled = true;
+          }
           nextBtn.click();
         }
         if (modalBtn) {
