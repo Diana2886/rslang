@@ -33,6 +33,8 @@ export default class SprintController {
 
   score: number;
 
+  // timerID: NodeJS.Timer | undefined;
+
   static: Statistic;
 
   constructor() {
@@ -47,14 +49,20 @@ export default class SprintController {
     this.page = 0;
     this.count = 0;
     this.len = 0;
-
+    // this.timerID = undefined;
     this.score = 0;
     this.point = 10;
     this.counter = 0;
   }
 
+  static timerID: undefined | NodeJS.Timer = undefined;
+
   checkSprintElem() {
     const container = document.querySelector('.container') as HTMLElement;
+    clearInterval(SprintController.timerID);
+    // console.log(this.timerID);
+    console.log(SprintController.timerID);
+
     container.addEventListener('click', async (e) => {
       const targ = e.target as HTMLElement;
       if (targ.classList.contains('btn-check')) {
@@ -85,17 +93,21 @@ export default class SprintController {
     if (serWods === 0) {
       return undefined;
     }
-    return (serWods as IUserWord[]).map((item) => item.wordId) as string[];
+    return (serWods as IUserWord[])
+      .filter((item) => item.difficulty === 'learned')
+      .map((item) => item.wordId) as string[];
   };
 
   async checkLevel(elem: HTMLElement | number) {
     const userWods: string[] | undefined = await this.filterUserWords();
-
+    // const [[id, difficult]] = userWods!;
+    // clearInterval(SprintController.timerID);
+    console.log(SprintController.timerID);
     if (typeof elem === 'number') {
       if (!userWods) {
         this.wordsArray = await Model.getWords(elem, this.level);
       } else {
-        this.wordsArray = await this.filterWords(this.page, this.level, userWods);
+        // this.wordsArray = await this.filterWords(this.page, this.level, userWods);
       }
     } else {
       this.counter = 0;
@@ -128,10 +140,10 @@ export default class SprintController {
   sprintTimer() {
     const sprintTimer = document.querySelector('.sprint-timer span') as HTMLElement;
     let counterTime = 60;
-    const timer = setInterval(() => {
+    SprintController.timerID = setInterval(() => {
       counterTime -= 1;
       if (counterTime === 0) {
-        clearInterval(timer);
+        clearInterval(SprintController.timerID);
         this.modalActive();
         if (this.checkLogIn()) {
           this.sendResultToStatic();
@@ -213,7 +225,7 @@ export default class SprintController {
     russiaWord.innerHTML = this.rusWords[this.count].wordTranslate;
     audioTag.src = `${baseUrl}/${this.engWords[this.count].audio}`;
     await this.nextWord('start');
-    window.addEventListener('keydown', this.arrow);
+    window.addEventListener('keyup', this.arrow);
     correctBtn.addEventListener('click', this.nextWord);
     wrongtBtn.addEventListener('click', this.nextWord);
   }
@@ -267,7 +279,13 @@ export default class SprintController {
     }
     const result = this.checkAnswerWord(engWord.word, rusWord.word, e);
     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-    result === 'correct' ? this.correctWords.push(engWord) : this.wrongWords.push(engWord);
+    if (result === 'correct') {
+      // await this.static.writeWordStat('sprint', engWord, true);
+      this.correctWords.push(engWord);
+    } else {
+      // await this.static.writeWordStat('sprint', engWord, false);
+      this.wrongWords.push(engWord);
+    }
     this.countScore(result);
     this.pastEffect(result);
     this.count += 1;
@@ -315,7 +333,7 @@ export default class SprintController {
     const modalWrapper = document.querySelector('.modal-wrapper') as HTMLElement;
     const wrongTable = document.querySelector('.wrong-answer') as HTMLTableElement;
     const correctTable = document.querySelector('.correct-answer') as HTMLTableElement;
-    window.removeEventListener('keydown', this.arrow);
+    window.removeEventListener('keyup', this.arrow);
     modalBG.classList.add('modal-bg-act');
     modalWrapper.classList.add('modal-wrapper-act');
     correctTable.innerHTML = '';
