@@ -205,9 +205,7 @@ class TextbookController {
             (async () => {
               const optional = await this.textbookModel.getOptional();
               optional[Object.keys(item)[0] as keyof ISettingsOptional] = checkboxItem.checked;
-              console.log(optional);
               await this.model.updateSettings({ optional });
-              // console.log(await this.model.getSettings());
             })().catch((err: Error) => console.warn(err.message));
           };
           checkboxItem.addEventListener('change', hideElements);
