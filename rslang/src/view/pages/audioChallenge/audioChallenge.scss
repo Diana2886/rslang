@@ -58,7 +58,7 @@
 }
 
 
-.contaier {
+.container {
   height: 100%;
 }
 
@@ -120,8 +120,7 @@
 }
 .game-body {
   display: flex;
-  height: 90vh;
-  min-height: 420px;
+  min-height: 100vh;
   flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
@@ -154,6 +153,7 @@ background: rgb(180, 193, 216);
   box-shadow: 0 0 3px #000;
   border-radius: 5px;
   padding: 10px;
+  margin: 50px 0;
   animation: scale 0.5s;
   &__body{
     display: flex;
@@ -169,7 +169,7 @@ background: rgb(180, 193, 216);
   
   }
   &__list {
-
+    margin-left: 0;
     h5 {
       font-weight: 700;
       color: rgb(255, 1, 22);
