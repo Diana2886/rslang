@@ -65,19 +65,19 @@ class TextbookPage extends Page {
                     <h5 class="transcription">${item.transcription}</h5>
                     <span class="word__play" id="${TextbookModel.getWordId(item)}"></span>
                   </div>
-                  <p class="translation" style="display:${await isTranslationDisplayed('translationCheck')}">${
+                  <p class="translation" style="display:${isTranslationDisplayed('translationCheck')}">${
           item.wordTranslate
         }</p>
                 </div>
                 <div class="phrase__wrapper phrase-meaning__wrapper">
                   <p class="phrase phrase-en_meaning">${item.textMeaning}</p>
-                  <p class="phrase phrase-ru phrase-ru_meaning" style="display:${await isTranslationDisplayed(
+                  <p class="phrase phrase-ru phrase-ru_meaning" style="display:${isTranslationDisplayed(
                     'translationCheck'
                   )}">${item.textMeaningTranslate}</p>
                 </div>
                 <div class="phrase__wrapper phrase-example__wrapper">
                   <p class="phrase phrase-en_example">${item.textExample}</p>
-                  <p class="phrase phrase-ru phrase-ru_example" style="display:${await isTranslationDisplayed(
+                  <p class="phrase phrase-ru phrase-ru_example" style="display:${isTranslationDisplayed(
                     'translationCheck'
                   )}">${item.textExampleTranslate}</p>
                 </div>
@@ -86,12 +86,12 @@ class TextbookPage extends Page {
                 <div class="word__buttons" style="display: ${
                   this.textbookModel.checkAuthorization() ? 'flex' : 'none'
                 }">
-                  <button class="btn btn-primary difficult-button" style="display:${await isTranslationDisplayed(
+                  <button class="btn btn-primary difficult-button" style="display:${isTranslationDisplayed(
                     'wordButtonsCheck'
                   )}">${TextbookModel.isDifficultWordsGroup ? 'remove' : 'difficult'}</button>
                   ${
                     !TextbookModel.isDifficultWordsGroup
-                      ? `<button class="btn btn-secondary learned-button" style="display:${await isTranslationDisplayed(
+                      ? `<button class="btn btn-secondary learned-button" style="display:${isTranslationDisplayed(
                           'wordButtonsCheck'
                         )}">learned</button>`
                       : ''
