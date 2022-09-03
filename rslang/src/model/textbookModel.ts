@@ -66,16 +66,6 @@ class TextbookModel {
     });
   }
 
-  resetPageStyles() {
-    const wordsWrapper = document.querySelector('.words__wrapper') as HTMLElement;
-    const pagesButton = document.querySelector('.pages-btn') as HTMLElement;
-    if (wordsWrapper || pagesButton) {
-      wordsWrapper.style.boxShadow = 'none';
-      wordsWrapper.style.border = 'inherit';
-      pagesButton.style.border = '1px solid #F0C932';
-    }
-  }
-
   static setLocalStorageSettings(): void {
     const setLocalStorage = (): void => {
       localStorage.setItem('group', `${TextbookModel.group}`);
@@ -134,9 +124,20 @@ class TextbookModel {
     } else wordsWrapper.innerText = 'Please select a level or sign in!';
   }
 
+  resetPageStyles() {
+    const wordsWrapper = document.querySelector('.words__wrapper') as HTMLElement;
+    const pagesButton = document.querySelector('.pages-btn') as HTMLElement;
+    if (wordsWrapper || pagesButton) {
+      wordsWrapper.style.boxShadow = 'none';
+      wordsWrapper.style.border = 'inherit';
+      pagesButton.style.border = '1px solid #F0C932';
+    }
+  }
+
   async checkPageStyle() {
     let count = 0;
     const words = await Model.getWords(TextbookModel.page, TextbookModel.group);
+    await this.getUserWords();
     if (await this.model.checkAuth()) {
       words.forEach((word) => {
         if (typeof TextbookModel.userWords === 'object') {
