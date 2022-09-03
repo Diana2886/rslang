@@ -11,6 +11,7 @@
   }
   &__image {
     width:40%;
+    min-width: 250px;
     margin: 0 auto;
     img{
       border-radius: 25px;
@@ -78,7 +79,7 @@
   width: 200px;
   height: 100px;
   text-align: center;
-  margin: 0 auto 35px auto;
+  margin: 0 auto 35px auto; 
   .cassette-icon{
     position: absolute;
     display: inline-block;
@@ -95,17 +96,22 @@
 
   &.showed{
     font-size: 18px;
-
+    @media (max-heigh: 500px) {
+      font-size: 14px;
+    }
     .cassette-big {
       max-height: 120px;
       border-radius: 10px;
       box-shadow: 0 0 3px #000;
-      animation: rotate 0.5s;
+      animation: rotate 0.5s;      
     }
     p {
       font-size: 14px;
       color:rgba(0, 0, 0, 0.466);
       font-weight: 400;
+      @media (max-heigh: 500px) {
+        font-size: 12px;
+      }
     }
 
     .cassette-icon{ 
@@ -120,7 +126,10 @@
 }
 .game-body {
   display: flex;
-  min-height: 100vh;
+  min-height: 80vh;
+  @media (max-heigh: 500px) {
+    min-height: 90vh;
+  }
   flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
@@ -134,9 +143,13 @@
 .greetBlock {
   animation: scale 0.5s;
   display: flex;
+  min-height: 60vh;
   flex-direction: column;
   align-items: center;
   margin: 0 auto;
+  .spinner-block{
+    margin: auto 0;
+  }
 }
 
 .game-start__btn.disabled {
