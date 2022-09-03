@@ -45,6 +45,7 @@
 }
 }
 &__signal{
+  cursor: pointer;
   display: inline-block;
   height: 30px;
   width: 30px;
@@ -74,6 +75,7 @@
 }
 
 .play-image {
+  cursor: pointer;
   position: relative;
   animation: scale 0.5s;
   width: 200px;
@@ -115,6 +117,7 @@
     }
 
     .cassette-icon{ 
+      cursor: pointer;
       top: 4px;
       left: 4px;
       border-radius: 0;
