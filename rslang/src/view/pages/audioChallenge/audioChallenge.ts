@@ -233,6 +233,7 @@ export default class AudioGame {
     const authStr = localStorage.getItem('authDataRSlang');
     let userWords: IUserWord[] | number | undefined;
     if (authStr) {
+      await this.model.checkAuth();
       userWords = await this.model.getUserWords();
     }
     this.data = await this.createData(group, pageNum, userWords);
