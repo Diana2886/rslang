@@ -1,6 +1,6 @@
 import Model from '../model/components/index';
 import TextbookModel from '../model/textbookModel';
-import { difficultyColors, IOptional } from '../types/index';
+import { difficultyColors, IOptional, ISettingsOptional } from '../types/index';
 import PageIds from '../view/pages/app/pageIds';
 import TextbookPage from '../view/pages/textbook/index';
 import Statistic from './statistics/index';
@@ -26,21 +26,42 @@ class TextbookController {
   }
 
   rerenderWords(wordsType: string) {
+    const spinnerBlock = document.createElement('div');
+    spinnerBlock.className = 'textbook__spinner-block';
+    spinnerBlock.innerHTML = `<div class="d-flex justify-content-center">
+    <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+  <span class="visually-hidden">Loading...</span>
+</div>
+  </div>`;
     this.textbookModel.resetPageStyles();
-    this.textbookModel.checkAuthorization();
-    const textbookToolsContainer = document.querySelector('.textbook-tools__container') as HTMLElement;
-    const difficultWordsButton = document.querySelector('.btn-difficult-words');
-    if (this.textbookModel.checkAuthorization()) {
-      if (!difficultWordsButton) textbookToolsContainer.append(this.textbookPage.renderDifficultWordsButton());
-    } else if (difficultWordsButton) difficultWordsButton.remove();
+    const textbookToolsAdditionContainer = document.querySelector('.textbook-tools-addition__container') as HTMLElement;
+    const difficultWordsButtonContainer = document.querySelector('.difficult-words-button__container');
+    const settingsContainer = document.querySelector('.settings__container');
     const wordsWrapper = document.querySelector('.words__wrapper') as HTMLElement;
-    wordsWrapper.innerHTML = '';
-    (async () => {
-      const words = await Model.getWords(TextbookModel.page, TextbookModel.group);
-      const difficultWords = await this.textbookModel.getDifficultWords();
-      wordsWrapper.append(await this.textbookPage.renderWords(wordsType === 'words' ? words : difficultWords));
-      await this.textbookModel.checkPageStyle();
-    })().catch((err: Error) => console.warn(err.message));
+    if (wordsWrapper) {
+      wordsWrapper.innerHTML = '';
+      wordsWrapper.append(spinnerBlock);
+      (async () => {
+        if (await this.model.checkAuth()) {
+          if (!difficultWordsButtonContainer)
+            textbookToolsAdditionContainer.append(this.textbookPage.renderDifficultWordsButton());
+          if (!settingsContainer) textbookToolsAdditionContainer.append(await this.textbookPage.renderSettingsButton());
+          else {
+            settingsContainer.remove();
+            textbookToolsAdditionContainer.append(await this.textbookPage.renderSettingsButton());
+            console.log('new settings button', TextbookModel.settings.optional);
+          }
+        } else {
+          if (difficultWordsButtonContainer) difficultWordsButtonContainer.remove();
+          if (settingsContainer) settingsContainer.remove();
+        }
+        const words = await Model.getWords(TextbookModel.page, TextbookModel.group);
+        const difficultWords = await this.textbookModel.getDifficultWords();
+        wordsWrapper.innerHTML = '';
+        wordsWrapper.append(await this.textbookPage.renderWords(wordsType === 'words' ? words : difficultWords));
+        await this.textbookModel.checkPageStyle();
+      })().catch((err: Error) => console.warn(err.message));
+    }
   }
 
   listenLevelButton() {
@@ -105,7 +126,9 @@ class TextbookController {
       if (target.classList.contains('btn-difficult-words')) {
         this.rerenderWords('difficultWords');
         this.textbookModel.resetPageStyles();
-        this.textbookModel.setDifficultWordsPage();
+        (async () => {
+          await this.textbookModel.setDifficultWordsPage();
+        })().catch((err: Error) => console.warn(err.message));
       }
     });
   }
@@ -141,7 +164,7 @@ class TextbookController {
           if (target.innerHTML !== 'remove') wordContainer.style.backgroundColor = difficultyColors[item];
           const wordId = wordContainer.id.split('word-id-')[1];
           (async () => {
-            if (this.textbookModel.checkAuthorization()) {
+            if (await this.model.checkAuth()) {
               const userWord = await this.model.getUserWord(wordId);
               const statistics = new Statistic();
               if (typeof userWord === 'number') {
@@ -152,6 +175,7 @@ class TextbookController {
                 this.textbookModel.resetPageStyles();
                 await this.textbookModel.checkPageStyle();
               } else if (userWord.difficulty !== item) {
+                if (target.classList.contains('item')) target.classList.remove(item);
                 if (target.classList.contains('learned-button')) {
                   await statistics.writeGlobalStat('learned', 'textbook', key);
                 }
@@ -164,6 +188,18 @@ class TextbookController {
                 await this.model.updateUserWord(wordId, { difficulty: item, optional: userWord.optional });
                 this.textbookModel.resetPageStyles();
                 await this.textbookModel.checkPageStyle();
+              } else if (userWord.difficulty === item) {
+                if (target.classList.contains(`${item}-button`)) {
+                  wordContainer.style.backgroundColor = 'inherit';
+                  target.classList.add(item);
+                  if (target.classList.contains(item))
+                    await this.model.updateUserWord(wordId, { difficulty: 'new', optional: userWord.optional });
+                  if (target.classList.contains('learned')) {
+                    await statistics.writeGlobalStat('learned', 'textbook', key, true);
+                  }
+                  this.textbookModel.resetPageStyles();
+                  await this.textbookModel.checkPageStyle();
+                }
               }
               if (target.classList.contains('difficult-button') && target.innerHTML === 'remove') {
                 await this.model.deleteUserWord(wordId);
@@ -173,6 +209,38 @@ class TextbookController {
           })().catch((err: Error) => console.warn(err.message));
         }
       });
+    });
+  }
+
+  listenSettingsModalWindow() {
+    document.body.addEventListener('click', (e) => {
+      const target = e.target as HTMLElement;
+      if (target.closest('.form-check')) {
+        const settingsCheckboxIds = [
+          { translationCheck: ['translation', 'phrase-ru_meaning', 'phrase-ru_example'] },
+          { wordButtonsCheck: ['difficult-button', 'learned-button'] },
+        ];
+        settingsCheckboxIds.forEach((item) => {
+          const checkboxItem = document.querySelector(`#${Object.keys(item)[0]}`) as HTMLInputElement;
+          const elementsForHiding = Object.values(item)[0] as string[];
+          const hideElements = () => {
+            elementsForHiding.forEach((el) => {
+              const elements = document.querySelectorAll(`.${el}`);
+              elements.forEach((element) => {
+                (element as HTMLElement).style.display = checkboxItem.checked ? 'block' : 'none';
+              });
+            });
+          };
+          const updateSettings = () => {
+            (async () => {
+              TextbookModel.settings.optional[Object.keys(item)[0] as keyof ISettingsOptional] = checkboxItem.checked;
+              await this.model.updateSettings(TextbookModel.settings);
+            })().catch((err: Error) => console.warn(err.message));
+          };
+          checkboxItem.addEventListener('change', hideElements);
+          checkboxItem.addEventListener('change', updateSettings);
+        });
+      }
     });
   }
 }

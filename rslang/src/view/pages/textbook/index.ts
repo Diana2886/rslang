@@ -2,7 +2,7 @@ import TextbookModel from '../../../model/textbookModel';
 import Model, { baseURL } from '../../../model/components/index';
 import Page from '../../core/templates/page';
 import PageIds from '../app/pageIds';
-import { difficultyColors, IUserWord, IWord, LevelColors, Levels } from '../../../types/index';
+import { difficultyColors, ISettingsOptional, IWord, LevelColors, Levels } from '../../../types/index';
 import Footer from '../../core/components/footer/index';
 import AudioGame from '../audioChallenge/audioChallenge';
 
@@ -16,59 +16,104 @@ class TextbookPage extends Page {
   textbookModel = new TextbookModel();
 
   async renderWords(words: IWord[]) {
+    const spinnerBlock = document.createElement('div');
+    spinnerBlock.className = 'textbook__spinner-block';
+    spinnerBlock.innerHTML = `<div class="d-flex justify-content-center">
+    <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+  <span class="visually-hidden">Loading...</span>
+</div>
+  </div>`;
+    this.container.append(spinnerBlock);
     const wordsContainer = document.createElement('div');
     wordsContainer.classList.add('words__container');
     const wordsWrapper = document.createElement('div');
     wordsWrapper.classList.add('words__wrapper');
-    let userWords: IUserWord[] | number;
-    if (this.textbookModel.checkAuthorization()) {
-      userWords = await this.model.getUserWords();
+    let allGamesStatistics: number;
+    let correctAnswersStatistics: number;
+    if (await this.model.checkAuth()) {
+      await this.textbookModel.getUserWords();
     }
+    await this.textbookModel.updateSettings();
+    const isTranslationDisplayed = (key: keyof ISettingsOptional) => {
+      return TextbookModel.settings.optional[key] ? 'block' : 'none';
+    };
     words.forEach((item) => {
       const imgPath = `${baseURL}/${item.image}`;
       const wordContainer = document.createElement('div');
       wordContainer.classList.add('word__container');
       wordContainer.id = `word-id-${TextbookModel.getWordId(item)}`;
       wordContainer.style.boxShadow = `0px 8px 8px ${LevelColors[item.group]}30`;
-      if (typeof userWords === 'object') {
-        userWords.forEach((el) => {
+      if (typeof TextbookModel.userWords === 'object') {
+        TextbookModel.userWords.forEach((el) => {
           if (el.wordId === item.id) {
             wordContainer.style.backgroundColor = difficultyColors[el.difficulty as string];
           }
         });
       }
-      const template = `
-        <img class="word__img" src="${imgPath}" alt="image">
-        <div class="word__content">
-          <div class="word-translation__wrapper" style="border-left: 3px solid ${LevelColors[item.group]}">
-            <div class="word__wrapper">
-              <h4 class="word">${item.word}</h4>
-              <h5 class="transcription">${item.transcription}</h5>
-              <span class="word__play" id="${TextbookModel.getWordId(item)}"></span>
+      (async () => {
+        allGamesStatistics = (await this.textbookModel.getStatisticsForTextbookWord(item.id)).allGames;
+        correctAnswersStatistics = (await this.textbookModel.getStatisticsForTextbookWord(item.id)).correctAnswers;
+        const incorrectAnswers = allGamesStatistics - correctAnswersStatistics;
+        const template = `
+            <img class="word__img" src="${imgPath}" alt="image">
+            <div class="word__content">
+              <div class word-text__wrapper>
+                <div class="word-translation__wrapper" style="border-left: 3px solid ${LevelColors[item.group]}">
+                  <div class="word__wrapper">
+                    <h4 class="word">${item.word}</h4>
+                    <h5 class="transcription">${item.transcription}</h5>
+                    <span class="word__play" id="${TextbookModel.getWordId(item)}"></span>
+                  </div>
+                  <p class="translation" style="display:${isTranslationDisplayed('translationCheck')}">${
+          item.wordTranslate
+        }</p>
+                </div>
+                <div class="phrase__wrapper phrase-meaning__wrapper">
+                  <p class="phrase phrase-en_meaning">${item.textMeaning}</p>
+                  <p class="phrase phrase-ru phrase-ru_meaning" style="display:${isTranslationDisplayed(
+                    'translationCheck'
+                  )}">${item.textMeaningTranslate}</p>
+                </div>
+                <div class="phrase__wrapper phrase-example__wrapper">
+                  <p class="phrase phrase-en_example">${item.textExample}</p>
+                  <p class="phrase phrase-ru phrase-ru_example" style="display:${isTranslationDisplayed(
+                    'translationCheck'
+                  )}">${item.textExampleTranslate}</p>
+                </div>
+              </div>
+              <div class="word-buttons-stat__container">
+                <div class="word__buttons" style="display: ${(await this.model.checkAuth()) ? 'flex' : 'none'}">
+                  <button class="btn btn-primary difficult-button" style="display:${isTranslationDisplayed(
+                    'wordButtonsCheck'
+                  )}">${TextbookModel.isDifficultWordsGroup ? 'remove' : 'difficult'}</button>
+                  ${
+                    !TextbookModel.isDifficultWordsGroup
+                      ? `<button class="btn btn-secondary learned-button" style="display:${isTranslationDisplayed(
+                          'wordButtonsCheck'
+                        )}">learned</button>`
+                      : ''
+                  }
+                </div>
+                ${
+                  (await this.textbookModel.isUserWordExist(item.id)) && allGamesStatistics !== 0
+                    ? `
+                  <div class="word-games-stat__container">
+                    <p class="word-games-stat">Correct answers: ${correctAnswersStatistics}</p>
+                    <p class="word-games-stat">Incorrect answers: ${incorrectAnswers >= 0 ? incorrectAnswers : 0}</p>
+                  </div>
+                `
+                    : ''
+                }
+              </div>
             </div>
-            <p class="translation">${item.wordTranslate}</p>
-          </div>
-          <p class="phrase phrase-en_meaning">${item.textMeaning}</p>
-          <p class="phrase phrase-ru phrase-ru_meaning">${item.textMeaningTranslate}</p>
-          <p class="phrase phrase-en_example">${item.textExample}</p>
-          <p class="phrase phrase-ru phrase-ru_example">${item.textExampleTranslate}</p>
-          <div class="word__buttons" style="display: ${this.textbookModel.checkAuthorization() ? 'flex' : 'none'}">
-            <button class="btn btn-primary difficult-button">${
-              TextbookModel.isDifficultWordsGroup ? 'remove' : 'difficult'
-            }</button>
-            ${
-              !TextbookModel.isDifficultWordsGroup
-                ? '<button class="btn btn-secondary learned-button">learned</button>'
-                : ''
-            }
-          </div>
-        </div>
-      `;
-      wordContainer.innerHTML = template;
-      wordsContainer.append(wordContainer);
+          `;
+        wordContainer.innerHTML = template;
+        wordsContainer.append(wordContainer);
+      })().catch((err: Error) => console.warn(err.message));
     });
     wordsWrapper.append(wordsContainer);
     const footer = new Footer();
+    spinnerBlock.remove();
     this.container.append(wordsWrapper, footer.renderFooter());
     return wordsContainer;
   }
@@ -168,7 +213,7 @@ class TextbookPage extends Page {
                 greetBlock.innerHTML = '';
                 greetBlock?.append(element);
               })
-              .catch((err) => console.error(err));
+              .catch((err) => console.warn(err));
           });
         }
       });
@@ -179,8 +224,57 @@ class TextbookPage extends Page {
   renderDifficultWordsButton() {
     const template = `<button type="button" class="btn btn-primary btn-difficult-words">Difficult words</button>`;
     const difficultWordsButton = document.createElement('div');
+    difficultWordsButton.classList.add('difficult-words-button__container');
     difficultWordsButton.innerHTML = template;
     return difficultWordsButton;
+  }
+
+  async renderSettingsButton() {
+    await this.textbookModel.updateSettings();
+    const isCheckboxChecked = (key: keyof ISettingsOptional) => {
+      console.log('view', TextbookModel.settings.optional);
+      return TextbookModel.settings.optional[key] ? 'checked' : '';
+    };
+    const template = `
+    <button type="button" class="btn btn-primary btn-settings" data-bs-toggle="modal" data-bs-target="#exampleModal">
+      Settings
+    </button>
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-settings modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Settings</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="" id="translationCheck" ${isCheckboxChecked(
+                'translationCheck'
+              )}>
+              <label class="form-check-label" for="translationCheck">
+                Display translation
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="" id="wordButtonsCheck" ${isCheckboxChecked(
+                'wordButtonsCheck'
+              )}>
+              <label class="form-check-label" for="wordButtonsCheck">
+                Show action buttons for words
+              </label>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+    const settingsButton = document.createElement('div');
+    settingsButton.classList.add('settings__container');
+    settingsButton.innerHTML = template;
+    return settingsButton;
   }
 
   renderModalAudio(title: string, description: string) {
@@ -197,29 +291,42 @@ class TextbookPage extends Page {
     return { modal, buttonStart };
   }
 
-  renderTextbookToolsContainer() {
+  async renderTextbookToolsContainer() {
     const textbookToolsContainer = document.createElement('div');
     textbookToolsContainer.classList.add('textbook-tools__container');
-    textbookToolsContainer.append(this.renderLevelsElement(), this.renderPaginationElement(), this.renderGamesButton());
-    if (this.textbookModel.checkAuthorization()) textbookToolsContainer.append(this.renderDifficultWordsButton());
+    const textbookToolsMainContainer = document.createElement('div');
+    textbookToolsMainContainer.classList.add('textbook-tools-main__container');
+    textbookToolsMainContainer.append(
+      this.renderLevelsElement(),
+      this.renderPaginationElement(),
+      this.renderGamesButton()
+    );
+    const textbookToolsAdditionContainer = document.createElement('div');
+    textbookToolsAdditionContainer.classList.add('textbook-tools-addition__container');
+    if (await this.model.checkAuth())
+      textbookToolsAdditionContainer.append(this.renderDifficultWordsButton(), await this.renderSettingsButton());
+    textbookToolsContainer.append(textbookToolsMainContainer, textbookToolsAdditionContainer);
     return textbookToolsContainer;
   }
 
-  renderTextbookContainer() {
+  async renderTextbookContainer() {
     const textbookContainer = document.createElement('div');
     textbookContainer.classList.add('textbook__container');
     const title = this.createHeaderTitle(TextbookPage.TextObject.MainTitle);
-    textbookContainer.append(title, this.renderTextbookToolsContainer());
+    textbookContainer.append(title, await this.renderTextbookToolsContainer());
     return textbookContainer;
   }
 
   render() {
-    this.container.append(this.renderTextbookContainer());
     (async () => {
+      if (await this.model.checkAuth()) {
+        await this.textbookModel.getSettings();
+      }
+      this.container.append(await this.renderTextbookContainer());
       const words = await Model.getWords(TextbookModel.page, TextbookModel.group);
       const difficultWords = await this.textbookModel.getDifficultWords();
       await this.renderWords(TextbookModel.isDifficultWordsGroup ? difficultWords : words);
-      if (TextbookModel.isDifficultWordsGroup) this.textbookModel.setDifficultWordsPage();
+      if (TextbookModel.isDifficultWordsGroup) await this.textbookModel.setDifficultWordsPage();
       const textbookModel = new TextbookModel();
       textbookModel.updatePaginationState();
       await textbookModel.checkPageStyle();

@@ -26,6 +26,7 @@ class App {
     textbookController.listenPageButton();
     textbookController.listenWordButtons();
     textbookController.listenDifficultWordsButton();
+    textbookController.listenSettingsModalWindow();
   }
 }
 

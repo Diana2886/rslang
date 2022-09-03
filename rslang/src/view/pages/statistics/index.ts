@@ -34,7 +34,7 @@ class StatisticsPage extends Page {
           statSection.append(titleLong);
           statSection.append(this.statView.drawChart());
         })
-        .catch((err) => console.log(err));
+        .catch((err) => console.warn(err));
     } else {
       statSection.innerHTML = '';
       statSection.append(this.drawUnAuthInfo());

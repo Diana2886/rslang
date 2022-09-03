@@ -33,7 +33,7 @@ export default class AudioResult {
       audioRes.src = `http://localhost:3000/${element.audio}`;
       imgAudio.src = 'assets/svg/compact-cassette.svg';
       imgAudio.addEventListener('click', () => {
-        audioRes.play().catch((err) => console.log(err));
+        audioRes.play().catch((err) => console.warn(err));
       });
       const engText = document.createElement('span');
       engText.textContent = `${element.word} -`;

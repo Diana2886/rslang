@@ -54,11 +54,6 @@ export interface IAuth {
   name: string;
 }
 
-export interface ISetting {
-  wordsPerDay: number;
-  optional?: IOptional;
-}
-
 export interface IStatOptional {
   [date: string]: {
     audio: {
@@ -111,6 +106,19 @@ export interface IStatData {
     newWords: number;
   };
 }
+
+export interface ISettingsOptional {
+  translationCheck: boolean;
+  wordButtonsCheck: boolean;
+}
+
+export interface ISettings {
+  optional: ISettingsOptional;
+}
+
+export type ISettingsCheckboxIds = {
+  [key in keyof ISettingsOptional]: string[];
+};
 
 export type QueryData = {
   key: string;
@@ -173,4 +181,6 @@ export interface ILoginInfo {
   email: string;
   password: string;
   startDate: Date;
+  settings: boolean;
+  statistics: boolean;
 }

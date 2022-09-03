@@ -58,7 +58,7 @@ class AudioChallenge extends Page {
             greetBlock.innerHTML = '';
             greetBlock.append(el);
           })
-          .catch((err) => console.log(err));
+          .catch((err) => console.warn(err));
         e.target?.removeEventListener('click', () => {
           startButton.classList.add('disabled');
           greetBlock.innerHTML = '';
@@ -68,7 +68,7 @@ class AudioChallenge extends Page {
             .then((el) => {
               greetBlock.append(el);
             })
-            .catch((err) => console.log(err));
+            .catch((err) => console.warn(err));
         });
       },
       { once: true }

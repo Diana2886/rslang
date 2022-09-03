@@ -3,12 +3,24 @@
 }
 
 .footer__wrapper {
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   gap: 2rem;
   height: 70px;
-  padding: 0;
+  padding: 0 2rem;
   color: #ffffff;
+  @media (max-width: 680px) {
+    flex-direction: column;
+    gap: 0;
+    height: 100px;
+    padding: 1rem;
+  }
+}
+
+.footer-inner__wrapper {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
 }
 
 .footer__link {
