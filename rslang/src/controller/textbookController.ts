@@ -183,9 +183,8 @@ class TextbookController {
                 if (target.classList.contains(`${item}-button`)) {
                   wordContainer.style.backgroundColor = 'inherit';
                   target.classList.add(item);
-                  if (target.classList.contains('difficult'))
+                  if (target.classList.contains(item))
                     await this.model.updateUserWord(wordId, { difficulty: 'new', optional: userWord.optional });
-                  else if (target.classList.contains('learned')) await this.model.deleteUserWord(wordId);
                   this.textbookModel.resetPageStyles();
                   await this.textbookModel.checkPageStyle();
                 }
