@@ -29,19 +29,24 @@ class TextbookController {
     this.textbookModel.resetPageStyles();
     this.textbookModel.checkAuthorization();
     const textbookToolsAdditionContainer = document.querySelector('.textbook-tools-addition__container') as HTMLElement;
-    const difficultWordsButton = document.querySelector('.btn-difficult-words');
-    const settingsButton = document.querySelector('.btn-settings');
+    const difficultWordsButtonContainer = document.querySelector('.difficult-words-button__container');
+    const settingsContainer = document.querySelector('.settings__container');
     const wordsWrapper = document.querySelector('.words__wrapper') as HTMLElement;
     if (wordsWrapper) {
       wordsWrapper.innerHTML = '';
       (async () => {
         if (this.textbookModel.checkAuthorization()) {
-          if (!difficultWordsButton)
+          if (!difficultWordsButtonContainer)
             textbookToolsAdditionContainer.append(this.textbookPage.renderDifficultWordsButton());
-          if (!settingsButton) textbookToolsAdditionContainer.append(this.textbookPage.renderSettingsButton());
+          if (!settingsContainer) textbookToolsAdditionContainer.append(await this.textbookPage.renderSettingsButton());
+          else {
+            settingsContainer.remove();
+            textbookToolsAdditionContainer.append(await this.textbookPage.renderSettingsButton());
+            console.log('new settings button', TextbookModel.settings.optional);
+          }
         } else {
-          if (difficultWordsButton) difficultWordsButton.remove();
-          if (settingsButton) settingsButton.remove();
+          if (difficultWordsButtonContainer) difficultWordsButtonContainer.remove();
+          if (settingsContainer) settingsContainer.remove();
         }
         const words = await Model.getWords(TextbookModel.page, TextbookModel.group);
         const difficultWords = await this.textbookModel.getDifficultWords();
