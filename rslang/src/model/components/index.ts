@@ -133,7 +133,6 @@ class Model {
 
       switch (status) {
         case 200:
-          console.log('The user word has been created');
           break;
         case 400:
           throw new Error('Bad request');
@@ -195,7 +194,6 @@ class Model {
 
       switch (status) {
         case 204:
-          console.log('The user word has been deleted');
           break;
         case 400:
           throw new Error('Bad request');
@@ -308,9 +306,6 @@ class Model {
       status = response.status;
 
       switch (status) {
-        case 200:
-          console.log('The user word has been updated');
-          break;
         case 400:
           throw new Error('Bad request');
         case 401:
@@ -341,9 +336,6 @@ class Model {
       status = response.status;
       const statistic = await (<Promise<IStatistic>>response.json());
       switch (status) {
-        case 200:
-          console.log('get statistics: Successful operation');
-          break;
         case 400:
           throw new Error('Access token is missing or invalid');
         case 401:
@@ -379,9 +371,6 @@ class Model {
       status = response.status;
 
       switch (status) {
-        case 200:
-          console.log('The statistics has been updated');
-          break;
         case 400:
           throw new Error('Bad request');
         case 401:
@@ -412,8 +401,6 @@ class Model {
       status = response.status;
       const settings = await (<Promise<ISettings>>response.json());
       switch (status) {
-        case 200:
-          break;
         case 400:
           throw new Error('Access token is missing or invalid');
         case 401:
@@ -449,8 +436,6 @@ class Model {
       status = response.status;
 
       switch (status) {
-        case 200:
-          break;
         case 400:
           throw new Error('Bad request');
         case 401:
