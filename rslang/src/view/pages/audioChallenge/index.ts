@@ -10,6 +10,13 @@ class AudioChallenge extends Page {
 
   drawInit() {
     const greetBlock = document.createElement('div');
+    const spinnerBlock = document.createElement('div');
+    spinnerBlock.className = 'spinner-block';
+    spinnerBlock.innerHTML = `<div class="d-flex justify-content-center">
+    <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+  <span class="visually-hidden">Loading...</span>
+</div>
+  </div>`;
     greetBlock.className = 'greetBlock';
     const image = document.createElement('div');
     const img = document.createElement('img');
@@ -41,12 +48,14 @@ class AudioChallenge extends Page {
     startButton.addEventListener(
       'click',
       (e) => {
-        startButton.disabled = false;
         greetBlock.innerHTML = '';
+        greetBlock.append(spinnerBlock);
+        startButton.disabled = false;
         chooseLevel?.classList.remove('active');
         this.audioGame
           .startGame(level)
           .then((el) => {
+            greetBlock.innerHTML = '';
             greetBlock.append(el);
           })
           .catch((err) => console.log(err));
