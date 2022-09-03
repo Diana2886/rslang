@@ -1,5 +1,5 @@
 /* eslint-disable no-underscore-dangle */
-import { IUserWord, IWord } from '../types/index';
+import { ISettings, IUserWord, IWord } from '../types/index';
 import Model, { baseURL } from './components/index';
 
 class TextbookModel {
@@ -13,9 +13,11 @@ class TextbookModel {
 
   static userWords: IUserWord[] | number = [];
 
-  optional = {
-    translationCheck: true,
-    wordButtonsCheck: true,
+  static settings: ISettings = {
+    optional: {
+      translationCheck: true,
+      wordButtonsCheck: true,
+    },
   };
 
   model = new Model();
@@ -28,19 +30,14 @@ class TextbookModel {
     TextbookModel.userWords = await this.model.getUserWords();
   }
 
-  async getOptional() {
-    const optional = {
-      translationCheck: true,
-      wordButtonsCheck: true,
-    };
-    if (this.checkAuthorization()) {
-      const settings = await this.model.getSettings();
-      if (typeof settings === 'object') {
-        optional.translationCheck = settings.optional?.translationCheck;
-        optional.wordButtonsCheck = settings.optional?.wordButtonsCheck;
-      }
-    }
-    return optional;
+  async getSettings() {
+    const settingsApi = await this.model.getSettings();
+    if (typeof settingsApi === 'number') {
+      TextbookModel.settings.optional = {
+        translationCheck: true,
+        wordButtonsCheck: true,
+      };
+    } else TextbookModel.settings.optional = settingsApi.optional;
   }
 
   playWord(words: IWord[], target: HTMLElement) {

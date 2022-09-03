@@ -1,9 +1,8 @@
-/* eslint-disable no-nested-ternary */
 import TextbookModel from '../../../model/textbookModel';
 import Model, { baseURL } from '../../../model/components/index';
 import Page from '../../core/templates/page';
 import PageIds from '../app/pageIds';
-import { difficultyColors, ISettingsOptional, IUserWord, IWord, LevelColors, Levels } from '../../../types/index';
+import { difficultyColors, ISettingsOptional, IWord, LevelColors, Levels } from '../../../types/index';
 import Footer from '../../core/components/footer/index';
 import AudioGame from '../audioChallenge/audioChallenge';
 
@@ -21,22 +20,18 @@ class TextbookPage extends Page {
     wordsContainer.classList.add('words__container');
     const wordsWrapper = document.createElement('div');
     wordsWrapper.classList.add('words__wrapper');
-    let userWords: IUserWord[] | number;
-    if (this.textbookModel.checkAuthorization()) {
-      userWords = await this.model.getUserWords();
-    }
     let allGamesStatistics: number;
     let correctAnswersStatistics: number;
-
-    if (this.textbookModel.checkAuthorization()) {
-      const settings = await this.model.getSettings();
-      if (typeof settings === 'object') {
-        this.textbookModel.optional.translationCheck = settings.optional?.translationCheck;
-        this.textbookModel.optional.wordButtonsCheck = settings.optional?.wordButtonsCheck;
-      }
+    if (!this.textbookModel.checkAuthorization()) {
+      TextbookModel.settings.optional = {
+        translationCheck: true,
+        wordButtonsCheck: true,
+      };
+    } else {
+      await this.textbookModel.getSettings();
     }
     const isTranslationDisplayed = (key: keyof ISettingsOptional) => {
-      return this.textbookModel.optional[key] ? 'block' : 'none';
+      return TextbookModel.settings.optional[key] ? 'block' : 'none';
     };
     words.forEach((item) => {
       const imgPath = `${baseURL}/${item.image}`;
@@ -44,8 +39,8 @@ class TextbookPage extends Page {
       wordContainer.classList.add('word__container');
       wordContainer.id = `word-id-${TextbookModel.getWordId(item)}`;
       wordContainer.style.boxShadow = `0px 8px 8px ${LevelColors[item.group]}30`;
-      if (typeof userWords === 'object') {
-        userWords.forEach((el) => {
+      if (typeof TextbookModel.userWords === 'object') {
+        TextbookModel.userWords.forEach((el) => {
           if (el.wordId === item.id) {
             wordContainer.style.backgroundColor = difficultyColors[el.difficulty as string];
           }
@@ -98,7 +93,7 @@ class TextbookPage extends Page {
                   }
                 </div>
                 ${
-                  (await this.textbookModel.isUserWordExist(item.id)) && allGamesStatistics !== 0
+                  this.textbookModel.isUserWordExist(item.id) && allGamesStatistics !== 0
                     ? `
                   <div class="word-games-stat__container">
                     <p class="word-games-stat">Correct answers: ${correctAnswersStatistics}</p>
@@ -230,10 +225,9 @@ class TextbookPage extends Page {
     return difficultWordsButton;
   }
 
-  async renderSettingsButton() {
-    const isCheckboxChecked = async (key: keyof ISettingsOptional) => {
-      const optional = await this.textbookModel.getOptional();
-      return optional[key] ? 'checked' : '';
+  renderSettingsButton() {
+    const isCheckboxChecked = (key: keyof ISettingsOptional) => {
+      return TextbookModel.settings.optional[key] ? 'checked' : '';
     };
     const template = `
     <button type="button" class="btn btn-primary btn-settings" data-bs-toggle="modal" data-bs-target="#exampleModal">
@@ -248,7 +242,7 @@ class TextbookPage extends Page {
           </div>
           <div class="modal-body">
             <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="" id="translationCheck" ${await isCheckboxChecked(
+              <input class="form-check-input" type="checkbox" value="" id="translationCheck" ${isCheckboxChecked(
                 'translationCheck'
               )}>
               <label class="form-check-label" for="translationCheck">
@@ -256,7 +250,7 @@ class TextbookPage extends Page {
               </label>
             </div>
             <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="" id="wordButtonsCheck" ${await isCheckboxChecked(
+              <input class="form-check-input" type="checkbox" value="" id="wordButtonsCheck" ${isCheckboxChecked(
                 'wordButtonsCheck'
               )}>
               <label class="form-check-label" for="wordButtonsCheck">
@@ -290,7 +284,7 @@ class TextbookPage extends Page {
     return { modal, buttonStart };
   }
 
-  async renderTextbookToolsContainer() {
+  renderTextbookToolsContainer() {
     const textbookToolsContainer = document.createElement('div');
     textbookToolsContainer.classList.add('textbook-tools__container');
     const textbookToolsMainContainer = document.createElement('div');
@@ -303,22 +297,25 @@ class TextbookPage extends Page {
     const textbookToolsAdditionContainer = document.createElement('div');
     textbookToolsAdditionContainer.classList.add('textbook-tools-addition__container');
     if (this.textbookModel.checkAuthorization())
-      textbookToolsAdditionContainer.append(this.renderDifficultWordsButton(), await this.renderSettingsButton());
+      textbookToolsAdditionContainer.append(this.renderDifficultWordsButton(), this.renderSettingsButton());
     textbookToolsContainer.append(textbookToolsMainContainer, textbookToolsAdditionContainer);
     return textbookToolsContainer;
   }
 
-  async renderTextbookContainer() {
+  renderTextbookContainer() {
     const textbookContainer = document.createElement('div');
     textbookContainer.classList.add('textbook__container');
     const title = this.createHeaderTitle(TextbookPage.TextObject.MainTitle);
-    textbookContainer.append(title, await this.renderTextbookToolsContainer());
+    textbookContainer.append(title, this.renderTextbookToolsContainer());
     return textbookContainer;
   }
 
   render() {
     (async () => {
-      this.container.append(await this.renderTextbookContainer());
+      if (this.textbookModel.checkAuthorization()) {
+        await this.textbookModel.getSettings();
+      }
+      this.container.append(this.renderTextbookContainer());
       const words = await Model.getWords(TextbookModel.page, TextbookModel.group);
       const difficultWords = await this.textbookModel.getDifficultWords();
       await this.renderWords(TextbookModel.isDifficultWordsGroup ? difficultWords : words);

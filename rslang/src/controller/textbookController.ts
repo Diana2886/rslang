@@ -38,7 +38,7 @@ class TextbookController {
         if (this.textbookModel.checkAuthorization()) {
           if (!difficultWordsButton)
             textbookToolsAdditionContainer.append(this.textbookPage.renderDifficultWordsButton());
-          if (!settingsButton) textbookToolsAdditionContainer.append(await this.textbookPage.renderSettingsButton());
+          if (!settingsButton) textbookToolsAdditionContainer.append(this.textbookPage.renderSettingsButton());
         } else {
           if (difficultWordsButton) difficultWordsButton.remove();
           if (settingsButton) settingsButton.remove();
@@ -205,9 +205,8 @@ class TextbookController {
           };
           const updateSettings = () => {
             (async () => {
-              const optional = await this.textbookModel.getOptional();
-              optional[Object.keys(item)[0] as keyof ISettingsOptional] = checkboxItem.checked;
-              await this.model.updateSettings({ optional });
+              TextbookModel.settings.optional[Object.keys(item)[0] as keyof ISettingsOptional] = checkboxItem.checked;
+              await this.model.updateSettings(TextbookModel.settings);
             })().catch((err: Error) => console.warn(err.message));
           };
           checkboxItem.addEventListener('change', hideElements);
