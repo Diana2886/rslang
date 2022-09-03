@@ -181,4 +181,6 @@ export interface ILoginInfo {
   email: string;
   password: string;
   startDate: Date;
+  settings: boolean;
+  statistics: boolean;
 }
