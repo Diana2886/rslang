@@ -22,14 +22,7 @@ class TextbookPage extends Page {
     wordsWrapper.classList.add('words__wrapper');
     let allGamesStatistics: number;
     let correctAnswersStatistics: number;
-    if (!this.textbookModel.checkAuthorization()) {
-      TextbookModel.settings.optional = {
-        translationCheck: true,
-        wordButtonsCheck: true,
-      };
-    } else {
-      await this.textbookModel.getSettings();
-    }
+    await this.textbookModel.updateSettings();
     const isTranslationDisplayed = (key: keyof ISettingsOptional) => {
       return TextbookModel.settings.optional[key] ? 'block' : 'none';
     };
@@ -221,12 +214,15 @@ class TextbookPage extends Page {
   renderDifficultWordsButton() {
     const template = `<button type="button" class="btn btn-primary btn-difficult-words">Difficult words</button>`;
     const difficultWordsButton = document.createElement('div');
+    difficultWordsButton.classList.add('difficult-words-button__container');
     difficultWordsButton.innerHTML = template;
     return difficultWordsButton;
   }
 
-  renderSettingsButton() {
+  async renderSettingsButton() {
+    await this.textbookModel.updateSettings();
     const isCheckboxChecked = (key: keyof ISettingsOptional) => {
+      console.log('view', TextbookModel.settings.optional);
       return TextbookModel.settings.optional[key] ? 'checked' : '';
     };
     const template = `
@@ -266,6 +262,7 @@ class TextbookPage extends Page {
     </div>
   `;
     const settingsButton = document.createElement('div');
+    settingsButton.classList.add('settings__container');
     settingsButton.innerHTML = template;
     return settingsButton;
   }
@@ -284,7 +281,7 @@ class TextbookPage extends Page {
     return { modal, buttonStart };
   }
 
-  renderTextbookToolsContainer() {
+  async renderTextbookToolsContainer() {
     const textbookToolsContainer = document.createElement('div');
     textbookToolsContainer.classList.add('textbook-tools__container');
     const textbookToolsMainContainer = document.createElement('div');
@@ -297,16 +294,16 @@ class TextbookPage extends Page {
     const textbookToolsAdditionContainer = document.createElement('div');
     textbookToolsAdditionContainer.classList.add('textbook-tools-addition__container');
     if (this.textbookModel.checkAuthorization())
-      textbookToolsAdditionContainer.append(this.renderDifficultWordsButton(), this.renderSettingsButton());
+      textbookToolsAdditionContainer.append(this.renderDifficultWordsButton(), await this.renderSettingsButton());
     textbookToolsContainer.append(textbookToolsMainContainer, textbookToolsAdditionContainer);
     return textbookToolsContainer;
   }
 
-  renderTextbookContainer() {
+  async renderTextbookContainer() {
     const textbookContainer = document.createElement('div');
     textbookContainer.classList.add('textbook__container');
     const title = this.createHeaderTitle(TextbookPage.TextObject.MainTitle);
-    textbookContainer.append(title, this.renderTextbookToolsContainer());
+    textbookContainer.append(title, await this.renderTextbookToolsContainer());
     return textbookContainer;
   }
 
@@ -315,7 +312,7 @@ class TextbookPage extends Page {
       if (this.textbookModel.checkAuthorization()) {
         await this.textbookModel.getSettings();
       }
-      this.container.append(this.renderTextbookContainer());
+      this.container.append(await this.renderTextbookContainer());
       const words = await Model.getWords(TextbookModel.page, TextbookModel.group);
       const difficultWords = await this.textbookModel.getDifficultWords();
       await this.renderWords(TextbookModel.isDifficultWordsGroup ? difficultWords : words);

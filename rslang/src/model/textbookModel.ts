@@ -40,6 +40,17 @@ class TextbookModel {
     } else TextbookModel.settings.optional = settingsApi.optional;
   }
 
+  async updateSettings() {
+    if (!this.checkAuthorization()) {
+      TextbookModel.settings.optional = {
+        translationCheck: true,
+        wordButtonsCheck: true,
+      };
+    } else {
+      await this.getSettings();
+    }
+  }
+
   playWord(words: IWord[], target: HTMLElement) {
     const audioPlay = (paths: string[]) => {
       const audio = new Audio(paths[0]);
