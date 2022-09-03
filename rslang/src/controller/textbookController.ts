@@ -166,6 +166,7 @@ class TextbookController {
                 this.textbookModel.resetPageStyles();
                 await this.textbookModel.checkPageStyle();
               } else if (userWord.difficulty !== item) {
+                if (target.classList.contains('item')) target.classList.remove(item);
                 if (target.classList.contains('learned-button')) {
                   await statistics.writeGlobalStat('learned', 'textbook', key);
                 }
@@ -178,6 +179,14 @@ class TextbookController {
                 await this.model.updateUserWord(wordId, { difficulty: item, optional: userWord.optional });
                 this.textbookModel.resetPageStyles();
                 await this.textbookModel.checkPageStyle();
+              } else if (userWord.difficulty === item) {
+                if (target.classList.contains(`${item}-button`)) {
+                  wordContainer.style.backgroundColor = 'inherit';
+                  target.classList.add(item);
+                  if (target.classList.contains(item)) await this.model.deleteUserWord(wordId);
+                  this.textbookModel.resetPageStyles();
+                  await this.textbookModel.checkPageStyle();
+                }
               }
               if (target.classList.contains('difficult-button') && target.innerHTML === 'remove') {
                 await this.model.deleteUserWord(wordId);
