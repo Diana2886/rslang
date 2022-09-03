@@ -22,10 +22,6 @@ class TextbookModel {
 
   model = new Model();
 
-  checkAuthorization() {
-    return Boolean(localStorage.getItem('authDataRSlang'));
-  }
-
   async getUserWords() {
     TextbookModel.userWords = await this.model.getUserWords();
   }
@@ -41,7 +37,7 @@ class TextbookModel {
   }
 
   async updateSettings() {
-    if (!this.checkAuthorization()) {
+    if (!(await this.model.checkAuth())) {
       TextbookModel.settings.optional = {
         translationCheck: true,
         wordButtonsCheck: true,
@@ -104,7 +100,7 @@ class TextbookModel {
   }
 
   async getDifficultWords() {
-    if (this.checkAuthorization()) {
+    if (await this.model.checkAuth()) {
       let wordsCount = 0;
       if (typeof TextbookModel.userWords === 'object') {
         const difficultWords = TextbookModel.userWords.filter((word) => word.difficulty === 'difficult');
@@ -125,14 +121,14 @@ class TextbookModel {
     return [];
   }
 
-  setDifficultWordsPage() {
+  async setDifficultWordsPage() {
     TextbookModel.isDifficultWordsGroup = true;
     const levelButton = document.querySelector('.levels-btn') as HTMLElement;
     levelButton.innerHTML = 'Level';
     this.controlPageButtonsAccess(true);
     this.controlGamesButtonAccess();
     const wordsWrapper = document.querySelector('.words__wrapper') as HTMLElement;
-    if (this.checkAuthorization()) {
+    if (await this.model.checkAuth()) {
       wordsWrapper.style.border = '3px solid #545BE850';
       wordsWrapper.style.boxShadow = '0px 0px 8px rgba(0, 0, 0, 0.1)';
     } else wordsWrapper.innerText = 'Please select a level or sign in!';
@@ -141,7 +137,7 @@ class TextbookModel {
   async checkPageStyle() {
     let count = 0;
     const words = await Model.getWords(TextbookModel.page, TextbookModel.group);
-    if (this.checkAuthorization()) {
+    if (await this.model.checkAuth()) {
       words.forEach((word) => {
         if (typeof TextbookModel.userWords === 'object') {
           TextbookModel.userWords.forEach((item) => {
@@ -193,8 +189,8 @@ class TextbookModel {
     return word.id;
   }
 
-  isUserWordExist(id: string) {
-    if (this.checkAuthorization()) {
+  async isUserWordExist(id: string) {
+    if (await this.model.checkAuth()) {
       if (typeof TextbookModel.userWords === 'object') {
         let count = 0;
         TextbookModel.userWords.forEach((word) => {
@@ -211,7 +207,7 @@ class TextbookModel {
   async getStatisticsForTextbookWord(id: string) {
     let allGames = 0;
     let correctAnswers = 0;
-    if (this.checkAuthorization() && this.isUserWordExist(id)) {
+    if ((await this.model.checkAuth()) && (await this.isUserWordExist(id))) {
       const userWord = await this.model.getUserWord(id);
       if (typeof userWord === 'object' && userWord.optional) {
         const { audio, sprint } = userWord.optional;

@@ -22,7 +22,7 @@ class TextbookPage extends Page {
     wordsWrapper.classList.add('words__wrapper');
     let allGamesStatistics: number;
     let correctAnswersStatistics: number;
-    if (this.textbookModel.checkAuthorization()) {
+    if (await this.model.checkAuth()) {
       await this.textbookModel.getUserWords();
     }
     await this.textbookModel.updateSettings();
@@ -56,44 +56,46 @@ class TextbookPage extends Page {
                     <h5 class="transcription">${item.transcription}</h5>
                     <span class="word__play" id="${TextbookModel.getWordId(item)}"></span>
                   </div>
-                  <p class="translation" style="display:${isTranslationDisplayed('translationCheck')}">${item.wordTranslate
-          }</p>
+                  <p class="translation" style="display:${isTranslationDisplayed('translationCheck')}">${
+          item.wordTranslate
+        }</p>
                 </div>
                 <div class="phrase__wrapper phrase-meaning__wrapper">
                   <p class="phrase phrase-en_meaning">${item.textMeaning}</p>
                   <p class="phrase phrase-ru phrase-ru_meaning" style="display:${isTranslationDisplayed(
-            'translationCheck'
-          )}">${item.textMeaningTranslate}</p>
+                    'translationCheck'
+                  )}">${item.textMeaningTranslate}</p>
                 </div>
                 <div class="phrase__wrapper phrase-example__wrapper">
                   <p class="phrase phrase-en_example">${item.textExample}</p>
                   <p class="phrase phrase-ru phrase-ru_example" style="display:${isTranslationDisplayed(
-            'translationCheck'
-          )}">${item.textExampleTranslate}</p>
+                    'translationCheck'
+                  )}">${item.textExampleTranslate}</p>
                 </div>
               </div>
               <div class="word-buttons-stat__container">
-                <div class="word__buttons" style="display: ${this.textbookModel.checkAuthorization() ? 'flex' : 'none'
-          }">
+                <div class="word__buttons" style="display: ${(await this.model.checkAuth()) ? 'flex' : 'none'}">
                   <button class="btn btn-primary difficult-button" style="display:${isTranslationDisplayed(
-            'wordButtonsCheck'
-          )}">${TextbookModel.isDifficultWordsGroup ? 'remove' : 'difficult'}</button>
-                  ${!TextbookModel.isDifficultWordsGroup
-            ? `<button class="btn btn-secondary learned-button" style="display:${isTranslationDisplayed(
-              'wordButtonsCheck'
-            )}">learned</button>`
-            : ''
-          }
+                    'wordButtonsCheck'
+                  )}">${TextbookModel.isDifficultWordsGroup ? 'remove' : 'difficult'}</button>
+                  ${
+                    !TextbookModel.isDifficultWordsGroup
+                      ? `<button class="btn btn-secondary learned-button" style="display:${isTranslationDisplayed(
+                          'wordButtonsCheck'
+                        )}">learned</button>`
+                      : ''
+                  }
                 </div>
-                ${this.textbookModel.isUserWordExist(item.id) && allGamesStatistics !== 0
-            ? `
+                ${
+                  (await this.textbookModel.isUserWordExist(item.id)) && allGamesStatistics !== 0
+                    ? `
                   <div class="word-games-stat__container">
                     <p class="word-games-stat">Correct answers: ${correctAnswersStatistics}</p>
                     <p class="word-games-stat">Incorrect answers: ${incorrectAnswers >= 0 ? incorrectAnswers : 0}</p>
                   </div>
                 `
-            : ''
-          }
+                    : ''
+                }
               </div>
             </div>
           `;
@@ -119,8 +121,9 @@ class TextbookPage extends Page {
     `;
     for (let i = 0; i < GROUPS_AMOUNT; i += 1) {
       template += `
-        <li><button class="dropdown-item level__item" id="level${i + 1}" type="button" style="background-color:${LevelColors[i]
-        }">${Levels[i]}</button></li>
+        <li><button class="dropdown-item level__item" id="level${i + 1}" type="button" style="background-color:${
+        LevelColors[i]
+      }">${Levels[i]}</button></li>
       `;
     }
     template += '</ul>';
@@ -146,8 +149,9 @@ class TextbookPage extends Page {
     `;
     for (let i = 0; i < TextbookModel.PAGES_AMOUNT; i += 1) {
       template += `
-        <li><button class="dropdown-item page__item page${i + 1}" id="page${i + 1}" type="button">Page ${i + 1
-        }</button></li>
+        <li><button class="dropdown-item page__item page${i + 1}" id="page${i + 1}" type="button">Page ${
+        i + 1
+      }</button></li>
       `;
     }
     template += `
@@ -236,16 +240,16 @@ class TextbookPage extends Page {
           <div class="modal-body">
             <div class="form-check">
               <input class="form-check-input" type="checkbox" value="" id="translationCheck" ${isCheckboxChecked(
-      'translationCheck'
-    )}>
+                'translationCheck'
+              )}>
               <label class="form-check-label" for="translationCheck">
                 Display translation
               </label>
             </div>
             <div class="form-check">
               <input class="form-check-input" type="checkbox" value="" id="wordButtonsCheck" ${isCheckboxChecked(
-      'wordButtonsCheck'
-    )}>
+                'wordButtonsCheck'
+              )}>
               <label class="form-check-label" for="wordButtonsCheck">
                 Show action buttons for words
               </label>
@@ -290,7 +294,7 @@ class TextbookPage extends Page {
     );
     const textbookToolsAdditionContainer = document.createElement('div');
     textbookToolsAdditionContainer.classList.add('textbook-tools-addition__container');
-    if (this.textbookModel.checkAuthorization())
+    if (await this.model.checkAuth())
       textbookToolsAdditionContainer.append(this.renderDifficultWordsButton(), await this.renderSettingsButton());
     textbookToolsContainer.append(textbookToolsMainContainer, textbookToolsAdditionContainer);
     return textbookToolsContainer;
@@ -306,14 +310,14 @@ class TextbookPage extends Page {
 
   render() {
     (async () => {
-      if (this.textbookModel.checkAuthorization()) {
+      if (await this.model.checkAuth()) {
         await this.textbookModel.getSettings();
       }
       this.container.append(await this.renderTextbookContainer());
       const words = await Model.getWords(TextbookModel.page, TextbookModel.group);
       const difficultWords = await this.textbookModel.getDifficultWords();
       await this.renderWords(TextbookModel.isDifficultWordsGroup ? difficultWords : words);
-      if (TextbookModel.isDifficultWordsGroup) this.textbookModel.setDifficultWordsPage();
+      if (TextbookModel.isDifficultWordsGroup) await this.textbookModel.setDifficultWordsPage();
       const textbookModel = new TextbookModel();
       textbookModel.updatePaginationState();
       await textbookModel.checkPageStyle();

@@ -27,7 +27,6 @@ class TextbookController {
 
   rerenderWords(wordsType: string) {
     this.textbookModel.resetPageStyles();
-    this.textbookModel.checkAuthorization();
     const textbookToolsAdditionContainer = document.querySelector('.textbook-tools-addition__container') as HTMLElement;
     const difficultWordsButtonContainer = document.querySelector('.difficult-words-button__container');
     const settingsContainer = document.querySelector('.settings__container');
@@ -35,7 +34,7 @@ class TextbookController {
     if (wordsWrapper) {
       wordsWrapper.innerHTML = '';
       (async () => {
-        if (this.textbookModel.checkAuthorization()) {
+        if (await this.model.checkAuth()) {
           if (!difficultWordsButtonContainer)
             textbookToolsAdditionContainer.append(this.textbookPage.renderDifficultWordsButton());
           if (!settingsContainer) textbookToolsAdditionContainer.append(await this.textbookPage.renderSettingsButton());
@@ -118,7 +117,9 @@ class TextbookController {
       if (target.classList.contains('btn-difficult-words')) {
         this.rerenderWords('difficultWords');
         this.textbookModel.resetPageStyles();
-        this.textbookModel.setDifficultWordsPage();
+        (async () => {
+          await this.textbookModel.setDifficultWordsPage();
+        })().catch((err: Error) => console.warn(err.message));
       }
     });
   }
@@ -154,7 +155,7 @@ class TextbookController {
           if (target.innerHTML !== 'remove') wordContainer.style.backgroundColor = difficultyColors[item];
           const wordId = wordContainer.id.split('word-id-')[1];
           (async () => {
-            if (this.textbookModel.checkAuthorization()) {
+            if (await this.model.checkAuth()) {
               const userWord = await this.model.getUserWord(wordId);
               const statistics = new Statistic();
               if (typeof userWord === 'number') {
