@@ -16,6 +16,14 @@ class TextbookPage extends Page {
   textbookModel = new TextbookModel();
 
   async renderWords(words: IWord[]) {
+    const spinnerBlock = document.createElement('div');
+    spinnerBlock.className = 'textbook__spinner-block';
+    spinnerBlock.innerHTML = `<div class="d-flex justify-content-center">
+    <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+  <span class="visually-hidden">Loading...</span>
+</div>
+  </div>`;
+    this.container.append(spinnerBlock);
     const wordsContainer = document.createElement('div');
     wordsContainer.classList.add('words__container');
     const wordsWrapper = document.createElement('div');
@@ -105,6 +113,7 @@ class TextbookPage extends Page {
     });
     wordsWrapper.append(wordsContainer);
     const footer = new Footer();
+    spinnerBlock.remove();
     this.container.append(wordsWrapper, footer.renderFooter());
     return wordsContainer;
   }
