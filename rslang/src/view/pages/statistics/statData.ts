@@ -38,6 +38,7 @@ export default class StatData {
   }
 
   async getData() {
+    await this.model.checkAuth();
     const date = new Date();
     const key = `${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`;
     this.statistic = await this.model.getStatistic();
