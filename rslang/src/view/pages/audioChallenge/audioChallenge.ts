@@ -126,7 +126,7 @@ export default class AudioGame {
     variantsBtns.className = 'variants__btns';
     const nextBtn = document.createElement('button');
     const signalDiv = this.initSounds();
-    nextBtn.className = 'audio-call__next btn btn-info';
+    nextBtn.className = 'audio-call__next btn btn-warning';
     nextBtn.innerHTML = `Next  <kbd>↵</kbd>`;
     nextBtn.disabled = false;
     example.variants.forEach((item, index) => {
