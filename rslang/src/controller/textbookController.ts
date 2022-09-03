@@ -185,6 +185,9 @@ class TextbookController {
                   target.classList.add(item);
                   if (target.classList.contains(item))
                     await this.model.updateUserWord(wordId, { difficulty: 'new', optional: userWord.optional });
+                  if (target.classList.contains('learned')) {
+                    await statistics.writeGlobalStat('learned', 'textbook', key, true);
+                  }
                   this.textbookModel.resetPageStyles();
                   await this.textbookModel.checkPageStyle();
                 }
