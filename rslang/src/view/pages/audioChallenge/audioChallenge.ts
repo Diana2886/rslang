@@ -20,6 +20,8 @@ export default class AudioGame {
 
   audio: HTMLAudioElement;
 
+  signal: HTMLAudioElement;
+
   image: HTMLImageElement;
 
   corrects: IWord[];
@@ -39,6 +41,7 @@ export default class AudioGame {
     this.image = document.createElement('img');
     this.text = document.createElement('div');
     this.audio = document.createElement('audio');
+    this.signal = new Audio(undefined);
     this.index = 0;
     this.result = new AudioResult();
   }
@@ -118,12 +121,14 @@ export default class AudioGame {
     this.image.src = 'assets/svg/compact-cassette.svg';
     this.audio.src = `http://localhost:3000/${example.word.audio}`;
     this.audio.autoplay = true;
+    this.signal.volume = 0.3;
     const variantsBtns = document.createElement('div');
     variantsBtns.className = 'variants__btns';
     const nextBtn = document.createElement('button');
+    const signalDiv = this.initSounds();
     nextBtn.className = 'audio-call__next btn btn-info';
     nextBtn.innerHTML = `Next  <kbd>↵</kbd>`;
-
+    nextBtn.disabled = false;
     example.variants.forEach((item, index) => {
       const btnDiv = document.createElement('button');
       btnDiv.className = 'audio-call__choose-btn';
@@ -146,6 +151,8 @@ export default class AudioGame {
             btnDiv.classList.add('wrong');
             this.wrongs.push(example.word);
           }
+          this.signal.src = answers ? 'assets/audio/correct.mp3' : 'assets/audio/wrong.mp3';
+          this.signal.play().catch((err) => console.log(err));
           if (typeof userWords === 'object') {
             this.stat.writeWordStat('audio', example.word, answers).catch((err) => console.error(err));
           }
@@ -156,10 +163,25 @@ export default class AudioGame {
       );
       variantsBtns.append(btnDiv);
     });
+    variantsBtns.append(signalDiv);
     nextBtn.addEventListener('click', () => {
+      nextBtn.disabled = true;
       this.index += 1;
+      const buttons = variantsBtns.querySelectorAll('button');
+      if (!buttons[0].disabled) {
+        buttons.forEach((item) => {
+          item.disabled = true;
+        });
+        nextBtn.classList.add('wrong');
+        this.signal.src = 'assets/audio/wrong.mp3';
+        this.signal.play().catch((err) => console.log(err));
+        this.wrongs.push(example.word);
+        if (typeof userWords === 'object') {
+          this.stat.writeWordStat('audio', example.word, false).catch((err) => console.error(err));
+        }
+      }
       if (this.index < this.data.length) {
-        this.getProcessGame(userWords);
+        setTimeout(() => this.getProcessGame(userWords), 1000);
       } else {
         window.dispatchEvent(new CustomEvent('done'));
         this.index = 0;
@@ -177,11 +199,41 @@ export default class AudioGame {
     });
   }
 
+  initSounds() {
+    const muteState = localStorage.getItem('muteState');
+    if (muteState) {
+      this.signal.muted = muteState === 'true';
+    }
+    const signalDiv = document.createElement('div');
+    const signalIcon = document.createElement('img');
+    signalDiv.className = 'audio-call__signal';
+    signalIcon.className = this.signal.muted ? 'signal' : 'mute';
+    signalIcon.src = this.signal.muted ? 'assets/svg/volume-xmark.svg' : 'assets/svg/volume-high.svg';
+    signalDiv.append(signalIcon);
+    signalIcon.addEventListener('click', (e) => {
+      const element = <HTMLElement>e.target;
+      if (element.classList.contains('mute')) {
+        this.signal.muted = true;
+        signalIcon.src = 'assets/svg/volume-xmark.svg';
+        signalIcon.classList.remove('mute');
+      } else {
+        this.signal.muted = false;
+        signalIcon.classList.add('mute');
+        signalIcon.src = 'assets/svg/volume-high.svg';
+      }
+      localStorage.setItem('muteState', String(this.signal.muted));
+    });
+    return signalDiv;
+  }
+
   async startGame(group: number, pageNum?: number) {
+    this.corrects = [];
+    this.wrongs = [];
     this.audio.src = '';
     const authStr = localStorage.getItem('authDataRSlang');
     let userWords: IUserWord[] | number | undefined;
     if (authStr) {
+      await this.model.checkAuth();
       userWords = await this.model.getUserWords();
     }
     this.data = await this.createData(group, pageNum, userWords);

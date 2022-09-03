@@ -1,6 +1,7 @@
 import {
   IAggregatedWords,
   IAuth,
+  ILoginInfo,
   INewUser,
   ISignIn,
   IStatistic,
@@ -460,6 +461,27 @@ class Model {
     } catch (error) {
       console.error(error);
     }
+  }
+
+  async checkAuth() {
+    const authDataRSlang = localStorage.getItem('authDataRSlang');
+    const sthmPasMail = localStorage.getItem('sthmPasMail');
+    if (sthmPasMail && authDataRSlang) {
+      const loginInfo = <ILoginInfo>JSON.parse(sthmPasMail);
+      const { startDate } = loginInfo;
+      const start = new Date(startDate);
+      const limit = new Date(startDate).setHours(start.getHours() + 4);
+      const nowTime = +new Date();
+      if (nowTime >= limit) {
+        const user: ISignIn = {
+          email: loginInfo.email,
+          password: loginInfo.password,
+        };
+        await this.signIn(user);
+      }
+      return true;
+    }
+    return false;
   }
 }
 
