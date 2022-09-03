@@ -10,26 +10,35 @@ class StatisticsPage extends Page {
 
   drawStatPage() {
     const statSection = document.createElement('div');
+    const spinnerBlock = document.createElement('div');
+    spinnerBlock.className = 'spinner-block';
+    spinnerBlock.innerHTML = `<div class="d-flex justify-content-center">
+    <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+  <span class="visually-hidden">Loading...</span>
+</div>
+  </div>`;
+    statSection.append(spinnerBlock);
     statSection.className = 'statistic';
     const authStr = localStorage.getItem('authDataRSlang');
     if (authStr) {
-      const titleDaily = document.createElement('h3');
-      titleDaily.textContent = 'Daily statistics';
-      const titleLong = document.createElement('h3');
-      titleLong.textContent = 'Long term statistics';
-      statSection.append(titleDaily);
       this.statView
         .drawDayStats()
         .then((element) => {
+          statSection.innerHTML = '';
+          const titleDaily = document.createElement('h3');
+          titleDaily.textContent = 'Daily statistics';
+          const titleLong = document.createElement('h3');
+          titleLong.textContent = 'Long term statistics';
+          statSection.append(titleDaily);
           statSection.append(element);
           statSection.append(titleLong);
           statSection.append(this.statView.drawChart());
         })
         .catch((err) => console.log(err));
     } else {
+      statSection.innerHTML = '';
       statSection.append(this.drawUnAuthInfo());
     }
-
     return statSection;
   }
 

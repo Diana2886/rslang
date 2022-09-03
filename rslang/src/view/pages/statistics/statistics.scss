@@ -4,6 +4,13 @@
   min-height: 100vh;
   padding: 50px 0;
   margin: 0 auto;
+  .spinner-block{
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    justify-content: center;
+    height: 70vh;
+  }
   h3 {
     text-align: center;
     margin-bottom: 30px;
@@ -31,6 +38,7 @@
 .day-common{
   min-width: 300px;
   background: #fff;
+  animation: scale 0.5s;
   H5{
     color: #000000;
     font-weight: 700;

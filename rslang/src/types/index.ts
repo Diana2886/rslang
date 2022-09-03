@@ -168,3 +168,9 @@ export interface IChartData {
   date: Date;
   value: number;
 }
+
+export interface ILoginInfo {
+  email: string;
+  password: string;
+  startDate: Date;
+}
