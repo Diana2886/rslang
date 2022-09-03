@@ -103,46 +103,12 @@ export default class Statistic {
     key: string,
     minus?: boolean
   ) {
-    let statistic: IStatistic | number = {
-      learnedWords: 0,
-      optional: {
-        [key]: {
-          audio: {
-            newWords: 0,
-            learnedWords: 0,
-            series: 0,
-            bestSeries: 0,
-          },
-          sprint: {
-            newWords: 0,
-            learnedWords: 0,
-            series: 0,
-            bestSeries: 0,
-          },
-          textbook: {
-            newWords: 0,
-            learnedWords: 0,
-            series: 0,
-            bestSeries: 0,
-          },
-        },
-      },
-    };
-
-    const loginInfoStr = localStorage.getItem('sthmPasMail');
-    if (loginInfoStr) {
-      const loginInfo = <ILoginInfo>JSON.parse(loginInfoStr);
-
-      if (loginInfo.statistics) {
-        statistic = await this.model.getStatistic();
-      } else {
-        loginInfo.statistics = true;
-        localStorage.setItem('sthmPasMail', JSON.stringify(loginInfo));
-      }
-
-      if (typeof statistic === 'object') {
-        if (!statistic.optional[key]) {
-          statistic.optional[key] = {
+    let statistic = await this.model.getStatistic();
+    if (typeof statistic === 'number') {
+      statistic = {
+        learnedWords: 0,
+        optional: {
+          [key]: {
             audio: {
               newWords: 0,
               learnedWords: 0,
@@ -161,21 +127,47 @@ export default class Statistic {
               series: 0,
               bestSeries: 0,
             },
-          };
-        }
+          },
+        },
+      };
+    }
 
-        if (type === 'new') {
-          const dayStat = statistic.optional[key];
-          dayStat[source].newWords += 1;
-        }
-        if (type === 'learned') {
-          statistic.learnedWords += minus ? -1 : 1;
-          const dayStat = statistic.optional[key];
-          dayStat[source].learnedWords += minus ? -1 : 1;
-        }
-        await this.model.updateStatistic({ learnedWords: statistic.learnedWords, optional: statistic.optional });
+    if (typeof statistic === 'object') {
+      if (!statistic.optional[key]) {
+        statistic.optional[key] = {
+          audio: {
+            newWords: 0,
+            learnedWords: 0,
+            series: 0,
+            bestSeries: 0,
+          },
+          sprint: {
+            newWords: 0,
+            learnedWords: 0,
+            series: 0,
+            bestSeries: 0,
+          },
+          textbook: {
+            newWords: 0,
+            learnedWords: 0,
+            series: 0,
+            bestSeries: 0,
+          },
+        };
       }
     }
+
+    if (type === 'new') {
+      const dayStat = statistic.optional[key];
+      dayStat[source].newWords += 1;
+    }
+    if (type === 'learned') {
+      statistic.learnedWords += minus ? -1 : 1;
+      const dayStat = statistic.optional[key];
+      dayStat[source].learnedWords += minus ? -1 : 1;
+    }
+
+    await this.model.updateStatistic({ learnedWords: statistic.learnedWords, optional: statistic.optional });
   }
 
   async writeBestSerial(type: 'audio' | 'sprint', answer: boolean, date: string) {
