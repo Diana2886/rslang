@@ -22,6 +22,9 @@ class TextbookPage extends Page {
     wordsWrapper.classList.add('words__wrapper');
     let allGamesStatistics: number;
     let correctAnswersStatistics: number;
+    if (this.textbookModel.checkAuthorization()) {
+      await this.textbookModel.getUserWords();
+    }
     await this.textbookModel.updateSettings();
     const isTranslationDisplayed = (key: keyof ISettingsOptional) => {
       return TextbookModel.settings.optional[key] ? 'block' : 'none';
