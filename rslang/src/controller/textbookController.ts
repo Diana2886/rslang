@@ -26,6 +26,13 @@ class TextbookController {
   }
 
   rerenderWords(wordsType: string) {
+    const spinnerBlock = document.createElement('div');
+    spinnerBlock.className = 'textbook__spinner-block';
+    spinnerBlock.innerHTML = `<div class="d-flex justify-content-center">
+    <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+  <span class="visually-hidden">Loading...</span>
+</div>
+  </div>`;
     this.textbookModel.resetPageStyles();
     const textbookToolsAdditionContainer = document.querySelector('.textbook-tools-addition__container') as HTMLElement;
     const difficultWordsButtonContainer = document.querySelector('.difficult-words-button__container');
@@ -33,6 +40,7 @@ class TextbookController {
     const wordsWrapper = document.querySelector('.words__wrapper') as HTMLElement;
     if (wordsWrapper) {
       wordsWrapper.innerHTML = '';
+      wordsWrapper.append(spinnerBlock);
       (async () => {
         if (await this.model.checkAuth()) {
           if (!difficultWordsButtonContainer)
@@ -49,6 +57,7 @@ class TextbookController {
         }
         const words = await Model.getWords(TextbookModel.page, TextbookModel.group);
         const difficultWords = await this.textbookModel.getDifficultWords();
+        wordsWrapper.innerHTML = '';
         wordsWrapper.append(await this.textbookPage.renderWords(wordsType === 'words' ? words : difficultWords));
         await this.textbookModel.checkPageStyle();
       })().catch((err: Error) => console.warn(err.message));
@@ -185,6 +194,9 @@ class TextbookController {
                   target.classList.add(item);
                   if (target.classList.contains(item))
                     await this.model.updateUserWord(wordId, { difficulty: 'new', optional: userWord.optional });
+                  if (target.classList.contains('learned')) {
+                    await statistics.writeGlobalStat('learned', 'textbook', key, true);
+                  }
                   this.textbookModel.resetPageStyles();
                   await this.textbookModel.checkPageStyle();
                 }
