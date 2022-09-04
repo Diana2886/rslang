@@ -226,7 +226,7 @@ class TextbookController {
                   userWord.optional.serial = 0;
                   await this.model.updateUserWord(wordId, { difficulty: 'new', optional: userWord.optional });
                 }
-                this.rerenderWords('difficultWords');
+                await this.rerenderWords('difficultWords');
               }
             }
           })().catch((err: Error) => console.warn(err.message));
