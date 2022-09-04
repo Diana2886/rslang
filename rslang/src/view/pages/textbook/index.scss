@@ -127,6 +127,7 @@
   display: flex;
   align-items: center;
   gap: 1rem;
+  flex-wrap: wrap;
 }
 
 .word,
@@ -179,6 +180,7 @@
 .word-games-stat__container {
   display: flex;
   gap: 1rem;
+  flex-wrap: wrap;
 }
 
 .word-games-stat {
