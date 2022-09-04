@@ -98,7 +98,7 @@
 
   &.showed{
     font-size: 18px;
-    @media (max-heigh: 500px) {
+    @media (max-height: 500px) {
       font-size: 14px;
     }
     .cassette-big {
@@ -111,9 +111,6 @@
       font-size: 14px;
       color:rgba(0, 0, 0, 0.466);
       font-weight: 400;
-      @media (max-heigh: 500px) {
-        font-size: 12px;
-      }
     }
 
     .cassette-icon{ 
@@ -130,16 +127,19 @@
 .game-body {
   display: flex;
   min-height: 80vh;
-  @media (max-heigh: 500px) {
-    min-height: 90vh;
-  }
-  flex-direction: column;
   justify-content: space-evenly;
+  flex-direction: column;
   align-items: center;
   margin: 0 auto;
   animation: scale 0.5s;
   .wrong{
     box-shadow: 0 0 5px rgba(255, 11, 11, 0.959);
+  }
+}
+
+@media (max-height: 500px) {
+  .game-body {
+  justify-content: space-between;
   }
 }
 
