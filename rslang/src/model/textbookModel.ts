@@ -137,8 +137,8 @@ class TextbookModel {
   async checkPageStyle() {
     let count = 0;
     const words = await Model.getWords(TextbookModel.page, TextbookModel.group);
-    await this.getUserWords();
     if (await this.model.checkAuth()) {
+      await this.getUserWords();
       words.forEach((word) => {
         if (typeof TextbookModel.userWords === 'object') {
           TextbookModel.userWords.forEach((item) => {
