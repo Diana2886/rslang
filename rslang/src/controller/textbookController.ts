@@ -192,20 +192,24 @@ class TextbookController {
                 if (target.classList.contains(`${item}-button`)) {
                   wordContainer.style.backgroundColor = 'inherit';
                   target.classList.add(item);
-                  if (target.classList.contains(item))
-                    await this.model.updateUserWord(wordId, { difficulty: 'new', optional: userWord.optional });
-                  if (target.classList.contains('learned')) {
-                    await statistics.writeGlobalStat('learned', 'textbook', key, true);
-                    if (userWord.optional) {
-                      userWord.optional.serial = 0;
+                  if (target.classList.contains(item)) {
+                    if (target.classList.contains('learned')) {
+                      await statistics.writeGlobalStat('learned', 'textbook', key, true);
+                      if (userWord.optional) {
+                        userWord.optional.serial = 0;
+                      }
                     }
+                    await this.model.updateUserWord(wordId, { difficulty: 'new', optional: userWord.optional });
                   }
                   this.textbookModel.resetPageStyles();
                   await this.textbookModel.checkPageStyle();
                 }
               }
               if (target.classList.contains('difficult-button') && target.innerHTML === 'remove') {
-                await this.model.deleteUserWord(wordId);
+                if (typeof userWord !== 'number' && userWord.optional) {
+                  userWord.optional.serial = 0;
+                  await this.model.updateUserWord(wordId, { difficulty: 'new', optional: userWord.optional });
+                }
                 this.rerenderWords('difficultWords');
               }
             }
