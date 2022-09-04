@@ -61,7 +61,6 @@ class Model {
       const word = await (<Promise<IWord>>response.json());
       return word;
     } catch (error) {
-      console.error(error);
       return status;
     }
   }
@@ -168,7 +167,6 @@ class Model {
       const userWords = await (<Promise<IUserWord[]>>response.json());
       return userWords;
     } catch (error) {
-      console.error(error);
       return status;
     }
   }
@@ -248,7 +246,6 @@ class Model {
       const words = await (<Promise<IAggregatedWords[]>>response.json());
       return words;
     } catch (error) {
-      console.error(error);
       return status;
     }
   }
@@ -345,7 +342,6 @@ class Model {
       }
       return statistic;
     } catch (error) {
-      console.error(error);
       return status;
     }
   }
@@ -410,7 +406,6 @@ class Model {
       }
       return settings;
     } catch (error) {
-      console.error(error);
       return status;
     }
   }
