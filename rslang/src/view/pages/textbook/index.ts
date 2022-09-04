@@ -232,7 +232,6 @@ class TextbookPage extends Page {
   async renderSettingsButton() {
     await this.textbookModel.updateSettings();
     const isCheckboxChecked = (key: keyof ISettingsOptional) => {
-      console.log('view', TextbookModel.settings.optional);
       return TextbookModel.settings.optional[key] ? 'checked' : '';
     };
     const template = `
