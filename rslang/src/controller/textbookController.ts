@@ -16,11 +16,10 @@ class TextbookController {
     document.body.addEventListener('click', (e) => {
       const target = e.target as HTMLElement;
       if (target.classList.contains('word__play')) {
-        (async () => {
-          const words = await Model.getWords(TextbookModel.page, TextbookModel.group);
-          const difficultWords = await this.textbookModel.getDifficultWords();
-          this.textbookModel.playWord(TextbookModel.isDifficultWordsGroup ? difficultWords : words, target);
-        })().catch((err: Error) => console.warn(err.message));
+        this.textbookModel.playWord(
+          TextbookModel.isDifficultWordsGroup ? TextbookModel.difficultWords : TextbookModel.words,
+          target
+        );
       }
     });
   }
@@ -38,10 +37,12 @@ class TextbookController {
     if (wordsWrapper) {
       wordsWrapper.innerHTML = '';
       wordsWrapper.append(spinnerBlock);
-      const words = await Model.getWords(TextbookModel.page, TextbookModel.group);
-      const difficultWords = await this.textbookModel.getDifficultWords();
+      TextbookModel.words = await Model.getWords(TextbookModel.page, TextbookModel.group);
+      await this.textbookModel.getDifficultWords();
       wordsWrapper.innerHTML = '';
-      wordsWrapper.append(await this.textbookPage.renderWords(wordsType === 'words' ? words : difficultWords));
+      wordsWrapper.append(
+        await this.textbookPage.renderWords(wordsType === 'words' ? TextbookModel.words : TextbookModel.difficultWords)
+      );
       await this.textbookModel.checkPageStyle();
     }
   }
