@@ -38,19 +38,19 @@ class MainPage extends Page {
       {
         name: 'Diana Abdykassenova',
         role: 'Team leader, <br>Frontend developer',
-        text: 'Made basic project settings, layout of the main page, ...',
+        text: 'Made basic project settings, layout of the main page and the Textbook',
         img: './assets/img/diana.jpg',
       },
       {
         name: 'Aibek Kenzhebayev',
         role: 'Frontend developer',
-        text: 'Set up an API connection, developed Audio Challenge game,...',
+        text: 'Made API connection settings, the Audio Challenge game and statistics page',
         img: './assets/img/aibek.jpg',
       },
       {
         name: 'Sanjar Tukhtamishev',
         role: 'Frontend developer',
-        text: 'Made the login page, Sprint game,...',
+        text: 'Developed authorization and the Sprint game',
         img: './assets/img/sanjar.jpg',
       },
     ],
