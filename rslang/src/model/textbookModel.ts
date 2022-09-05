@@ -13,6 +13,10 @@ class TextbookModel {
 
   static userWords: IUserWord[] | number = [];
 
+  static words: IWord[] = [];
+
+  static difficultWords: IWord[] = [];
+
   static settings: ISettings = {
     optional: {
       translationCheck: true,
@@ -102,13 +106,10 @@ class TextbookModel {
         0,
         wordsCount
       );
-      let difficultWords: IWord[] = [];
       if (typeof difficultWordsRes === 'object') {
-        difficultWords = difficultWordsRes[0].paginatedResults;
+        TextbookModel.difficultWords = difficultWordsRes[0].paginatedResults;
       }
-      return difficultWords;
     }
-    return [];
   }
 
   async setDifficultWordsPage() {
@@ -136,10 +137,9 @@ class TextbookModel {
 
   async checkPageStyle() {
     let count = 0;
-    const words = await Model.getWords(TextbookModel.page, TextbookModel.group);
     if (await this.model.checkAuth()) {
       await this.getUserWords();
-      words.forEach((word) => {
+      TextbookModel.words.forEach((word) => {
         if (typeof TextbookModel.userWords === 'object') {
           TextbookModel.userWords.forEach((item) => {
             if (word.id === item.wordId && item.difficulty === 'learned') count += 1;

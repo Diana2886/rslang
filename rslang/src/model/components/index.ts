@@ -13,7 +13,7 @@ import {
   WordsGroup,
 } from '../../types/index';
 
-export const baseURL = 'http://localhost:3000';
+export const baseURL = 'https://learnwords-di.herokuapp.com';
 enum Path {
   words = '/words',
   users = '/users',

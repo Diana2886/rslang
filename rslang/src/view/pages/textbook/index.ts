@@ -320,11 +320,12 @@ class TextbookPage extends Page {
     (async () => {
       if (await this.model.checkAuth()) {
         await this.textbookModel.getSettings();
+        await this.textbookModel.getUserWords();
+        await this.textbookModel.getDifficultWords();
       }
       this.container.append(await this.renderTextbookContainer());
-      const words = await Model.getWords(TextbookModel.page, TextbookModel.group);
-      const difficultWords = await this.textbookModel.getDifficultWords();
-      await this.renderWords(TextbookModel.isDifficultWordsGroup ? difficultWords : words);
+      TextbookModel.words = await Model.getWords(TextbookModel.page, TextbookModel.group);
+      await this.renderWords(TextbookModel.isDifficultWordsGroup ? TextbookModel.difficultWords : TextbookModel.words);
       if (TextbookModel.isDifficultWordsGroup) await this.textbookModel.setDifficultWordsPage();
       const textbookModel = new TextbookModel();
       textbookModel.updatePaginationState();
