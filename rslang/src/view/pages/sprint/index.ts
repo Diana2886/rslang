@@ -123,7 +123,7 @@ class Sprint extends Page {
        </div>
       <div class="modal-body">
         <table >
-          <h5 class="game-sprint-m-ctitle">Correct</h5>
+          <h5 class="game-sprint-m-ctitle">Correct <span>0</span></h5>
           <thead>
             <tr class="thead-tr">
               <td>Sound</td>
@@ -151,7 +151,7 @@ class Sprint extends Page {
           </tbody>
         </table>
         <table >
-          <h5 class="game-sprint-m-wtitle">Wrong</h5>
+          <h5 class="game-sprint-m-wtitle">Wrong <span>0</span> </h5>
           <thead>
             <tr  class="tbody-tr">
               <td>Sound</td>

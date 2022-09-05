@@ -305,10 +305,22 @@ table{
 .game-sprint-m-ctitle{
   color: #198754;
   text-align: center;
+  & span{
+    background: #198754;
+    color: white;
+    padding: 0px 7px;
+    border-radius: 9px;
+  }
 }
 .game-sprint-m-wtitle{
   color: #dc3545;
   text-align: center;
+  & span{
+    background: #dc3545;
+    color: white;
+    padding: 0px 7px;
+    border-radius: 9px;
+  }
 }
 
 
