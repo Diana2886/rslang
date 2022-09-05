@@ -345,6 +345,10 @@ export default class SprintController {
     const modalWrapper = document.querySelector('.modal-wrapper') as HTMLElement;
     const wrongTable = document.querySelector('.wrong-answer') as HTMLTableElement;
     const correctTable = document.querySelector('.correct-answer') as HTMLTableElement;
+    const corrLen = document.querySelector('.game-sprint-m-ctitle span') as HTMLTableElement;
+    corrLen.innerHTML = this.correctWords.length.toString();
+    const wrongLen = document.querySelector('.game-sprint-m-wtitle span') as HTMLTableElement;
+    wrongLen.innerHTML = this.wrongWords.length.toString();
     window.removeEventListener('keyup', this.arrow);
     modalBG.classList.add('modal-bg-act');
     modalWrapper.classList.add('modal-wrapper-act');
@@ -396,6 +400,7 @@ export default class SprintController {
 
   pastResultWords(id: string, audio: string, eng: string, rus: string) {
     const tr = document.createElement('tr') as HTMLElement;
+    tr.classList.add('table-tr');
     tr.innerHTML = `
       <td class="modal-sound">
       <audio src="${audio}" id="${id}"></audio>
