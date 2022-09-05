@@ -1,3 +1,4 @@
+import { baseURL } from '../../../model/components/index';
 import { IWord } from '../../../types/index';
 
 export default class AudioResult {
@@ -30,7 +31,7 @@ export default class AudioResult {
       const point = document.createElement('li');
       const imgAudio = document.createElement('img');
       const audioRes = document.createElement('audio');
-      audioRes.src = `http://localhost:3000/${element.audio}`;
+      audioRes.src = `${baseURL}/${element.audio}`;
       imgAudio.src = 'assets/svg/compact-cassette.svg';
       imgAudio.addEventListener('click', () => {
         audioRes.play().catch((err) => console.warn(err));
