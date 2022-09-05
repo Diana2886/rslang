@@ -225,5 +225,17 @@
 }
 
 .dev__text {
-  margin-bottom: 0;
+  margin-bottom: 0.5rem;
+}
+
+.github__link {
+  align-self: flex-end;
+}
+
+.github__icon {
+  width: 25px;
+  height: 25px;
+  background: url('./assets/img/github.png') no-repeat;
+  background-size: cover;
+  background-position: center;
 }
