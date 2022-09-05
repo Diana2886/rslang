@@ -20,15 +20,9 @@ class Sprint extends Page {
     <div class="sprint-header">
     
       <div class="sprint-notification">
-        <svg width="30px" height="30px" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 1000 1000" enable-background="new 0 0 1000 1000" xml:space="preserve">
-          <g><path d="M508.8,937.5c0-5.8-2.9-8.7-8.8-8.7c-21.5,0-40-7.7-55.5-23.2c-15.5-15.5-23.2-34-23.2-55.5c0-5.8-2.9-8.8-8.7-8.8c-5.8,0-8.8,2.9-8.8,8.8c0,26.6,9.4,49.3,28.2,68.1c18.8,18.8,41.5,28.2,68.1,28.2C505.8,946.3,508.8,943.3,508.8,937.5z M955,780c0,19-6.9,35.4-20.8,49.2S904,850,885,850H640c0,38.6-13.7,71.6-41,99s-60.3,41-99,41c-38.6,0-71.6-13.7-99-41c-27.3-27.3-41-60.3-41-99H115c-19,0-35.4-6.9-49.2-20.8C51.9,815.4,45,799,45,780c18.2-15.3,34.8-31.4,49.8-48.1c14.9-16.8,30.4-38.6,46.5-65.4c16-26.8,29.6-55.7,40.7-86.7c11.1-31,20.2-68.5,27.3-112.7c7.1-44.1,10.7-91.5,10.7-142.2c0-55.4,21.3-106.9,64-154.5c42.7-47.6,98.6-76.5,167.9-86.7c-2.9-6.9-4.4-14-4.4-21.3c0-14.6,5.1-27,15.3-37.2C473,15.1,485.4,10,500,10c14.6,0,27,5.1,37.2,15.3c10.2,10.2,15.3,22.6,15.3,37.2c0,7.3-1.5,14.4-4.4,21.3C617.4,94,673.4,122.9,716,170.5c42.7,47.6,64,99.1,64,154.5c0,50.7,3.6,98.1,10.7,142.2c7.1,44.1,16.2,81.7,27.3,112.7c11.1,31,24.7,59.9,40.7,86.7c16,26.8,31.5,48.6,46.5,65.4C920.2,748.6,936.8,764.7,955,780L955,780z"/></g>
-          </svg>
-      </div>
-      <div class="sprint-fuul_screan">
-        
+
       </div>
       
-      <a href="#main-page" class="btn-close" aria-label="Закрыть"></a>
     </div>
     <div class="sprint-main">
     
@@ -58,36 +52,38 @@ class Sprint extends Page {
         </svg>
       </h2>
       <div class="promo">
-          <svg class="first-svg animate__backInLeft" width="150px" height="200px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Pro 6.1.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path fill="#F0C932" d="M400 224h-44l-26.12-53.25c-12.5-25.5-35.38-44.25-61.75-51L197 98.63C189.5 96.84 181.1 95.97 174.5 95.97c-20.88 0-41.33 6.81-58.26 19.78L76.5 146.3C68.31 152.5 64.01 162 64.01 171.6c0 17.11 13.67 32.02 32.02 32.02c6.808 0 13.67-2.158 19.47-6.616l39.63-30.38c5.92-4.488 13.01-6.787 19.53-6.787c2.017 0 3.981 .2196 5.841 .6623l14.62 4.25l-37.5 87.5C154.1 260.3 152.5 268.8 152.5 277.2c0 22.09 11.49 43.52 31.51 55.29l85 50.13l-27.5 87.75c-.9875 3.174-1.458 6.388-1.458 9.55c0 13.65 8.757 26.31 22.46 30.58C265.6 511.5 268.9 512 272 512c13.62 0 26.25-8.75 30.5-22.5l31.75-101c1.211-4.278 1.796-8.625 1.796-12.93c0-16.57-8.661-32.51-23.55-41.44l-61.13-36.12l31.25-78.38l20.25 41.5C310.9 277.4 327.9 288 345.1 288H400c17.62 0 32-14.38 32-32C432 238.3 417.6 224 400 224zM288 96c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48S261.5 96 288 96zM129.8 317.5L114.9 352H48c-17.62 0-32 14.38-32 32s14.38 32 32 32h77.5c19.25 0 36.5-11.5 44-29.12l8.875-20.5l-10.75-6.25C150.4 349.9 137.6 334.8 129.8 317.5z"/></svg>
-          <svg class="second-svg animate__backInLeft1" width="150px" height="200px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Pro 6.1.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path fill="#F0C932" d="M400 224h-44l-26.12-53.25c-12.5-25.5-35.38-44.25-61.75-51L197 98.63C189.5 96.84 181.1 95.97 174.5 95.97c-20.88 0-41.33 6.81-58.26 19.78L76.5 146.3C68.31 152.5 64.01 162 64.01 171.6c0 17.11 13.67 32.02 32.02 32.02c6.808 0 13.67-2.158 19.47-6.616l39.63-30.38c5.92-4.488 13.01-6.787 19.53-6.787c2.017 0 3.981 .2196 5.841 .6623l14.62 4.25l-37.5 87.5C154.1 260.3 152.5 268.8 152.5 277.2c0 22.09 11.49 43.52 31.51 55.29l85 50.13l-27.5 87.75c-.9875 3.174-1.458 6.388-1.458 9.55c0 13.65 8.757 26.31 22.46 30.58C265.6 511.5 268.9 512 272 512c13.62 0 26.25-8.75 30.5-22.5l31.75-101c1.211-4.278 1.796-8.625 1.796-12.93c0-16.57-8.661-32.51-23.55-41.44l-61.13-36.12l31.25-78.38l20.25 41.5C310.9 277.4 327.9 288 345.1 288H400c17.62 0 32-14.38 32-32C432 238.3 417.6 224 400 224zM288 96c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48S261.5 96 288 96zM129.8 317.5L114.9 352H48c-17.62 0-32 14.38-32 32s14.38 32 32 32h77.5c19.25 0 36.5-11.5 44-29.12l8.875-20.5l-10.75-6.25C150.4 349.9 137.6 334.8 129.8 317.5z"/></svg>
-          <svg class="third-svg animate__backInLeft2" width="150px" height="200px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Pro 6.1.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path fill="#F0C932" d="M400 224h-44l-26.12-53.25c-12.5-25.5-35.38-44.25-61.75-51L197 98.63C189.5 96.84 181.1 95.97 174.5 95.97c-20.88 0-41.33 6.81-58.26 19.78L76.5 146.3C68.31 152.5 64.01 162 64.01 171.6c0 17.11 13.67 32.02 32.02 32.02c6.808 0 13.67-2.158 19.47-6.616l39.63-30.38c5.92-4.488 13.01-6.787 19.53-6.787c2.017 0 3.981 .2196 5.841 .6623l14.62 4.25l-37.5 87.5C154.1 260.3 152.5 268.8 152.5 277.2c0 22.09 11.49 43.52 31.51 55.29l85 50.13l-27.5 87.75c-.9875 3.174-1.458 6.388-1.458 9.55c0 13.65 8.757 26.31 22.46 30.58C265.6 511.5 268.9 512 272 512c13.62 0 26.25-8.75 30.5-22.5l31.75-101c1.211-4.278 1.796-8.625 1.796-12.93c0-16.57-8.661-32.51-23.55-41.44l-61.13-36.12l31.25-78.38l20.25 41.5C310.9 277.4 327.9 288 345.1 288H400c17.62 0 32-14.38 32-32C432 238.3 417.6 224 400 224zM288 96c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48S261.5 96 288 96zM129.8 317.5L114.9 352H48c-17.62 0-32 14.38-32 32s14.38 32 32 32h77.5c19.25 0 36.5-11.5 44-29.12l8.875-20.5l-10.75-6.25C150.4 349.9 137.6 334.8 129.8 317.5z"/></svg>
-          <h5 class="game-sprint-title">Trains the skill of quick translation from English into Russian. <br> You need to choose whether the translation matches the suggested word.</h5>
-          <h5 class="game-sprint-title">you can select answers from keyboard right and left</h5>
+          <div>
+            <svg class="first-svg animate__backInLeft" width="150px" height="200px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Pro 6.1.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path fill="#F0C932" d="M400 224h-44l-26.12-53.25c-12.5-25.5-35.38-44.25-61.75-51L197 98.63C189.5 96.84 181.1 95.97 174.5 95.97c-20.88 0-41.33 6.81-58.26 19.78L76.5 146.3C68.31 152.5 64.01 162 64.01 171.6c0 17.11 13.67 32.02 32.02 32.02c6.808 0 13.67-2.158 19.47-6.616l39.63-30.38c5.92-4.488 13.01-6.787 19.53-6.787c2.017 0 3.981 .2196 5.841 .6623l14.62 4.25l-37.5 87.5C154.1 260.3 152.5 268.8 152.5 277.2c0 22.09 11.49 43.52 31.51 55.29l85 50.13l-27.5 87.75c-.9875 3.174-1.458 6.388-1.458 9.55c0 13.65 8.757 26.31 22.46 30.58C265.6 511.5 268.9 512 272 512c13.62 0 26.25-8.75 30.5-22.5l31.75-101c1.211-4.278 1.796-8.625 1.796-12.93c0-16.57-8.661-32.51-23.55-41.44l-61.13-36.12l31.25-78.38l20.25 41.5C310.9 277.4 327.9 288 345.1 288H400c17.62 0 32-14.38 32-32C432 238.3 417.6 224 400 224zM288 96c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48S261.5 96 288 96zM129.8 317.5L114.9 352H48c-17.62 0-32 14.38-32 32s14.38 32 32 32h77.5c19.25 0 36.5-11.5 44-29.12l8.875-20.5l-10.75-6.25C150.4 349.9 137.6 334.8 129.8 317.5z"/></svg>
+            <svg class="second-svg animate__backInLeft1" width="150px" height="200px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Pro 6.1.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path fill="#F0C932" d="M400 224h-44l-26.12-53.25c-12.5-25.5-35.38-44.25-61.75-51L197 98.63C189.5 96.84 181.1 95.97 174.5 95.97c-20.88 0-41.33 6.81-58.26 19.78L76.5 146.3C68.31 152.5 64.01 162 64.01 171.6c0 17.11 13.67 32.02 32.02 32.02c6.808 0 13.67-2.158 19.47-6.616l39.63-30.38c5.92-4.488 13.01-6.787 19.53-6.787c2.017 0 3.981 .2196 5.841 .6623l14.62 4.25l-37.5 87.5C154.1 260.3 152.5 268.8 152.5 277.2c0 22.09 11.49 43.52 31.51 55.29l85 50.13l-27.5 87.75c-.9875 3.174-1.458 6.388-1.458 9.55c0 13.65 8.757 26.31 22.46 30.58C265.6 511.5 268.9 512 272 512c13.62 0 26.25-8.75 30.5-22.5l31.75-101c1.211-4.278 1.796-8.625 1.796-12.93c0-16.57-8.661-32.51-23.55-41.44l-61.13-36.12l31.25-78.38l20.25 41.5C310.9 277.4 327.9 288 345.1 288H400c17.62 0 32-14.38 32-32C432 238.3 417.6 224 400 224zM288 96c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48S261.5 96 288 96zM129.8 317.5L114.9 352H48c-17.62 0-32 14.38-32 32s14.38 32 32 32h77.5c19.25 0 36.5-11.5 44-29.12l8.875-20.5l-10.75-6.25C150.4 349.9 137.6 334.8 129.8 317.5z"/></svg>
+            <svg class="third-svg animate__backInLeft2" width="150px" height="200px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Pro 6.1.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path fill="#F0C932" d="M400 224h-44l-26.12-53.25c-12.5-25.5-35.38-44.25-61.75-51L197 98.63C189.5 96.84 181.1 95.97 174.5 95.97c-20.88 0-41.33 6.81-58.26 19.78L76.5 146.3C68.31 152.5 64.01 162 64.01 171.6c0 17.11 13.67 32.02 32.02 32.02c6.808 0 13.67-2.158 19.47-6.616l39.63-30.38c5.92-4.488 13.01-6.787 19.53-6.787c2.017 0 3.981 .2196 5.841 .6623l14.62 4.25l-37.5 87.5C154.1 260.3 152.5 268.8 152.5 277.2c0 22.09 11.49 43.52 31.51 55.29l85 50.13l-27.5 87.75c-.9875 3.174-1.458 6.388-1.458 9.55c0 13.65 8.757 26.31 22.46 30.58C265.6 511.5 268.9 512 272 512c13.62 0 26.25-8.75 30.5-22.5l31.75-101c1.211-4.278 1.796-8.625 1.796-12.93c0-16.57-8.661-32.51-23.55-41.44l-61.13-36.12l31.25-78.38l20.25 41.5C310.9 277.4 327.9 288 345.1 288H400c17.62 0 32-14.38 32-32C432 238.3 417.6 224 400 224zM288 96c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48S261.5 96 288 96zM129.8 317.5L114.9 352H48c-17.62 0-32 14.38-32 32s14.38 32 32 32h77.5c19.25 0 36.5-11.5 44-29.12l8.875-20.5l-10.75-6.25C150.4 349.9 137.6 334.8 129.8 317.5z"/></svg>
+          </div>
+          <p class="game-sprint-title">You need to choose correct or wrong answer.</p>
+          <p class="game-sprint-title">You can select answers from the keyboard (right and left arrow buttons)</p>
         </div>
-        <h3 class="check-level-title">
-          What is level of game choose? 
-        </h3>
+        <h5 class="check-level-title">
+        Choose your level: 
+        </h5>
 
         <div class="btn-group" role="group" aria-label="Базовая группа переключателей радио">          
           
           
-          <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off">          
-          <label class="btn btn-outline-primary" for="btnradio1">A1</label>
+          <input type="radio" class="btn-check btn-sm sprint-lvl-btn" name="btnradio" id="btnradio1" autocomplete="off">          
+          <label class="btn btn-sm btn-outline-primary" for="btnradio1">A1</label>
           
-          <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off">          
-          <label class="btn btn-outline-primary" for="btnradio2">A2</label>
+          <input type="radio" class="btn-check btn-sm sprint-lvl-btn" name="btnradio" id="btnradio2" autocomplete="off">          
+          <label class="btn btn-sm btn-outline-primary" for="btnradio2">A2</label>
           
-          <input type="radio" class="btn-check" name="btnradio" id="btnradio3" autocomplete="off">
-          <label class="btn btn-outline-primary" for="btnradio3">B1</label>
+          <input type="radio" class="btn-check btn-sm sprint-lvl-btn" name="btnradio" id="btnradio3" autocomplete="off">
+          <label class="btn btn-sm btn-outline-primary" for="btnradio3">B1</label>
           
-          <input type="radio" class="btn-check" name="btnradio" id="btnradio4" autocomplete="off">
-          <label class="btn btn-outline-primary" for="btnradio4">B2</label>
+          <input type="radio" class="btn-check btn-sm sprint-lvl-btn" name="btnradio" id="btnradio4" autocomplete="off">
+          <label class="btn btn-sm btn-outline-primary" for="btnradio4">B2</label>
           
-          <input type="radio" class="btn-check" name="btnradio" id="btnradio5" autocomplete="off">
-          <label class="btn btn-outline-primary" for="btnradio5">C1</label>
+          <input type="radio" class="btn-check btn-sm sprint-lvl-btn" name="btnradio" id="btnradio5" autocomplete="off">
+          <label class="btn btn-sm btn-outline-primary" for="btnradio5">C1</label>
           
-          <input type="radio" class="btn-check" name="btnradio" id="btnradio6" autocomplete="off">
-          <label class="btn btn-outline-primary" for="btnradio6">C2</label>
+          <input type="radio" class="btn-check btn-sm sprint-lvl-btn" name="btnradio" id="btnradio6" autocomplete="off">
+          <label class="btn btn-sm btn-outline-primary" for="btnradio6">C2</label>
         </div>
         <button type="button" class="btn btn-primary start-game" disabled>Start</button>
       </div>
@@ -127,9 +123,9 @@ class Sprint extends Page {
        </div>
       <div class="modal-body">
         <table >
-          <h5 class="game-sprint-title">Correct</h5>
+          <h5 class="game-sprint-m-ctitle">Correct <span>0</span></h5>
           <thead>
-            <tr>
+            <tr class="thead-tr">
               <td>Sound</td>
               <td>English</td>
               <td>Russian</td>
@@ -155,9 +151,9 @@ class Sprint extends Page {
           </tbody>
         </table>
         <table >
-          <h5 class="game-sprint-title">Wrong</h5>
+          <h5 class="game-sprint-m-wtitle">Wrong <span>0</span> </h5>
           <thead>
-            <tr>
+            <tr  class="tbody-tr">
               <td>Sound</td>
               <td>English</td>
               <td>Russian</td>

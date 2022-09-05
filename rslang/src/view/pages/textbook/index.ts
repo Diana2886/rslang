@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/require-await */
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import TextbookModel from '../../../model/textbookModel';
 import Model, { baseURL } from '../../../model/components/index';
 import Page from '../../core/templates/page';
@@ -5,6 +7,7 @@ import PageIds from '../app/pageIds';
 import { difficultyColors, ISettingsOptional, IWord, LevelColors, Levels } from '../../../types/index';
 import Footer from '../../core/components/footer/index';
 import AudioGame from '../audioChallenge/audioChallenge';
+import SprintController from '../../../controller/sprint/sprint';
 
 class TextbookPage extends Page {
   static TextObject = {
@@ -184,13 +187,38 @@ class TextbookPage extends Page {
       </button>
       <ul class="dropdown-menu dropdown-menu-end">
         <li><a class="dropdown-item textbook__audio-challenge" href="#">Audio Challenge</a></li>
-        <li><a class="dropdown-item" href="#${PageIds.Sprint}">Sprint</a></li>
+        <li><a class="dropdown-item textbook__sprint-challenge" href="#${PageIds.Sprint}">Sprint</a></li>
       </ul>
     `;
     const gamesDropdown = document.createElement('div');
     gamesDropdown.classList.add('dropdown', 'textbook-tools__games');
     gamesDropdown.innerHTML = template;
     const audioBtn = gamesDropdown.querySelector('.textbook__audio-challenge');
+    const sprintBtn = gamesDropdown.querySelector('.textbook__sprint-challenge');
+
+    const spinnerBlock = document.createElement('div');
+    spinnerBlock.className = 'spinner-block-sprint';
+    spinnerBlock.innerHTML = `<div class="d-flex justify-content-center">
+    <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+  <span class="visually-hidden">Loading...</span>
+</div>
+  </div>`;
+    sprintBtn?.addEventListener('click', async (e) => {
+      const levelDrop = document.querySelector('#dropdownMenu2') as HTMLButtonElement;
+      const pageDrop = document.querySelector('#dropdownMenu3') as HTMLButtonElement;
+      const page = +pageDrop.outerText.split(' ')[1] - 1;
+      const level = levelDrop.outerText.split(' ')[1];
+      e.preventDefault();
+      window.location.hash = '#sprint-page';
+      const sprintGame = new SprintController();
+      setTimeout(async () => {
+        document.body.append(spinnerBlock);
+        const startBtn = document.querySelector('.start-game') as HTMLButtonElement;
+        await sprintGame.checkLevel(startBtn, level, page);
+        await sprintGame.pastWordToPlayGame(startBtn);
+        spinnerBlock.remove();
+      }, 1);
+    });
     audioBtn?.addEventListener('click', (e) => {
       e.preventDefault();
       window.location.hash = '#audioChallenge-page';

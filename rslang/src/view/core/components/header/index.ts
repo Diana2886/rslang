@@ -19,7 +19,7 @@ let navItems = [
     text: 'Statistics',
   },
   {
-    id: PageIds.LogIn,
+    id: 'logIn-page',
     text: 'Log in',
   },
 ];
@@ -46,6 +46,7 @@ class Header extends Component {
       navItems = navItems.map((item) => {
         if (item.id === PageIds.LogIn) {
           item.text = 'Log out';
+          item.id = 'logOut';
           return item;
         }
         return item;
@@ -84,7 +85,7 @@ class Header extends Component {
             </ul>
           </li>
         `;
-      } else if (item.id === PageIds.LogIn) {
+      } else if (item.id === 'logIn-page' || item.id === 'logOut') {
         template += `
         <li class="nav-item">
           <button type="button" class="btn btn-primary btn-${item.id}" data-page="${item.id}" id="login-page">${item.text}</button>
