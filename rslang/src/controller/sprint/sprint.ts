@@ -31,6 +31,8 @@ export default class SprintController {
 
   score: number;
 
+  textBookPage: boolean;
+
   timerID: NodeJS.Timer | undefined;
 
   static: Statistic;
@@ -51,6 +53,7 @@ export default class SprintController {
     this.score = 0;
     this.point = 10;
     this.counter = 0;
+    this.textBookPage = false;
   }
 
   // static timerID: undefined | NodeJS.Timer = undefined;
@@ -62,6 +65,7 @@ export default class SprintController {
       if (targ.classList.contains('sprint-lvl-btn')) {
         await this.checkLevel(targ);
       } else if (targ.classList.contains('start-game')) {
+        this.textBookPage = false;
         await this.pastWordToPlayGame(targ);
       } else if (targ.classList.contains('sprint-fuul_screan')) {
         this.fullScreen(targ);
@@ -85,7 +89,7 @@ export default class SprintController {
   filterUserWords = async () => {
     const serWods = await this.model.getUserWords();
     if (serWods === 0) {
-      return undefined;
+      return [];
     }
     return (serWods as IUserWord[])
       .filter((item) => item.difficulty === 'learned')
@@ -94,7 +98,12 @@ export default class SprintController {
 
   async checkLevel(elem: HTMLElement | number, levels?: string, pages?: number) {
     if (typeof elem === 'number') {
+      if (this.textBookPage) {
+        const userWords = await this.filterUserWords();
+        this.wordsArray = await this.filterWords(elem, this.level, userWords);
+      }
       this.wordsArray = await Model.getWords(elem, this.level);
+      return;
     } else {
       this.counter = 0;
       this.point = 10;
@@ -122,7 +131,13 @@ export default class SprintController {
         lvl = lvl![lvl!.length - 1];
         this.level = +lvl - 1;
       }
-      this.wordsArray = await Model.getWords(this.page, this.level);
+      if (this.checkLogIn() && levels !== undefined) {
+        this.textBookPage = true;
+        const userWords = await this.filterUserWords();
+        this.wordsArray = await this.filterWords(this.page, this.level, userWords);
+      } else {
+        this.wordsArray = await Model.getWords(this.page, this.level);
+      }
 
       const startBtn = elem.parentElement?.nextElementSibling as HTMLButtonElement;
       if (startBtn) {
@@ -133,6 +148,9 @@ export default class SprintController {
 
   filterWords = async (page: number, lvl: number, arr: string[]): Promise<IWord[]> => {
     const words = await Model.getWords(page, lvl);
+    if (arr.length === 0) {
+      return words;
+    }
     const newWords = words.filter((item: IWord) => !arr.includes(item.id));
     if (newWords.length === 1) {
       this.page = page + 1;
@@ -149,6 +167,7 @@ export default class SprintController {
       if (counterTime === 0) {
         clearInterval(this.timerID);
         this.modalActive();
+        this.textBookPage = false;
         // if (this.checkLogIn()) {
         //   // this.sendResultToStatic();
         // }
@@ -285,12 +304,12 @@ export default class SprintController {
     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     if (result === 'correct') {
       if (this.checkLogIn()) {
-        await this.static.writeWordStat('sprint', engWord, true);
+        this.static.writeWordStat('sprint', engWord, true).catch((err) => console.warn(err));
       }
       this.correctWords.push(engWord);
     } else {
       if (this.checkLogIn()) {
-        await this.static.writeWordStat('sprint', engWord, false);
+        this.static.writeWordStat('sprint', engWord, false).catch((err) => console.warn(err));
       }
       this.wrongWords.push(engWord);
     }
