@@ -151,7 +151,7 @@ export default class SprintController {
       return words;
     }
     const newWords = words.filter((item: IWord) => !arr.includes(item.id));
-    if (newWords.length === 1) {
+    if (newWords.length === 0) {
       this.page = page + 1;
       return this.filterWords(page + 1, lvl, arr);
     }
@@ -160,7 +160,7 @@ export default class SprintController {
 
   sprintTimer() {
     const sprintTimer = document.querySelector('.sprint-timer span') as HTMLElement;
-    let counterTime = 10;
+    let counterTime = 60;
     SprintController.timerID = setInterval(() => {
       counterTime -= 1;
       if (counterTime === 0) {
@@ -274,13 +274,6 @@ export default class SprintController {
     const englishWord = taskBlock.children[1] as HTMLElement;
     const russiaWord = taskBlock.children[2] as HTMLElement;
 
-    if (this.count === this.len - 1) {
-      // this.modalActive();
-      this.count = 0;
-      this.page += 1;
-      await this.checkLevel(this.page);
-      this.wordArrayFill();
-    }
     const rusWord = this.rusWords[this.count];
     const engWord = this.engWords[this.count];
 
@@ -304,7 +297,13 @@ export default class SprintController {
     this.pastEffect(result);
     this.pastAudioEffect(result);
     this.count += 1;
-
+    if (this.count === this.len || this.len === 0) {
+      // this.modalActive();
+      this.count = 0;
+      this.page += 1;
+      await this.checkLevel(this.page);
+      this.wordArrayFill();
+    }
     setTimeout(() => this.removeEffect(), 100);
 
     const forAudio = this.engWords[this.count];
@@ -340,16 +339,6 @@ export default class SprintController {
     const arr = array.sort(() => Math.random() - 0.5);
     return arr;
   }
-
-  // fullScreen(elem: HTMLElement) {
-  //   elem.addEventListener('click', async () => {
-  //     if (document.fullscreenElement === null) {
-  //       await document.documentElement.requestFullscreen();
-  //     } else {
-  //       await document.exitFullscreen();
-  //     }
-  //   });
-  // }
 
   modalActive() {
     const modalBG = document.querySelector('.modal-bg') as HTMLElement;
