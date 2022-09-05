@@ -40,18 +40,21 @@ class MainPage extends Page {
         role: 'Team leader, <br>Frontend developer',
         text: 'Made basic project settings, layout of the main page and the Textbook',
         img: './assets/img/diana.jpg',
+        github: 'https://github.com/Diana2886/',
       },
       {
         name: 'Aibek Kenzhebayev',
         role: 'Frontend developer',
         text: 'Made API connection settings, the Audio Challenge game and statistics page',
         img: './assets/img/aibek.jpg',
+        github: 'https://https://github.com/aibekken/',
       },
       {
         name: 'Sanjar Tukhtamishev',
         role: 'Frontend developer',
         text: 'Developed authorization and the Sprint game',
         img: './assets/img/sanjar.jpg',
+        github: 'https://https://github.com/sthm23/',
       },
     ],
   };
@@ -158,7 +161,13 @@ class MainPage extends Page {
       const devText = document.createElement('p');
       devText.classList.add('dev__text');
       devText.innerText = item.text;
-      devItem.append(imgNameContainer, devText);
+      const githubLink = document.createElement('a');
+      githubLink.classList.add('github__link');
+      githubLink.href = item.github;
+      const githubIcon = document.createElement('div');
+      githubIcon.classList.add('github__icon');
+      githubLink.append(githubIcon);
+      devItem.append(imgNameContainer, devText, githubLink);
       devItemsContainer.append(devItem);
     });
     pageWrapper.append(devTitle, devItemsContainer);

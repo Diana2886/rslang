@@ -224,7 +224,7 @@ class TextbookPage extends Page {
       window.location.hash = '#audioChallenge-page';
       const audioGame = new AudioGame(new Model());
       const title = 'Audio Challenge';
-      const description = 'Listen these words and choose the correct translation';
+      const description = 'Listen to the words and choose the correct translation';
 
       const { modal, buttonStart } = this.renderModalAudio(title, description);
 
