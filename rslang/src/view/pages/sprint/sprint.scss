@@ -33,13 +33,7 @@
 .start-game{
   margin-top: 15px;
 }
-// .sprint-fuul_screan{
-//   cursor: pointer;
-//   background: url('./assets/svg/full-screen.png') no-repeat;
-//   height: 25px;
-//   width: 25px;
-//   background-size: cover;
-// }
+
 .btn-close{
   justify-self: flex-end;
 }
@@ -63,7 +57,7 @@
     padding: 18px;
 
   margin: 0 auto;
-  padding: 10px;
+  padding: 1.5rem;
   width: 500px;
   // display: flex;
   flex-direction: column;
@@ -116,11 +110,10 @@
     align-items: flex-start;
   }
   & :nth-child(1) {
-    width: 25%;
+    width: 20%;
   }
 
 }
-
 
 .word-sound{
   display: flex;
@@ -168,17 +161,7 @@
 .check-level-title{
   text-align: left;
 }
-// .thead-tr, .tbody-tr {
-//   display: flex;
-//   align-items: center;
-//   justify-content: space-between;
-// }
 
-// .table-tr{
-//   display: flex;
-//   align-items:center;
-//   justify-content: flex-start;
-// }
 @keyframes zoomIn {
   from {
     opacity: 0;
@@ -229,11 +212,14 @@
 .modal-wrapper{
   background: #fff;
   border-radius: 0.5rem;
-  width: 400px;
+  width: 80%;
   height: 500px;
+  min-width: 310px;
+  max-width: 600px;
   position: absolute;
-  top: 10%;
-  left: 35%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   display: none;
   flex-direction: column;
   align-items: center;
@@ -248,8 +234,9 @@
   width: 100%;
   border-top: 1px solid #dee2e6;
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
   align-items:center;
+  gap: 2rem;
 }
 .modal-header{
   padding: 5px;
@@ -296,7 +283,8 @@
   flex-grow: 1;
 }
 .answers-table-parent{
-  width: 90%;
+  width: 100%;
+  margin-bottom: 1rem;
 }
 .game-sprint-m-ctitle{
   color: #198754;
@@ -319,19 +307,9 @@
   }
 }
 
-
-@media (max-width: 768px) {
-  .modal-wrapper{
-    left: 20%;
-  }
-}
 @media (max-width: 650px) {
   .third-svg{
     display: none;
-  }
-  .modal-wrapper{
-    left: 15%;
-    width: 300px;
   }
 }
 @media (max-width: 530px) {
@@ -346,13 +324,7 @@
   .first-svg{
     display: none;
   }
-  .modal-wrapper{
-    left: 5%;
-    top:5%;
-    width: 300px;
-  }
 }
-
 
 @-webkit-keyframes backInLeft {
   0% {
@@ -409,7 +381,6 @@
   animation-duration: 1s;
   animation-delay: 1s;
 }
-
 
 .spinner-block-sprint {
   position: absolute;
