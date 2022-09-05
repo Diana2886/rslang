@@ -122,7 +122,7 @@ class Sprint extends Page {
         <h5 class="modal-title" id="exampleModalLabel">Your result</h5>
        </div>
       <div class="modal-body">
-        <table >
+        <table class="answers-table-parent">
           <h5 class="game-sprint-m-ctitle">Correct <span>0</span></h5>
           <thead>
             <tr class="thead-tr">
@@ -131,7 +131,7 @@ class Sprint extends Page {
               <td>Russian</td>
             </tr>
           </thead>
-          <tbody class="correct-answer">
+          <tbody class="answers-table correct-answer">
             <tr>
               <td>
                 <svg enable-background="new 0 0 91 91" height="25px" id="word-sound" version="1.1" viewBox="0 0 91 91"
@@ -150,16 +150,16 @@ class Sprint extends Page {
             </tr>
           </tbody>
         </table>
-        <table >
+        <table class="answers-table-parent">
           <h5 class="game-sprint-m-wtitle">Wrong <span>0</span> </h5>
           <thead>
-            <tr  class="tbody-tr">
+            <tr  class="thead-tr">
               <td>Sound</td>
               <td>English</td>
               <td>Russian</td>
             </tr>
           </thead>
-          <tbody class="wrong-answer">
+          <tbody class="answers-table wrong-answer">
             <tr>
               <td>
                 <svg enable-background="new 0 0 91 91" height="25px" id="word-sound" version="1.1" viewBox="0 0 91 91"
