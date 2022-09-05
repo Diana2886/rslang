@@ -1,3 +1,4 @@
+import { baseURL } from '../../../model/components/index';
 import { IWord } from '../../../types/index';
 
 export default class AudioResult {
@@ -8,7 +9,7 @@ export default class AudioResult {
     result.append(resultBody);
     resultBody.className = 'result__body';
     const correctTitle = document.createElement('h5');
-    correctTitle.textContent = 'Correct answers:';
+    correctTitle.innerHTML = `Correct <span class="result__correct-count">${corrects.length}</span>`;
     const correctList = document.createElement('ul');
     correctList.append(correctTitle);
     correctList.className = 'result__list result__list_correct';
@@ -17,7 +18,7 @@ export default class AudioResult {
     const wrongList = document.createElement('ul');
     wrongList.className = 'result__list result__list_wrong';
     const wrongTitle = document.createElement('h5');
-    wrongTitle.textContent = 'Wrong answers:';
+    wrongTitle.innerHTML = `Wrong <span class="result__wrong-count">${wrongs.length}</span>`;
     wrongList.append(wrongTitle);
     this.drawList(wrongs, wrongList);
     result.append(this.drawReStart());
@@ -30,7 +31,7 @@ export default class AudioResult {
       const point = document.createElement('li');
       const imgAudio = document.createElement('img');
       const audioRes = document.createElement('audio');
-      audioRes.src = `http://localhost:3000/${element.audio}`;
+      audioRes.src = `${baseURL}/${element.audio}`;
       imgAudio.src = 'assets/svg/compact-cassette.svg';
       imgAudio.addEventListener('click', () => {
         audioRes.play().catch((err) => console.warn(err));
