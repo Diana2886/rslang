@@ -1,5 +1,5 @@
 import Statistic from '../../../controller/statistics/index';
-import Model from '../../../model/components/index';
+import Model, { baseURL } from '../../../model/components/index';
 import { GameData, IUserWord, IWord } from '../../../types/index';
 import AudioResult from './results';
 
@@ -119,7 +119,7 @@ export default class AudioGame {
     const example = this.data[this.index];
     this.image.className = 'cassette-big';
     this.image.src = 'assets/svg/compact-cassette.svg';
-    this.audio.src = `http://localhost:3000/${example.word.audio}`;
+    this.audio.src = `${baseURL}/${example.word.audio}`;
     this.audio.autoplay = true;
     this.signal.volume = 0.3;
     const variantsBtns = document.createElement('div');
@@ -138,6 +138,8 @@ export default class AudioGame {
         'click',
         () => {
           const btns = variantsBtns.querySelectorAll('button');
+          this.image.src = '';
+          this.image.src = `${baseURL}/${example.word.image}`;
           btns.forEach((button) => {
             button.disabled = true;
           });
@@ -156,8 +158,9 @@ export default class AudioGame {
           if (typeof userWords === 'object') {
             this.stat.writeWordStat('audio', example.word, answers).catch((err) => console.warn(err));
           }
-          this.image.src = `http://localhost:3000/${example.word.image}`;
-          this.text.innerHTML = `${example.word.word} <p>${example.word.wordTranslate}</p>`;
+          setTimeout(() => {
+            this.text.innerHTML = `${example.word.word} <p>${example.word.wordTranslate}</p>`;
+          }, 400);
         },
         { once: true }
       );
