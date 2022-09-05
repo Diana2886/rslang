@@ -1,0 +1,163 @@
+.modal-loginPage-box{
+  position: absolute;
+  left: 37%;
+  top: 24%;
+  
+}
+
+.body-act{
+  overflow: hidden;
+}
+.login-block{
+  display: grid;
+}
+.login-wrapper{
+  width: 400px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.login-modal, .register-modal{
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  background: white;
+  width: 400px;
+  margin: 0 auto;
+  align-items: stretch;
+  padding: 18px;
+  border-radius: 8px;
+}
+.close-modal{
+  align-self: flex-end;
+}
+.createUser{
+  width: 180px;
+}
+.modal-active{
+  display: flex;
+  position: relative;
+  z-index: 2;
+}
+.back-login{
+  width: 150px;
+}
+.login-btn-box{
+  margin-bottom: 0px;
+  margin-top: 24px;
+}
+.black-bg{
+  display: block;
+  position: fixed;
+  height: 100vh;
+  width: 100vw;
+  top: 0;
+  left: 0;
+  background: rgb(0, 0, 0, 0.7);
+  z-index: 1;
+}
+#error-alert {
+  position: absolute;
+  bottom: 138px;
+  right: 10px;
+}
+#error-alert div{
+  width: 227px;
+  height: 30px;
+  padding: 3px;
+  margin: 0;
+  font-size: 12px;
+  line-height: 24px;
+  margin-top: 3px;
+}
+#error-alert2{
+  position: absolute;
+  left: 6px;
+  margin: 0;
+  padding: 0;
+}
+
+
+@-webkit-keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+.fadeIn {
+  -webkit-animation-name: fadeIn;
+  animation-name: fadeIn;
+  animation-duration: 0.5s;
+}
+
+@keyframes zoomIn {
+  from {
+    opacity: 0;
+    -webkit-transform: scale3d(0.3, 0.3, 0.3);
+    transform: scale3d(0.3, 0.3, 0.3);
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+@-webkit-keyframes zoomIn {
+  from {
+    opacity: 0;
+    -webkit-transform: scale3d(0.3, 0.3, 0.3);
+    transform: scale3d(0.3, 0.3, 0.3);
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+.zoomIn {
+  -webkit-animation-name: zoomIn;
+  animation-name: zoomIn;
+  animation-duration: 0.7s;
+}
+
+@media (max-width:950px) {
+  .modal-loginPage-box{
+    left: 28%;
+  }    
+}
+@media (max-width:768px) {
+  .modal-loginPage-box{
+    left: 20%;
+  }    
+}
+@media (max-width:550px) {
+  .modal-loginPage-box{
+    left: 12%;
+  }    
+}
+@media (max-width:500px) {
+  .modal-loginPage-box{
+    left: 5%;
+    top: 10%;
+  }    
+  .login-modal, .register-modal{
+    width: 300px;
+  }
+}
+@media (max-width:400px) {
+  .modal-loginPage-box{
+    left: 2%;
+  }    
+}

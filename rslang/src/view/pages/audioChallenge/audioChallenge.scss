@@ -1,0 +1,255 @@
+#current-page {
+  width: 100%;
+  min-height: 100%;
+}
+.audio-call {
+  &__body {
+    display: flex;
+    margin: 20px 0 0 0;
+    height: 100%;
+    font-weight: 700;
+  }
+  &__image {
+    width:40%;
+    min-width: 250px;
+    margin: 0 auto 30px;
+    img{
+      border-radius: 25px;
+      box-shadow: 0 0 5px #000;
+      width: 100%;
+    }
+  }
+  &__level-choose {
+    height: 100%;
+    margin: 0 0 30px 0;
+  }
+
+  &__choose-btn{
+    margin: 5px;
+    width: auto;
+    &:disabled {
+      opacity: 1;
+    }
+    &.correct{
+      background: #198754; 
+    }
+    &.wrong{
+      background: #dc3545;
+}
+}
+&__signal{
+  cursor: pointer;
+  display: inline-block;
+  height: 30px;
+  width: 30px;
+  line-height: 42px;
+  margin-left: 5px;
+
+  img{
+    border-radius: 5px;
+  }
+ }
+}
+
+.container {
+  height: 100%;
+}
+
+.variants__btns{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.disabled{
+  pointer-events: none;
+}
+
+.play-image {
+  cursor: pointer;
+  position: relative;
+  animation: scale 0.5s;
+  width: 200px;
+  height: 100px;
+  text-align: center;
+  margin: 0 auto 35px auto;
+  .cassette-icon{
+    position: absolute;
+    display: inline-block;
+    width: 30px;
+    top: 50%;
+    left: 50%;
+    visibility: hidden;
+    opacity: 0;
+    transition: all 0.3s ease;
+  }
+  img {
+    width: 100%;
+  }
+
+  &.showed {
+    font-size: 18px;
+    @media (max-height: 500px) {
+      font-size: 14px;
+    }
+    .cassette-big {
+      max-height: 120px;
+      border-radius: 10px;
+      box-shadow: 0 0 3px #000;
+      animation: rotate 0.5s;
+    }
+    p {
+      font-size: 14px;
+      color:rgba(0, 0, 0, 0.466);
+      font-weight: 400;
+    }
+
+    .cassette-icon {
+      cursor: pointer;
+      top: 4px;
+      left: 4px;
+      border-radius: 0;
+      display: block;
+      visibility: visible;
+      opacity: 1;
+    }
+  }
+}
+.game-body {
+  display: flex;
+  min-height: 80vh;
+  justify-content: space-evenly;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 auto 20px;
+  animation: scale 0.5s;
+  .wrong{
+    box-shadow: 0 0 5px #dc3545;
+  }
+}
+
+@media (max-height: 500px) {
+  .game-body {
+  justify-content: space-between;
+  min-height: 455px;
+  }
+}
+
+.greetBlock {
+  animation: scale 0.5s;
+  display: flex;
+  min-height: 60vh;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 auto;
+  .spinner-block{
+    margin: auto 0;
+  }
+}
+
+.game-start__btn.disabled {
+  button {
+    background: rgb(180, 193, 216);
+  }
+}
+
+
+
+.result{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #ffff;
+  box-shadow: 0 0 3px #000;
+  border-radius: 5px;
+  padding: 10px;
+  margin: 50px 0;
+  animation: scale 0.5s;
+  li span {
+    
+    &:last-child {
+      color: rgba(92, 89, 89, 0.486);
+    }
+    font-weight: 700;
+    color: #000;
+  
+  }
+  &__correct-count{
+    background: #198754;
+    color: white;
+    padding: 0px 7px;
+    border-radius: 9px;
+  }
+  &__wrong-count{
+    background: #dc3545;
+    color: white;
+    padding: 0px 7px;
+    border-radius: 9px;
+  } 
+  &__body{
+    display: flex;
+    flex-wrap: wrap;
+  }
+  &__list {
+    padding-left: 5px;
+    margin-right: 15px;
+    h5 {
+      font-weight: 700;
+      color: #dc3545;
+    }
+
+    li{
+      list-style: none;
+      img {
+        display: inline-block;
+        width: 30px;
+        margin-right: 5px;
+      }
+      margin: 0 0 10px 0;
+    }
+    &_correct{
+      h5 {
+        font-weight: 700;
+        color: #198754;
+      }
+    }
+  }
+
+  &__restart-btn{
+    display:inline-block;
+    margin: 0 auto;
+  }
+}
+
+@keyframes scale {
+  0%{
+    transform: scale(0);
+  }
+  100%{
+    transform: scale(1);
+  }
+}
+
+@keyframes rotate {
+  0%{
+    transform: rotate3d(0, 1, 0, 90deg);
+  }
+  100%{
+    transform: rotate3d(0, 1, 0, 0deg);
+  }
+}
+
+.audio-call__modal {
+  h4 {
+    font-weight: 700;
+  }
+  p {
+    font-weight: 400;
+  }
+  margin: 30px 0 0 0;
+  text-align: center;
+  padding: 10px;
+  background: #fff;
+  box-shadow: 0 0 2px #000;
+  border-radius: 5px;
+}

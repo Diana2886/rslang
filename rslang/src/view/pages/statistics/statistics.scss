@@ -1,0 +1,75 @@
+
+.statistic {
+  max-width: 1000px;
+  min-height: 100vh;
+  padding: 50px 0;
+  margin: 0 auto;
+  .spinner-block{
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    justify-content: center;
+    height: 70vh;
+  }
+  h3 {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  &__body {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 50px;
+    gap: 2rem;
+  }
+  &__games-block{
+    flex: 1 1 62%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 2rem;
+  }
+  &__info {
+    
+  }
+}
+.day-sprint,
+.day-audio,
+.day-common{
+  min-width: 300px;
+  background: #fff;
+  animation: scale 0.5s;
+  H5{
+    color: #000000;
+    font-weight: 700;
+  }
+  span {
+    font-weight: 600;
+  }
+  p{
+    margin-bottom: 0.5rem;
+  }
+  padding: 1rem;
+  box-shadow: 0px 8px 8px rgb(0 0 0 / 10%);
+  transition: all 0.5 ease;
+  &:hover {
+    box-shadow: 0px 8px 8px rgb(0 0 0 / 30%);
+  }
+}
+
+.day-common{
+ flex: 1 1 31%;
+}
+
+.day-audio{
+  flex: 1 1 31%;
+}
+
+.day-sprint{
+  flex: 1 1 31%;
+}
+
+.chart {
+  min-width: 300px;
+  margin: 0 auto;
+}

@@ -1,2 +1,2 @@
 # RS-Lang
-The final RSSchool project 
+The final RSSchool project
