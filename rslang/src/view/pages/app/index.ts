@@ -7,6 +7,7 @@ import ErrorPage, { ErrorTypes } from '../error/index';
 import TextbookPage from '../textbook/index';
 import AudioChallenge from '../audioChallenge/index';
 import Sprint from '../sprint/index';
+import SprintController from '../../../controller/sprint/sprint';
 
 class AppView {
   private static container: HTMLElement = document.createElement('div');
@@ -59,6 +60,7 @@ class AppView {
 
     window.addEventListener('hashchange', () => {
       cont.nextElementSibling?.remove();
+      clearInterval(SprintController.timerID);
       const hash = window.location.hash.slice(1);
       AppView.renderNewPage(hash);
     });
