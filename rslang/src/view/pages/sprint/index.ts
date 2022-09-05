@@ -153,7 +153,7 @@ class Sprint extends Page {
         <table class="answers-table-parent">
           <h5 class="game-sprint-m-wtitle">Wrong <span>0</span> </h5>
           <thead>
-            <tr  class="tbody-tr">
+            <tr  class="thead-tr">
               <td>Sound</td>
               <td>English</td>
               <td>Russian</td>

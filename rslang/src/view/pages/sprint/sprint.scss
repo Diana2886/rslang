@@ -110,21 +110,17 @@
   display: flex;
   justify-content: space-around;
 }
-
-.thead-tr,
-.table-tr {
+.thead-tr{
   td {
     width: 40%;
     align-items: flex-start;
   }
-}
-.thead-tr:first-child,
-.table-tr:first-child {
-  td {
-    width: 20%;
-    align-items: flex-start;
+  & :nth-child(1) {
+    width: 25%;
   }
+
 }
+
 
 .word-sound{
   display: flex;
