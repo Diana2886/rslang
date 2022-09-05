@@ -46,14 +46,14 @@ class TextbookPage extends Page {
       wordContainer.classList.add('word__container');
       wordContainer.id = `word-id-${TextbookModel.getWordId(item)}`;
       wordContainer.style.boxShadow = `0px 8px 8px ${LevelColors[item.group]}30`;
-      if (typeof TextbookModel.userWords === 'object') {
-        TextbookModel.userWords.forEach((el) => {
-          if (el.wordId === item.id) {
-            wordContainer.style.backgroundColor = difficultyColors[el.difficulty as string];
-          }
-        });
-      }
       (async () => {
+        if ((await this.model.checkAuth()) && typeof TextbookModel.userWords === 'object') {
+          TextbookModel.userWords.forEach((el) => {
+            if (el.wordId === item.id) {
+              wordContainer.style.backgroundColor = difficultyColors[el.difficulty as string];
+            }
+          });
+        }
         allGamesStatistics = (await this.textbookModel.getStatisticsForTextbookWord(item.id)).allGames;
         correctAnswersStatistics = (await this.textbookModel.getStatisticsForTextbookWord(item.id)).correctAnswers;
         const incorrectAnswers = allGamesStatistics - correctAnswersStatistics;

@@ -39,6 +39,7 @@ class TextbookController {
       wordsWrapper.append(spinnerBlock);
       TextbookModel.words = await Model.getWords(TextbookModel.page, TextbookModel.group);
       await this.textbookModel.getDifficultWords();
+      if (TextbookModel.isDifficultWordsGroup) await this.textbookModel.setDifficultWordsPage();
       wordsWrapper.innerHTML = '';
       wordsWrapper.append(
         await this.textbookPage.renderWords(wordsType === 'words' ? TextbookModel.words : TextbookModel.difficultWords)
@@ -141,6 +142,7 @@ class TextbookController {
     document.body.addEventListener('click', (e) => {
       const target = e.target as HTMLElement;
       if (target.classList.contains('btn-difficult-words')) {
+        TextbookModel.isDifficultWordsGroup = true;
         (async () => {
           await this.rerenderWords('difficultWords');
           this.textbookModel.resetPageStyles();
