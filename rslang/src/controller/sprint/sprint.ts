@@ -95,14 +95,8 @@ export default class SprintController {
   };
 
   async checkLevel(elem: HTMLElement | number, levels?: string, pages?: number) {
-    const userWods: string[] | undefined = await this.filterUserWords();
-    console.log(this.timerID);
     if (typeof elem === 'number') {
-      if (!userWods) {
-        this.wordsArray = await Model.getWords(elem, this.level);
-      } else {
-        this.wordsArray = await this.filterWords(this.page, this.level, userWods);
-      }
+      this.wordsArray = await Model.getWords(elem, this.level);
     } else {
       this.counter = 0;
       this.point = 10;
@@ -112,6 +106,7 @@ export default class SprintController {
         lvl = elem.id;
       } else {
         lvl = levels;
+        this.page = pages!;
       }
       if (lvl === 'A1') {
         this.level = 0;
@@ -129,12 +124,7 @@ export default class SprintController {
         lvl = lvl![lvl!.length - 1];
         this.level = +lvl - 1;
       }
-
-      if (!userWods) {
-        this.wordsArray = await Model.getWords(this.page, this.level);
-      } else {
-        this.wordsArray = await this.filterWords(this.page, this.level, userWods);
-      }
+      this.wordsArray = await Model.getWords(this.page, this.level);
 
       const startBtn = elem.parentElement?.nextElementSibling as HTMLButtonElement;
       if (startBtn) {
@@ -161,9 +151,9 @@ export default class SprintController {
       if (counterTime === 0) {
         clearInterval(this.timerID);
         this.modalActive();
-        if (this.checkLogIn()) {
-          // this.sendResultToStatic();
-        }
+        // if (this.checkLogIn()) {
+        //   // this.sendResultToStatic();
+        // }
         this.wrongWords = [];
         this.correctWords = [];
       }
@@ -181,14 +171,14 @@ export default class SprintController {
     return false;
   }
 
-  sendResultToStatic() {
-    this.wrongWords.forEach(async (item) => {
-      const res = await this.static.writeWordStat('sprint', item, false);
-    });
-    this.correctWords.forEach(async (item) => {
-      const res = await this.static.writeWordStat('sprint', item, true);
-    });
-  }
+  // sendResultToStatic() {
+  //   this.wrongWords.forEach(async (item) => {
+  //     const res = await this.static.writeWordStat('sprint', item, false);
+  //   });
+  //   this.correctWords.forEach(async (item) => {
+  //     const res = await this.static.writeWordStat('sprint', item, true);
+  //   });
+  // }
 
   countScore(str: string) {
     const scoreBlock = document.querySelector('.sprint-point') as HTMLElement;
@@ -219,6 +209,15 @@ export default class SprintController {
     }
   }
 
+  wordArrayFill() {
+    this.len = this.wordsArray.length;
+    this.engWords = this.shuffleArray(this.wordsArray);
+    this.rusWords = this.engWords.map((item, ind, arr) => {
+      const random = Math.floor(Math.random() * 3) + ind;
+      return arr[random] === undefined ? item : arr[random];
+    });
+  }
+
   async pastWordToPlayGame(elem?: HTMLElement) {
     this.sprintTimer();
     const parent = elem!.parentElement;
@@ -231,12 +230,7 @@ export default class SprintController {
     const taskBlock = document.querySelector('.task-block') as HTMLElement;
     const englishWord = taskBlock.children[1] as HTMLElement;
     const russiaWord = taskBlock.children[2] as HTMLElement;
-    this.len = this.wordsArray.length;
-    this.engWords = this.shuffleArray(this.wordsArray);
-    this.rusWords = this.engWords.map((item, ind, arr) => {
-      const random = Math.floor(Math.random() * 3) + ind;
-      return arr[random] === undefined ? item : arr[random];
-    });
+    this.wordArrayFill();
     englishWord.innerHTML = this.engWords[this.count].word;
     russiaWord.innerHTML = this.rusWords[this.count].wordTranslate;
     audioTag.src = `${baseUrl}/${this.engWords[this.count].audio}`;
@@ -281,11 +275,7 @@ export default class SprintController {
       this.count = 0;
       this.page += 1;
       await this.checkLevel(this.page);
-      this.engWords = this.shuffleArray(this.wordsArray);
-      this.rusWords = this.engWords.map((item, ind, arr) => {
-        const random = Math.floor(Math.random() * 3) + ind;
-        return arr[random] === undefined ? item : arr[random];
-      });
+      this.wordArrayFill();
     }
     const rusWord = this.rusWords[this.count];
     const engWord = this.engWords[this.count];
@@ -296,10 +286,14 @@ export default class SprintController {
     const result = this.checkAnswerWord(engWord.word, rusWord.word, e);
     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     if (result === 'correct') {
-      await this.static.writeWordStat('sprint', engWord, true);
+      if (this.checkLogIn()) {
+        await this.static.writeWordStat('sprint', engWord, true);
+      }
       this.correctWords.push(engWord);
     } else {
-      await this.static.writeWordStat('sprint', engWord, false);
+      if (this.checkLogIn()) {
+        await this.static.writeWordStat('sprint', engWord, false);
+      }
       this.wrongWords.push(engWord);
     }
     this.countScore(result);

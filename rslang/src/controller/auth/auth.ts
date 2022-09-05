@@ -23,14 +23,16 @@ class AuthController {
     const container = document.querySelector('.container') as HTMLElement;
     container.addEventListener('click', (e) => {
       const targ = e.target as HTMLElement;
-      if (targ.dataset.page === PageIds.LogIn) {
+      if (targ.dataset.page === 'logIn-page') {
+        const modal = LogInPage.authModal();
+        container.after(modal);
+        this.loginPage(modal, targ);
+      } else if (targ.dataset.page === 'logOut') {
         targ.innerHTML = 'Log in';
         localStorage.removeItem('sthmPasMail');
         localStorage.removeItem('newUserDataRSlang');
         localStorage.removeItem('authDataRSlang');
-        const modal = LogInPage.authModal();
-        container.after(modal);
-        this.loginPage(modal, targ);
+        window.location.reload();
       }
     });
   }
@@ -143,6 +145,7 @@ class AuthController {
         case Result.success:
           await this.model.signIn({ email: obj.email, password: obj.password });
           elem.innerHTML = 'Log out';
+          window.location.reload();
           this.closeModal();
           break;
         case Result.exist_email:
@@ -186,9 +189,8 @@ class AuthController {
     if (this.EMAIL_REGEXP.test(obj.email) && obj.password.length >= 8) {
       const resStatus = await this.model.signIn(obj);
       if (resStatus === 200) {
-        console.log(elem);
-
         elem.innerHTML = 'Log out';
+        window.location.reload();
         this.closeModal();
       } else if (alertPlaceholder.children.length === 0) {
         AuthController.alert2(alertPlaceholder, 'Account not found', 'danger');
