@@ -1,10 +1,8 @@
 /* eslint-disable no-dupe-else-if */
 /* eslint-disable @typescript-eslint/no-misused-promises */
-import Model from '../../model/components/index';
+import Model, { baseURL } from '../../model/components/index';
 import { IUserWord, IWord } from '../../types/index';
 import Statistic from '../statistics/index';
-
-const baseUrl = 'http://localhost:3000';
 
 export default class SprintController {
   model: Model;
@@ -233,7 +231,7 @@ export default class SprintController {
     this.wordArrayFill();
     englishWord.innerHTML = this.engWords[this.count].word;
     russiaWord.innerHTML = this.rusWords[this.count].wordTranslate;
-    audioTag.src = `${baseUrl}/${this.engWords[this.count].audio}`;
+    audioTag.src = `${baseURL}/${this.engWords[this.count].audio}`;
     await this.nextWord('start');
     window.addEventListener('keyup', this.arrow);
     correctBtn.addEventListener('click', this.nextWord);
@@ -304,7 +302,7 @@ export default class SprintController {
 
     const forAudio = this.engWords[this.count];
     soundWord.src = '';
-    soundWord.src = `${baseUrl}/${forAudio.audio}`;
+    soundWord.src = `${baseURL}/${forAudio.audio}`;
     englishWord.innerHTML = this.engWords[this.count].word;
     russiaWord.innerHTML = this.rusWords[this.count].wordTranslate;
   };
@@ -352,7 +350,7 @@ export default class SprintController {
       const { id } = this.correctWords[i];
       const eng = this.correctWords[i].word;
       const rus = this.correctWords[i].wordTranslate;
-      const sound = `${baseUrl}/${this.correctWords[i].audio}`;
+      const sound = `${baseURL}/${this.correctWords[i].audio}`;
       const tr = this.pastResultWords(id, sound, eng, rus);
       correctTable.append(tr);
     }
@@ -361,7 +359,7 @@ export default class SprintController {
       const { id } = this.wrongWords[i];
       const eng = this.wrongWords[i].word;
       const rus = this.wrongWords[i].wordTranslate;
-      const sound = `${baseUrl}/${this.wrongWords[i].audio}`;
+      const sound = `${baseURL}/${this.wrongWords[i].audio}`;
       const tr = this.pastResultWords(id, sound, eng, rus);
       wrongTable.append(tr);
     }

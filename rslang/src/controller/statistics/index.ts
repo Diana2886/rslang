@@ -1,5 +1,5 @@
 import Model from '../../model/components/index';
-import { IUserWord, IWord } from '../../types/index';
+import { ILoginInfo, IStatistic, IUserWord, IWord } from '../../types/index';
 
 export default class Statistic {
   model: Model;

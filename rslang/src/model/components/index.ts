@@ -5,6 +5,7 @@ import {
   INewUser,
   ISignIn,
   IStatistic,
+  ISettings,
   IUser,
   IUserWord,
   IWord,
@@ -12,6 +13,7 @@ import {
   WordsGroup,
 } from '../../types/index';
 
+// export const baseURL = 'https://learnwords-di.herokuapp.com';
 export const baseURL = 'http://localhost:3000';
 enum Path {
   words = '/words',
@@ -19,6 +21,7 @@ enum Path {
   signIn = '/signin',
   aggregatedWords = '/aggregatedWords',
   statistics = '/statistics',
+  settings = '/settings',
 }
 export enum Result {
   success = 200,
@@ -59,7 +62,6 @@ class Model {
       const word = await (<Promise<IWord>>response.json());
       return word;
     } catch (error) {
-      console.error(error);
       return status;
     }
   }
@@ -131,7 +133,6 @@ class Model {
 
       switch (status) {
         case 200:
-          console.log('The user word has been created');
           break;
         case 400:
           throw new Error('Bad request');
@@ -167,7 +168,6 @@ class Model {
       const userWords = await (<Promise<IUserWord[]>>response.json());
       return userWords;
     } catch (error) {
-      console.error(error);
       return status;
     }
   }
@@ -193,7 +193,6 @@ class Model {
 
       switch (status) {
         case 204:
-          console.log('The user word has been deleted');
           break;
         case 400:
           throw new Error('Bad request');
@@ -248,7 +247,6 @@ class Model {
       const words = await (<Promise<IAggregatedWords[]>>response.json());
       return words;
     } catch (error) {
-      console.error(error);
       return status;
     }
   }
@@ -306,9 +304,6 @@ class Model {
       status = response.status;
 
       switch (status) {
-        case 200:
-          console.log('The user word has been updated');
-          break;
         case 400:
           throw new Error('Bad request');
         case 401:
@@ -339,9 +334,6 @@ class Model {
       status = response.status;
       const statistic = await (<Promise<IStatistic>>response.json());
       switch (status) {
-        case 200:
-          console.log('get statistics: Successful operation');
-          break;
         case 400:
           throw new Error('Access token is missing or invalid');
         case 401:
@@ -351,7 +343,6 @@ class Model {
       }
       return statistic;
     } catch (error) {
-      console.error(error);
       return status;
     }
   }
@@ -377,9 +368,70 @@ class Model {
       status = response.status;
 
       switch (status) {
-        case 200:
-          console.log('The statistics has been updated');
+        case 400:
+          throw new Error('Bad request');
+        case 401:
+          throw new Error('Access token is missing or invalid');
+        default:
           break;
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async getSettings() {
+    let status = 0;
+    const authStr = localStorage.getItem('authDataRSlang');
+    let authDataRSlang: IAuth | undefined;
+    if (authStr) {
+      authDataRSlang = <IAuth>JSON.parse(authStr);
+    }
+    try {
+      if (!authDataRSlang) throw new Error('unauthorized user');
+      const response = await fetch(`${baseURL}${Path.users}/${authDataRSlang.userId}${Path.settings}`, {
+        headers: {
+          Authorization: `Bearer ${authDataRSlang.token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+      status = response.status;
+      const settings = await (<Promise<ISettings>>response.json());
+      switch (status) {
+        case 400:
+          throw new Error('Access token is missing or invalid');
+        case 401:
+          throw new Error('Settings not found');
+        default:
+          break;
+      }
+      return settings;
+    } catch (error) {
+      return status;
+    }
+  }
+
+  async updateSettings(settings: ISettings): Promise<void> {
+    let status = 0;
+    const authStr = localStorage.getItem('authDataRSlang');
+    let authDataRSlang: IAuth | undefined;
+    if (authStr) {
+      authDataRSlang = <IAuth>JSON.parse(authStr);
+    }
+    try {
+      if (!authDataRSlang) throw new Error('unauthorized user');
+      const response = await fetch(`${baseURL}${Path.users}/${authDataRSlang.userId}${Path.settings}`, {
+        method: 'PUT',
+        headers: {
+          Authorization: `Bearer ${authDataRSlang.token}`,
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(settings),
+      });
+      status = response.status;
+
+      switch (status) {
         case 400:
           throw new Error('Bad request');
         case 401:

@@ -83,7 +83,10 @@ class AuthController {
     document.body.classList.remove('body-act');
 
     const textbookController = new TextbookController();
-    textbookController.rerenderWords('words');
+    (async () => {
+      await textbookController.rerenderWords('words');
+      await textbookController.updateDifficultAndSettingsButtons();
+    })().catch((err: Error) => console.warn(err.message));
   }
 
   checkInput(elem: HTMLElement) {

@@ -126,12 +126,12 @@ export default class AudioGame {
     variantsBtns.className = 'variants__btns';
     const nextBtn = document.createElement('button');
     const signalDiv = this.initSounds();
-    nextBtn.className = 'audio-call__next btn btn-info';
+    nextBtn.className = 'audio-call__next btn btn-primary';
     nextBtn.innerHTML = `Next  <kbd>↵</kbd>`;
     nextBtn.disabled = false;
     example.variants.forEach((item, index) => {
       const btnDiv = document.createElement('button');
-      btnDiv.className = 'audio-call__choose-btn';
+      btnDiv.className = 'audio-call__choose-btn btn btn-secondary';
       btnDiv.type = 'button';
       btnDiv.innerHTML = `<kbd>${index + 1}</kbd> ${item.wordTranslate}`;
       btnDiv.addEventListener(
@@ -152,9 +152,9 @@ export default class AudioGame {
             this.wrongs.push(example.word);
           }
           this.signal.src = answers ? 'assets/audio/correct.mp3' : 'assets/audio/wrong.mp3';
-          this.signal.play().catch((err) => console.log(err));
+          this.signal.play().catch((err) => console.warn(err));
           if (typeof userWords === 'object') {
-            this.stat.writeWordStat('audio', example.word, answers).catch((err) => console.error(err));
+            this.stat.writeWordStat('audio', example.word, answers).catch((err) => console.warn(err));
           }
           this.image.src = `http://localhost:3000/${example.word.image}`;
           this.text.innerHTML = `${example.word.word} <p>${example.word.wordTranslate}</p>`;
@@ -174,10 +174,10 @@ export default class AudioGame {
         });
         nextBtn.classList.add('wrong');
         this.signal.src = 'assets/audio/wrong.mp3';
-        this.signal.play().catch((err) => console.log(err));
+        this.signal.play().catch((err) => console.warn(err));
         this.wrongs.push(example.word);
         if (typeof userWords === 'object') {
-          this.stat.writeWordStat('audio', example.word, false).catch((err) => console.error(err));
+          this.stat.writeWordStat('audio', example.word, false).catch((err) => console.warn(err));
         }
       }
       if (this.index < this.data.length) {
@@ -240,7 +240,7 @@ export default class AudioGame {
     this.imageDiv.className = 'play-image';
     this.text.className = 'play-text';
     this.imageDiv.addEventListener('click', () => {
-      this.audio.play().catch((err) => console.log(err));
+      this.audio.play().catch((err) => console.warn(err));
     });
     [this.image, this.text, this.audio].forEach((item) => this.imageDiv.append(item));
     this.gameBody.className = 'game-body';
