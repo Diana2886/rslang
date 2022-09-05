@@ -33,7 +33,7 @@ export default class SprintController {
 
   score: number;
 
-  // timerID: NodeJS.Timer | undefined;
+  timerID: NodeJS.Timer | undefined;
 
   static: Statistic;
 
@@ -49,23 +49,19 @@ export default class SprintController {
     this.page = 0;
     this.count = 0;
     this.len = 0;
-    // this.timerID = undefined;
+    this.timerID = undefined;
     this.score = 0;
     this.point = 10;
     this.counter = 0;
   }
 
-  static timerID: undefined | NodeJS.Timer = undefined;
+  // static timerID: undefined | NodeJS.Timer = undefined;
 
   checkSprintElem() {
     const container = document.querySelector('.container') as HTMLElement;
-    clearInterval(SprintController.timerID);
-    // console.log(this.timerID);
-    console.log(SprintController.timerID);
-
     container.addEventListener('click', async (e) => {
       const targ = e.target as HTMLElement;
-      if (targ.classList.contains('btn-check')) {
+      if (targ.classList.contains('sprint-lvl-btn')) {
         await this.checkLevel(targ);
       } else if (targ.classList.contains('start-game')) {
         await this.pastWordToPlayGame(targ);
@@ -98,23 +94,41 @@ export default class SprintController {
       .map((item) => item.wordId) as string[];
   };
 
-  async checkLevel(elem: HTMLElement | number) {
+  async checkLevel(elem: HTMLElement | number, levels?: string, pages?: number) {
     const userWods: string[] | undefined = await this.filterUserWords();
-    // const [[id, difficult]] = userWods!;
-    // clearInterval(SprintController.timerID);
-    console.log(SprintController.timerID);
+    console.log(this.timerID);
     if (typeof elem === 'number') {
       if (!userWods) {
         this.wordsArray = await Model.getWords(elem, this.level);
       } else {
-        // this.wordsArray = await this.filterWords(this.page, this.level, userWods);
+        this.wordsArray = await this.filterWords(this.page, this.level, userWods);
       }
     } else {
       this.counter = 0;
       this.point = 10;
       this.score = 0;
-      const lvl = elem.id;
-      this.level = +lvl[lvl.length - 1] - 1;
+      let lvl: string | undefined;
+      if (elem.id) {
+        lvl = elem.id;
+      } else {
+        lvl = levels;
+      }
+      if (lvl === 'A1') {
+        this.level = 0;
+      } else if (lvl === 'A2') {
+        this.level = 1;
+      } else if (lvl === 'B1') {
+        this.level = 2;
+      } else if (lvl === 'B2') {
+        this.level = 3;
+      } else if (lvl === 'C1') {
+        this.level = 4;
+      } else if (lvl === 'C2') {
+        this.level = 5;
+      } else {
+        lvl = lvl![lvl!.length - 1];
+        this.level = +lvl - 1;
+      }
 
       if (!userWods) {
         this.wordsArray = await Model.getWords(this.page, this.level);
@@ -123,7 +137,9 @@ export default class SprintController {
       }
 
       const startBtn = elem.parentElement?.nextElementSibling as HTMLButtonElement;
-      startBtn.disabled = false;
+      if (startBtn) {
+        startBtn.disabled = false;
+      }
     }
   }
 
@@ -140,13 +156,13 @@ export default class SprintController {
   sprintTimer() {
     const sprintTimer = document.querySelector('.sprint-timer span') as HTMLElement;
     let counterTime = 60;
-    SprintController.timerID = setInterval(() => {
+    this.timerID = setInterval(() => {
       counterTime -= 1;
       if (counterTime === 0) {
-        clearInterval(SprintController.timerID);
+        clearInterval(this.timerID);
         this.modalActive();
         if (this.checkLogIn()) {
-          this.sendResultToStatic();
+          // this.sendResultToStatic();
         }
         this.wrongWords = [];
         this.correctWords = [];
@@ -280,15 +296,16 @@ export default class SprintController {
     const result = this.checkAnswerWord(engWord.word, rusWord.word, e);
     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     if (result === 'correct') {
-      // await this.static.writeWordStat('sprint', engWord, true);
+      await this.static.writeWordStat('sprint', engWord, true);
       this.correctWords.push(engWord);
     } else {
-      // await this.static.writeWordStat('sprint', engWord, false);
+      await this.static.writeWordStat('sprint', engWord, false);
       this.wrongWords.push(engWord);
     }
     this.countScore(result);
     this.pastEffect(result);
     this.count += 1;
+
     setTimeout(() => this.removeEffect(), 100);
 
     const forAudio = this.engWords[this.count];

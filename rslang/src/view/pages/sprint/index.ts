@@ -71,22 +71,22 @@ class Sprint extends Page {
         <div class="btn-group" role="group" aria-label="Базовая группа переключателей радио">          
           
           
-          <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off">          
+          <input type="radio" class="btn-check sprint-lvl-btn" name="btnradio" id="btnradio1" autocomplete="off">          
           <label class="btn btn-outline-primary" for="btnradio1">A1</label>
           
-          <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off">          
+          <input type="radio" class="btn-check sprint-lvl-btn" name="btnradio" id="btnradio2" autocomplete="off">          
           <label class="btn btn-outline-primary" for="btnradio2">A2</label>
           
-          <input type="radio" class="btn-check" name="btnradio" id="btnradio3" autocomplete="off">
+          <input type="radio" class="btn-check sprint-lvl-btn" name="btnradio" id="btnradio3" autocomplete="off">
           <label class="btn btn-outline-primary" for="btnradio3">B1</label>
           
-          <input type="radio" class="btn-check" name="btnradio" id="btnradio4" autocomplete="off">
+          <input type="radio" class="btn-check sprint-lvl-btn" name="btnradio" id="btnradio4" autocomplete="off">
           <label class="btn btn-outline-primary" for="btnradio4">B2</label>
           
-          <input type="radio" class="btn-check" name="btnradio" id="btnradio5" autocomplete="off">
+          <input type="radio" class="btn-check sprint-lvl-btn" name="btnradio" id="btnradio5" autocomplete="off">
           <label class="btn btn-outline-primary" for="btnradio5">C1</label>
           
-          <input type="radio" class="btn-check" name="btnradio" id="btnradio6" autocomplete="off">
+          <input type="radio" class="btn-check sprint-lvl-btn" name="btnradio" id="btnradio6" autocomplete="off">
           <label class="btn btn-outline-primary" for="btnradio6">C2</label>
         </div>
         <button type="button" class="btn btn-primary start-game" disabled>Start</button>
