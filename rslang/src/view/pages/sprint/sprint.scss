@@ -156,6 +156,17 @@
 .check-level-title{
   text-align: left;
 }
+.thead-tr, .tbody-tr {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.table-tr{
+  display: flex;
+  align-items:center;
+  justify-content: flex-start;
+}
 @keyframes zoomIn {
   from {
     opacity: 0;
@@ -269,6 +280,11 @@
 
 .wr-eng{
   font-weight: 700;
+  text-align: center;
+  flex-grow: 1;
+}
+table{
+  width: 90%;
 }
 .game-sprint-m-ctitle{
   color: #198754;

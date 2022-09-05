@@ -125,7 +125,7 @@ class Sprint extends Page {
         <table >
           <h5 class="game-sprint-m-ctitle">Correct</h5>
           <thead>
-            <tr>
+            <tr class="thead-tr">
               <td>Sound</td>
               <td>English</td>
               <td>Russian</td>
@@ -153,7 +153,7 @@ class Sprint extends Page {
         <table >
           <h5 class="game-sprint-m-wtitle">Wrong</h5>
           <thead>
-            <tr>
+            <tr  class="tbody-tr">
               <td>Sound</td>
               <td>English</td>
               <td>Russian</td>

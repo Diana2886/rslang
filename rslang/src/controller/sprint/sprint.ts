@@ -396,6 +396,7 @@ export default class SprintController {
 
   pastResultWords(id: string, audio: string, eng: string, rus: string) {
     const tr = document.createElement('tr') as HTMLElement;
+    tr.classList.add('table-tr');
     tr.innerHTML = `
       <td class="modal-sound">
       <audio src="${audio}" id="${id}"></audio>
