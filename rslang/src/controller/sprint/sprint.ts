@@ -49,14 +49,14 @@ export default class SprintController {
     this.page = 0;
     this.count = 0;
     this.len = 0;
-    this.timerID = undefined;
+    // this.timerID = undefined;
     this.score = 0;
     this.point = 10;
     this.counter = 0;
     this.textBookPage = false;
   }
 
-  // static timerID: undefined | NodeJS.Timer = undefined;
+  static timerID: undefined | NodeJS.Timer = undefined;
 
   checkSprintElem() {
     const container = document.querySelector('.container') as HTMLElement;
@@ -67,8 +67,6 @@ export default class SprintController {
       } else if (targ.classList.contains('start-game')) {
         this.textBookPage = false;
         await this.pastWordToPlayGame(targ);
-      } else if (targ.classList.contains('sprint-fuul_screan')) {
-        this.fullScreen(targ);
       } else if (targ.classList.contains('repeat-btn')) {
         this.modalClose(targ, 'repeat');
       } else if (targ.classList.contains('close-btn')) {
@@ -77,6 +75,8 @@ export default class SprintController {
         await this.hearSound(targ);
       } else if (targ.classList.contains('word-sound')) {
         await this.soundOn(targ);
+      } else if (targ.classList.contains('sprint-notification')) {
+        targ.classList.toggle('sprint-notification-mute');
       }
     });
   }
@@ -103,7 +103,6 @@ export default class SprintController {
         this.wordsArray = await this.filterWords(elem, this.level, userWords);
       }
       this.wordsArray = await Model.getWords(elem, this.level);
-      return;
     } else {
       this.counter = 0;
       this.point = 10;
@@ -161,16 +160,13 @@ export default class SprintController {
 
   sprintTimer() {
     const sprintTimer = document.querySelector('.sprint-timer span') as HTMLElement;
-    let counterTime = 60;
-    this.timerID = setInterval(() => {
+    let counterTime = 10;
+    SprintController.timerID = setInterval(() => {
       counterTime -= 1;
       if (counterTime === 0) {
-        clearInterval(this.timerID);
+        clearInterval(SprintController.timerID);
         this.modalActive();
         this.textBookPage = false;
-        // if (this.checkLogIn()) {
-        //   // this.sendResultToStatic();
-        // }
         this.wrongWords = [];
         this.correctWords = [];
       }
@@ -187,15 +183,6 @@ export default class SprintController {
     }
     return false;
   }
-
-  // sendResultToStatic() {
-  //   this.wrongWords.forEach(async (item) => {
-  //     const res = await this.static.writeWordStat('sprint', item, false);
-  //   });
-  //   this.correctWords.forEach(async (item) => {
-  //     const res = await this.static.writeWordStat('sprint', item, true);
-  //   });
-  // }
 
   countScore(str: string) {
     const scoreBlock = document.querySelector('.sprint-point') as HTMLElement;
@@ -315,6 +302,7 @@ export default class SprintController {
     }
     this.countScore(result);
     this.pastEffect(result);
+    this.pastAudioEffect(result);
     this.count += 1;
 
     setTimeout(() => this.removeEffect(), 100);
@@ -325,6 +313,13 @@ export default class SprintController {
     englishWord.innerHTML = this.engWords[this.count].word;
     russiaWord.innerHTML = this.rusWords[this.count].wordTranslate;
   };
+
+  pastAudioEffect(src: string) {
+    const audio = new Audio(`./assets/audio/${src}.mp3`);
+    if (!(<HTMLElement>document.querySelector('.sprint-notification')).classList.contains('sprint-notification-mute')) {
+      audio.play();
+    }
+  }
 
   checkAnswerWord(eng: string, rus: string, elem: string | Event) {
     if (typeof elem === 'string') {
@@ -346,15 +341,15 @@ export default class SprintController {
     return arr;
   }
 
-  fullScreen(elem: HTMLElement) {
-    elem.addEventListener('click', async () => {
-      if (document.fullscreenElement === null) {
-        await document.documentElement.requestFullscreen();
-      } else {
-        await document.exitFullscreen();
-      }
-    });
-  }
+  // fullScreen(elem: HTMLElement) {
+  //   elem.addEventListener('click', async () => {
+  //     if (document.fullscreenElement === null) {
+  //       await document.documentElement.requestFullscreen();
+  //     } else {
+  //       await document.exitFullscreen();
+  //     }
+  //   });
+  // }
 
   modalActive() {
     const modalBG = document.querySelector('.modal-bg') as HTMLElement;
